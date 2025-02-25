@@ -5,8 +5,9 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"github.com/dgrijalva/jwt-go"
 	helper "superapps/helpers"
+
+	"github.com/dgrijalva/jwt-go"
 )
 
 func JwtAuthentication(next http.Handler) http.Handler {
@@ -15,13 +16,13 @@ func JwtAuthentication(next http.Handler) http.Handler {
 		var url string = r.URL.Path
 
 		var containImage string = "jpg"
-	 
-		if strings.Contains(url, containImage) {
-		   next.ServeHTTP(w, r)
-		   return 
-		} 
 
-		if r.URL.Path == "/api/v1/login" || r.URL.Path == "/api/v1/register" || r.URL.Path == "/api/v1/verify-otp" || r.URL.Path == "/api/v1/resend-otp" {
+		if strings.Contains(url, containImage) {
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		if r.URL.Path == "/api/v1/login" || r.URL.Path == "/api/v1/register" || r.URL.Path == "/api/v1/verify-otp" || r.URL.Path == "/api/v1/resend-otp" || r.URL.Path == "/api/v1/job-categories" {
 			next.ServeHTTP(w, r)
 			return
 		}
@@ -51,7 +52,7 @@ func JwtAuthentication(next http.Handler) http.Handler {
 		})
 
 		if err != nil {
-			helper.Logger("error", "In Server: "+ err.Error())
+			helper.Logger("error", "In Server: "+err.Error())
 			helper.Response(w, http.StatusUnauthorized, true, err.Error(), map[string]interface{}{})
 			return
 		}

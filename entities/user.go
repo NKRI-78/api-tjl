@@ -25,10 +25,7 @@ type Profile struct {
 	JobName  string `json:"job_name"`
 }
 
-type Job struct {
-	Id   string `json:"id"`
-	Name string `json:"name"`
-}
+
 
 type CheckAccount struct {
 	Email string `json:"email"`
