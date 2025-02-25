@@ -19,15 +19,22 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	jobId := data.JobId 
 	avatar := data.Avatar
 	fullname := data.Fullname
 	email := data.Email
 	password := data.Password
 	phone := data.Phone
 
+	if jobId == "" {
+		helper.Logger("error", "In Server: job_id is required")
+		helper.Response(w, 400, true, "job_id is required", map[string]interface{}{})
+		return
+	}
+
 	if avatar == "" {
 		helper.Logger("error", "In Server: avatar is required")
-		helper.Response(w, 400, true, "avatar is requried", map[string]interface{}{})
+		helper.Response(w, 400, true, "avatar is required", map[string]interface{}{})
 		return
 	}
 
