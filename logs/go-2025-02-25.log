@@ -29,3 +29,12 @@
 [ERROR]: 2025-02-25 11:00:50 - In Server: Error 1452: Cannot add or update a child row: a foreign key constraint fails (`tjl`.`profiles`, CONSTRAINT `profiles_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE)
 [INFO]: 2025-02-25 11:01:05 - Register success
 [INFO]: 2025-02-25 11:13:52 - Register success
+[ERROR]: 2025-02-25 11:39:56 - In Server: job_id is required
+[ERROR]: 2025-02-25 11:40:07 - In Server: job_id is required
+[ERROR]: 2025-02-25 11:40:11 - In Server: job_id is required
+[ERROR]: 2025-02-25 11:40:42 - In Server: Error 1054: Unknown column 'email' in 'field list'
+[ERROR]: 2025-02-25 11:40:56 - In Server: User already exist
+[ERROR]: 2025-02-25 11:41:22 - In Server: Job not found
+[ERROR]: 2025-02-25 11:41:41 - In Server: Error 1146: Table 'tjl.user_job_picks' doesn't exist
+[ERROR]: 2025-02-25 11:42:00 - In Server: User already exist
+[INFO]: 2025-02-25 11:42:14 - Register success

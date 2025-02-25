@@ -8,6 +8,7 @@ type User struct {
 	Id       string `json:"id"`
 	Avatar   string `json:"avatar"`
 	Val      string `json:"val"`
+	JobId    string `json:"job_id"`
 	Fullname string `json:"fullname"`
 	Email    string `json:"email"`
 	Phone    string `json:"phone"`
@@ -18,6 +19,10 @@ type User struct {
 
 type CheckAccount struct {
 	Email string `json:"email"`
+}
+
+type CheckJobs struct {
+	JobId string `json:"job_id"`
 }
 
 type UserLogin struct {
