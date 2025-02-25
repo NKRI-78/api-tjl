@@ -1,0 +1,27 @@
+package models
+
+import (
+	"superapps/entities"
+)
+
+type AllCountContent entities.AllCountContent
+type ContentApplicationResponse entities.ContentApplicationResponse
+type Content entities.Content
+type ReqContentComment entities.ReqContentComment
+type DelContent entities.DelContent
+type DelContentComment entities.DelContentComment
+type ContentComment entities.ContentComment
+type ContentCommentUser entities.ContentCommentUser
+type ContentCommentResponse entities.ContentCommentResponse
+type ContentCommentUserResponse entities.ContentCommentUserResponse
+type ReqContentLike entities.ReqContentLike
+type ReqContentUnlike entities.ReqContentUnlike
+type ContentLike entities.ContentLike
+type ContentLikeUser entities.ContentLikeUser
+type ContentLikeResponse entities.ContentLikeResponse
+type ContentLikeUserResponse entities.ContentLikeUserResponse
+type ContentMedia entities.ContentMedia
+type ContentResponse entities.ContentResponse
+type ContentMediaResponse entities.ContentMediaResponse
+type ContentUser entities.ContentUser
+type ContentUserResponse entities.ContentUserResponse

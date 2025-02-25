@@ -1,0 +1,30 @@
+[ERROR]: 2025-02-25 10:33:35 - In Server: E-mail address is invalid
+[ERROR]: 2025-02-25 10:33:43 - In Server: E-mail address is invalid
+[ERROR]: 2025-02-25 10:34:08 - In Server: E-mail address is invalid
+[ERROR]: 2025-02-25 10:34:26 - In Server: E-mail address is invalid
+[ERROR]: 2025-02-25 10:34:33 - In Server: EOF
+[ERROR]: 2025-02-25 10:34:36 - In Server: E-mail address is invalid
+[ERROR]: 2025-02-25 10:34:53 - In Server: E-mail address is invalid
+[ERROR]: 2025-02-25 10:34:54 - In Server: E-mail address is invalid
+[ERROR]: 2025-02-25 10:36:07 - In Server: E-mail address is invalid
+[ERROR]: 2025-02-25 10:36:19 - In Server: E-mail address is invalid
+[ERROR]: 2025-02-25 10:36:20 - In Server: E-mail address is invalid
+[ERROR]: 2025-02-25 10:36:31 - In Server: E-mail address is invalid
+[ERROR]: 2025-02-25 10:36:34 - In Server: E-mail address is invalid
+[ERROR]: 2025-02-25 10:36:59 - In Server: E-mail address is invalid
+[ERROR]: 2025-02-25 10:37:04 - In Server: E-mail address is invalid
+[ERROR]: 2025-02-25 10:37:41 - In Server: E-mail address is invalid
+[ERROR]: 2025-02-25 10:37:56 - In Server: E-mail address is invalid
+[ERROR]: 2025-02-25 10:38:45 - In Server: E-mail address is invalid
+[ERROR]: 2025-02-25 10:39:20 - In Server: Error 1146: Table 'tjl.applications' doesn't exist
+[ERROR]: 2025-02-25 10:41:40 - In Server: Error 1452: Cannot add or update a child row: a foreign key constraint fails (`tjl`.`users`, CONSTRAINT `users_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `profiles` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE)
+[INFO]: 2025-02-25 10:46:13 - Register success
+[INFO]: 2025-02-25 10:48:33 - Register success
+[ERROR]: 2025-02-25 10:53:17 - In Server: fullname is required
+[INFO]: 2025-02-25 10:53:26 - Register success
+[ERROR]: 2025-02-25 10:57:22 - In Server: avatar is required
+[ERROR]: 2025-02-25 10:57:56 - In Server: User already exist
+[INFO]: 2025-02-25 10:58:47 - Register success
+[INFO]: 2025-02-25 10:59:31 - Register success
+[ERROR]: 2025-02-25 11:00:50 - In Server: Error 1452: Cannot add or update a child row: a foreign key constraint fails (`tjl`.`profiles`, CONSTRAINT `profiles_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE)
+[INFO]: 2025-02-25 11:01:05 - Register success
