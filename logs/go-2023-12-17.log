@@ -1,0 +1,41 @@
+[INFO]: 2023-12-17 00:26:31 - Create content comment success
+[INFO]: 2023-12-17 00:26:48 - Create content comment success
+[INFO]: 2023-12-17 00:34:37 - Create content comment success
+[INFO]: 2023-12-17 00:34:46 - Delete content comment success
+[ERROR]: 2023-12-17 00:47:13 - In Server: Missing auth token
+[INFO]: 2023-12-17 00:47:18 - Create content like success
+[INFO]: 2023-12-17 00:47:33 - Create content like success
+[INFO]: 2023-12-17 00:55:47 - Create content like success
+[INFO]: 2023-12-17 00:55:50 - Create content like success
+[INFO]: 2023-12-17 00:55:53 - Create content like success
+[INFO]: 2023-12-17 00:55:56 - Create content like success
+[INFO]: 2023-12-17 00:56:06 - Get all content success
+[INFO]: 2023-12-17 00:56:09 - Create content like success
+[INFO]: 2023-12-17 00:56:11 - Get all content success
+[INFO]: 2023-12-17 00:56:16 - Create content like success
+[INFO]: 2023-12-17 00:56:17 - Get all content success
+[INFO]: 2023-12-17 01:02:20 - Create content comment success
+[INFO]: 2023-12-17 01:02:30 - Get all content success
+[INFO]: 2023-12-17 01:07:48 - Get all content success
+[INFO]: 2023-12-17 01:18:24 - Get all content success
+[ERROR]: 2023-12-17 01:20:31 - In Server: Error 1364: Field 'id' doesn't have a default value
+[INFO]: 2023-12-17 01:20:44 - Create content unlike success
+[INFO]: 2023-12-17 01:20:56 - Get all content success
+[INFO]: 2023-12-17 01:21:45 - Get all content success
+[INFO]: 2023-12-17 01:21:46 - Get all content success
+[INFO]: 2023-12-17 01:21:47 - Get all content success
+[INFO]: 2023-12-17 01:21:48 - Get all content success
+[INFO]: 2023-12-17 01:21:48 - Get all content success
+[INFO]: 2023-12-17 01:22:28 - Get all content success
+[INFO]: 2023-12-17 01:22:29 - Get all content success
+[INFO]: 2023-12-17 01:23:11 - Get all content success
+[INFO]: 2023-12-17 01:23:19 - Get all content success
+[INFO]: 2023-12-17 14:51:58 - Get all content success
+[INFO]: 2023-12-17 14:52:08 - Get all content success
+[INFO]: 2023-12-17 14:54:15 - Get all content success
+[ERROR]: 2023-12-17 14:55:00 - In Server: invalid character '}' looking for beginning of object key string
+[ERROR]: 2023-12-17 14:55:01 - In Server: invalid character '}' looking for beginning of object key string
+[ERROR]: 2023-12-17 14:55:02 - In Server: invalid character '}' looking for beginning of object key string
+[INFO]: 2023-12-17 14:55:12 - Create media success
+[INFO]: 2023-12-17 14:57:57 - Create media success
+[INFO]: 2023-12-17 14:58:58 - Create media success
