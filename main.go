@@ -68,6 +68,9 @@ func main() {
 	router.HandleFunc("/api/v1/resend-otp", controllers.ResendOtp).Methods("POST")
 	router.HandleFunc("/api/v1/verify-otp", controllers.VerifyOtp).Methods("POST")
 
+	// Jobs
+	router.HandleFunc("/api/v1/job-categories", controllers.JobCategories).Methods("GET")
+
 	// Content
 	router.HandleFunc("/api/v1/content", controllers.All).Methods("GET")
 	router.HandleFunc("/api/v1/content/delete", controllers.DeleteContent).Methods("DELETE")
