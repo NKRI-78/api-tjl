@@ -28,3 +28,4 @@
 [INFO]: 2025-02-25 10:59:31 - Register success
 [ERROR]: 2025-02-25 11:00:50 - In Server: Error 1452: Cannot add or update a child row: a foreign key constraint fails (`tjl`.`profiles`, CONSTRAINT `profiles_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE)
 [INFO]: 2025-02-25 11:01:05 - Register success
+[INFO]: 2025-02-25 11:13:52 - Register success

@@ -6,13 +6,19 @@ package helper
 
 import (
 	// "math/rand"
+	"bytes"
 	crand "crypto/rand"
 	"encoding/base32"
+	"encoding/json"
+	"errors"
+	"net/http"
 	"os"
 	"regexp"
 	"strings"
 
 	// "time"
+	entities "superapps/entities"
+
 	"github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -26,6 +32,32 @@ func Contains(s []string, e string) bool {
 		}
 	}
 	return false
+}
+
+func SendEmail(to, subject, body string) error {
+	emailData := &entities.SendEmailRequest{
+		To:      to,
+		App:     "TJL",
+		Subject: subject,
+		Body:    body,
+	}
+
+	jsonData, err := json.Marshal(emailData)
+	if err != nil {
+		return err
+	}
+
+	resp, err := http.Post("https://api-email.inovatiftujuh8.com/api/v1/email", "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return errors.New("failed to send email, status code: " + resp.Status)
+	}
+
+	return nil
 }
 
 func DecodeJwt(tokenP string) *jwt.Token {
