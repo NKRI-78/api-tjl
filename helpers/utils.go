@@ -48,7 +48,7 @@ func SendEmail(to, app, otp string) error {
 	emailData := &entities.SendEmailRequest{
 		To:      to,
 		App:     app,
-		Subject: app,
+		Subject: "Verification Account",
 		Body:    body,
 	}
 

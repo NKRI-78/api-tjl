@@ -38,3 +38,27 @@
 [ERROR]: 2025-02-25 11:41:41 - In Server: Error 1146: Table 'tjl.user_job_picks' doesn't exist
 [ERROR]: 2025-02-25 11:42:00 - In Server: User already exist
 [INFO]: 2025-02-25 11:42:14 - Register success
+[INFO]: 2025-02-25 11:45:39 - Register success
+[ERROR]: 2025-02-25 11:46:23 - In Server: User already exist
+[ERROR]: 2025-02-25 11:46:40 - In Server: val field is required
+[ERROR]: 2025-02-25 11:46:44 - In Server: Error 1054: Unknown column 'email_active' in 'field list'
+[ERROR]: 2025-02-25 11:48:42 - In Server: Error 1054: Unknown column 'otp_date' in 'field list'
+[ERROR]: 2025-02-25 11:49:22 - Failed to send email: failed to send email, status code: 400 Bad Request
+[ERROR]: 2025-02-25 11:49:22 - In Server: Please activate your account
+[ERROR]: 2025-02-25 11:50:14 - In Server: Please activate your account
+[ERROR]: 2025-02-25 11:51:38 - In Server: val field is required
+[ERROR]: 2025-02-25 11:52:00 - In Server: otp field is required
+[ERROR]: 2025-02-25 11:52:33 - In Server: Otp is expired
+[ERROR]: 2025-02-25 11:53:32 - In Server: Error 1054: Unknown column 'email_active' in 'field list'
+[INFO]: 2025-02-25 11:55:06 - Resend otp success
+[ERROR]: 2025-02-25 11:55:25 - In Server: Please activate your account
+[ERROR]: 2025-02-25 11:57:46 - In Server: Otp is expired
+[INFO]: 2025-02-25 11:57:50 - Resend otp success
+[INFO]: 2025-02-25 11:58:07 - Verify account success
+[INFO]: 2025-02-25 11:58:10 - Verify account success
+[ERROR]: 2025-02-25 11:58:12 - In Server: Please activate your account
+[ERROR]: 2025-02-25 11:58:14 - In Server: Please activate your account
+[ERROR]: 2025-02-25 11:58:22 - In Server: Please activate your account
+[ERROR]: 2025-02-25 11:59:35 - In Server: Please activate your account
+[INFO]: 2025-02-25 12:00:06 - Login success
+[ERROR]: 2025-02-25 12:00:17 - In Server: Account is already active

@@ -16,7 +16,7 @@ import (
 func VerifyOtp(u *models.User) (map[string]interface{}, error) {
 
 	users := []entities.UserOtp{}
-	query := `SELECT uid, email_active, otp_date FROM users 
+	query := `SELECT uid, enabled, otp_date FROM users 
 	WHERE (email = '` + u.Val + `' OR phone = '` + u.Val + `') AND otp = '` + u.Otp + `'`
 
 	fmt.Println((query))
@@ -31,11 +31,11 @@ func VerifyOtp(u *models.User) (map[string]interface{}, error) {
 	isUserExist := len(users)
 
 	if isUserExist == 0 {
-		return nil, errors.New("user not found")
+		return nil, errors.New("user / otp is invalid")
 	}
 
 	uid := users[0].Uid
-	emailActive := users[0].EmailActive
+	emailActive := users[0].Enabled
 	otpDate := users[0].OtpDate
 
 	if emailActive == 1 {
@@ -51,7 +51,7 @@ func VerifyOtp(u *models.User) (map[string]interface{}, error) {
 		return nil, errors.New("otp is expired")
 	}
 
-	errUpdateEmailActive := db.Debug().Exec(`UPDATE users SET email_active = 1, email_active_date = NOW()
+	errUpdateEmailActive := db.Debug().Exec(`UPDATE users SET enabled = 1, email_active_date = NOW()
 		WHERE email = '` + u.Val + `'
 	`).Error
 
@@ -74,7 +74,7 @@ func VerifyOtp(u *models.User) (map[string]interface{}, error) {
 func ResendOtp(u *models.User) (map[string]interface{}, error) {
 
 	users := []entities.UserOtp{}
-	query := `SELECT email_active, otp_date FROM users
+	query := `SELECT enabled, otp_date FROM users
 	WHERE (email = '` + u.Val + `' OR phone = '` + u.Val + `')`
 
 	err := db.Debug().Raw(query).Scan(&users).Error
@@ -90,7 +90,7 @@ func ResendOtp(u *models.User) (map[string]interface{}, error) {
 		return nil, errors.New("user not found")
 	}
 
-	emailActive := users[0].EmailActive
+	emailActive := users[0].Enabled
 	otpDate := users[0].OtpDate
 
 	if emailActive == 1 {
@@ -110,6 +110,11 @@ func ResendOtp(u *models.User) (map[string]interface{}, error) {
 			helper.Logger("error", "In Server: "+errUpdateResendOtp.Error())
 			return nil, errors.New(errUpdateResendOtp.Error())
 		}
+
+		errEmail := helper.SendEmail(u.Val, "TJL", otp)
+		if errEmail != nil {
+			helper.Logger("error", "Failed to send email: "+errEmail.Error())
+		}
 	}
 
 	return map[string]interface{}{
@@ -122,7 +127,7 @@ func Login(u *models.User) (map[string]interface{}, error) {
 	user := entities.User{}
 
 	users := []entities.UserLogin{}
-	query := `SELECT uid, email_active, password FROM users WHERE email = '` + u.Val + `' OR phone = '` + u.Val + `'`
+	query := `SELECT uid, enabled, password FROM users WHERE email = '` + u.Val + `' OR phone = '` + u.Val + `'`
 
 	err := db.Debug().Raw(query).Scan(&users).Error
 
@@ -139,11 +144,11 @@ func Login(u *models.User) (map[string]interface{}, error) {
 
 	otp := helper.CodeOtpSecure()
 
-	emailActive := users[0].EmailActive
+	emailActive := users[0].Enabled
 	user.Id = users[0].Uid
 
 	if emailActive == 0 {
-		err := db.Debug().Exec(`UPDATE users SET otp = '` + otp + `', otp_date = NOW() 
+		err := db.Debug().Exec(`UPDATE users SET otp = '` + otp + `', otp_date = NOW()
 		WHERE email = '` + u.Val + `' OR phone = '` + u.Val + `'`).Error
 
 		if err != nil {
@@ -151,7 +156,7 @@ func Login(u *models.User) (map[string]interface{}, error) {
 			return nil, errors.New(err.Error())
 		}
 
-		errEmail := helper.SendEmail(user.Email, "TJL", otp)
+		errEmail := helper.SendEmail(u.Val, "TJL", otp)
 		if errEmail != nil {
 			helper.Logger("error", "Failed to send email: "+errEmail.Error())
 		}
