@@ -61,6 +61,9 @@ func main() {
 	router.HandleFunc("/api/v1/login", controllers.Login).Methods("POST")
 	router.HandleFunc("/api/v1/register", controllers.Register).Methods("POST")
 
+	// Profile
+	router.HandleFunc("/api/v1/profile", controllers.Profile).Methods("GET")
+
 	// Otp
 	router.HandleFunc("/api/v1/resend-otp", controllers.ResendOtp).Methods("POST")
 	router.HandleFunc("/api/v1/verify-otp", controllers.VerifyOtp).Methods("POST")
