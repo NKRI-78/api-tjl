@@ -62,3 +62,28 @@
 [ERROR]: 2025-02-25 11:59:35 - In Server: Please activate your account
 [INFO]: 2025-02-25 12:00:06 - Login success
 [ERROR]: 2025-02-25 12:00:17 - In Server: Account is already active
+[INFO]: 2025-02-25 12:05:36 - Login success
+[ERROR]: 2025-02-25 12:05:43 - In Server: Missing auth token
+[ERROR]: 2025-02-25 12:06:23 - In Server: Missing auth token
+[ERROR]: 2025-02-25 12:07:16 - In Server: Missing auth token
+[ERROR]: 2025-02-25 12:07:34 - In Server: Missing auth token
+[ERROR]: 2025-02-25 12:07:34 - In Server: Missing auth token
+[ERROR]: 2025-02-25 12:07:35 - In Server: Missing auth token
+[ERROR]: 2025-02-25 12:07:42 - In Server: Missing auth token
+[ERROR]: 2025-02-25 12:07:47 - In Server: Missing auth token
+[ERROR]: 2025-02-25 12:07:48 - In Server: Missing auth token
+[ERROR]: 2025-02-25 12:07:49 - In Server: Missing auth token
+[ERROR]: 2025-02-25 12:08:23 - In Server: Missing auth token
+[ERROR]: 2025-02-25 12:08:23 - In Server: Missing auth token
+[ERROR]: 2025-02-25 12:09:15 - In Server: Missing auth token
+[ERROR]: 2025-02-25 12:09:31 - In Server: Missing auth token
+[ERROR]: 2025-02-25 12:09:54 - In Server: Missing auth token
+[ERROR]: 2025-02-25 12:10:22 - In Server: Missing auth token
+[ERROR]: 2025-02-25 12:11:07 - In Server: signature is invalid
+[INFO]: 2025-02-25 12:11:12 - Login success
+[INFO]: 2025-02-25 12:11:21 - Create content unlike success
+[INFO]: 2025-02-25 12:11:37 - Create content unlike success
+[ERROR]: 2025-02-25 12:22:59 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '.fullname, p.avatar, u.phone, u.email 
+	FROM profiles p 
+	INNER JOIN users u ON ' at line 1
+[ERROR]: 2025-02-25 12:23:02 - In Server: Error 1054: Unknown column 'p.uid' in 'field list'

@@ -17,6 +17,13 @@ type User struct {
 	Password string `json:"password"`
 }
 
+type Profile struct {
+	Id       string `json:"id"`
+	Avatar   string `json:"avatar"`
+	Fullname string `json:"fullname"`
+	Email    string `json:"email"`
+}
+
 type CheckAccount struct {
 	Email string `json:"email"`
 }
