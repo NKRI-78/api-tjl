@@ -8,12 +8,13 @@ import (
 )
 
 func GetProfile(p *models.Profile) (map[string]interface{}, error) {
-
 	profiles := []entities.Profile{}
 
-	query := `SELECT p.user_id AS id, p.fullname, p.avatar, u.phone, u.email 
+	query := `SELECT p.user_id AS id, p.fullname, p.avatar, u.phone, u.email, jc.name AS job_name
 	FROM profiles p 
 	INNER JOIN users u ON u.uid = p.user_id
+	INNER JOIN user_pick_jobs upj ON upj.user_id = u.uid
+	INNER JOIN job_categories jc ON jc.uid = upj.job_id
 	WHERE u.uid = '` + p.Id + `'`
 
 	err := db.Debug().Raw(query).Scan(&profiles).Error

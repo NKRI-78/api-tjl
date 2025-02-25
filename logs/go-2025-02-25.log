@@ -87,3 +87,6 @@
 	FROM profiles p 
 	INNER JOIN users u ON ' at line 1
 [ERROR]: 2025-02-25 12:23:02 - In Server: Error 1054: Unknown column 'p.uid' in 'field list'
+[ERROR]: 2025-02-25 12:30:18 - In Server: Error 1054: Unknown column 'upj.name' in 'field list'
+[ERROR]: 2025-02-25 12:30:20 - In Server: Error 1054: Unknown column 'upj.name' in 'field list'
+[ERROR]: 2025-02-25 12:30:51 - In Server: Error 1054: Unknown column 'upj.name' in 'field list'
