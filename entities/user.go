@@ -26,13 +26,13 @@ type CheckJobs struct {
 }
 
 type UserLogin struct {
-	Uid         string `json:"uid"`
-	EmailActive int    `json:"email_active"`
-	Password    string `json:"password"`
+	Uid      string `json:"uid"`
+	Enabled  int    `json:"enabled"`
+	Password string `json:"password"`
 }
 
 type UserOtp struct {
-	Uid         string    `json:"uid"`
-	EmailActive int       `json:"email_active"`
-	OtpDate     time.Time `json:"otp_date"`
+	Uid     string    `json:"uid"`
+	Enabled int       `json:"enabled"`
+	OtpDate time.Time `json:"otp_date"`
 }
