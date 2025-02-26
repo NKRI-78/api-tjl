@@ -74,6 +74,7 @@ func main() {
 	// Forum
 	router.HandleFunc("/api/v1/forum-store", controllers.ForumStore).Methods("POST")
 	router.HandleFunc("/api/v1/forum-delete", controllers.ForumDelete).Methods("DELETE")
+	router.HandleFunc("/api/v1/forum-list", controllers.ForumList).Methods("GET")
 	router.HandleFunc("/api/v1/forum-type", controllers.ForumCategory).Methods("GET")
 
 	// Content Comment

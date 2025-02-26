@@ -65,3 +65,21 @@
 [ERROR]: 2025-02-26 14:42:27 - In Server: record not found
 [INFO]: 2025-02-26 14:45:17 - Forum Store success
 [INFO]: 2025-02-26 14:45:28 - Forum Delete success
+[INFO]: 2025-02-26 14:46:09 - Fetch Forum Category success
+[INFO]: 2025-02-26 14:46:16 - Fetch Forum Category success
+[INFO]: 2025-02-26 14:46:17 - Fetch Forum Category success
+[INFO]: 2025-02-26 14:46:57 - Fetch Forum Category success
+[INFO]: 2025-02-26 14:48:11 - Fetch Forum Category success
+[ERROR]: 2025-02-26 14:50:34 - In Server: Missing auth token
+[INFO]: 2025-02-26 14:50:39 - Forum Delete success
+[INFO]: 2025-02-26 14:50:45 - Fetch Forum Category success
+[INFO]: 2025-02-26 15:23:08 - Forum Store success
+[ERROR]: 2025-02-26 15:23:17 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ft.name AS forum_type_name, 
+	f.user_id, f.created_at
+	FROM forums f
+	INNER JOIN' at line 2
+[ERROR]: 2025-02-26 15:23:29 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 8
+[ERROR]: 2025-02-26 15:23:46 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 8
+[ERROR]: 2025-02-26 15:25:10 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 8
+[ERROR]: 2025-02-26 15:25:39 - In Server: Error 1054: Unknown column 'f.type_id' in 'on clause'
+[INFO]: 2025-02-26 15:26:02 - Forum Delete success
