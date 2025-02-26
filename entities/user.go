@@ -20,6 +20,7 @@ type User struct {
 type Profile struct {
 	Id       string `json:"id"`
 	Avatar   string `json:"avatar"`
+	Phone    string `json:"phone"`
 	Fullname string `json:"fullname"`
 	Email    string `json:"email"`
 	JobId    string `json:"job_id"`
@@ -29,6 +30,7 @@ type Profile struct {
 type ProfileResponse struct {
 	Id       string             `json:"id"`
 	Avatar   string             `json:"avatar"`
+	Phone    string             `json:"phone"`
 	Fullname string             `json:"fullname"`
 	Email    string             `json:"email"`
 	Job      ProfileJobResponse `json:"job"`

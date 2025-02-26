@@ -36,6 +36,7 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 
 	profile.Id = profiles[0].Id
 	profile.Avatar = profiles[0].Avatar
+	profile.Phone = profiles[0].Phone
 	profile.Email = profiles[0].Email
 	profile.Fullname = profiles[0].Fullname
 	profile.Job = entities.ProfileJobResponse{

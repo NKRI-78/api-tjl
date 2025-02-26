@@ -69,13 +69,12 @@ func main() {
 	router.HandleFunc("/api/v1/verify-otp", controllers.VerifyOtp).Methods("POST")
 
 	// Jobs
-	router.HandleFunc("/api/v1/job-categories", controllers.JobCategories).Methods("GET")
+	router.HandleFunc("/api/v1/job-categories", controllers.JobCategory).Methods("GET")
 
 	// Forum
-	router.HandleFunc("/api/v1/forum-type", controllers.GetForumCategory).Methods("GET")
-	router.HandleFunc("/api/v1/content/delete", controllers.DeleteContent).Methods("DELETE")
-	router.HandleFunc("/api/v1/content-upload", controllers.CreateMediaContent).Methods("POST")
-	router.HandleFunc("/api/v1/content", controllers.CreateContent).Methods("POST")
+	router.HandleFunc("/api/v1/forum-store", controllers.ForumStore).Methods("POST")
+	router.HandleFunc("/api/v1/forum-delete", controllers.ForumDelete).Methods("DELETE")
+	router.HandleFunc("/api/v1/forum-type", controllers.ForumCategory).Methods("GET")
 
 	// Content Comment
 	router.HandleFunc("/api/v1/content/comment", controllers.CreateContentComment).Methods("POST")
