@@ -30,14 +30,14 @@ type ForumType struct {
 }
 
 type ForumMedia struct {
-	ForumId string `json:"forum_id"`
-	Path    string `json:"path"`
-	Size    string `json:"size"`
+	Id   int    `json:"id"`
+	Path string `json:"path"`
 }
 
 type ForumLikeQuery struct {
 	Id       string `json:"id"`
 	UserId   string `json:"user_id"`
+	Avatar   string `json:"avatar"`
 	Fullname string `json:"fullname"`
 }
 
@@ -49,6 +49,7 @@ type ForumLike struct {
 type ForumCommentQuery struct {
 	Id       string `json:"id"`
 	Comment  string `json:"comment"`
+	Avatar   string `json:"avatar"`
 	UserId   string `json:"user_id"`
 	Fullname string `json:"fullname"`
 }
@@ -61,11 +62,13 @@ type ForumComment struct {
 
 type ForumCommentUser struct {
 	Id       string `json:"id"`
+	Avatar   string `json:"avatar"`
 	Fullname string `json:"fullname"`
 }
 
 type ForumLikeUser struct {
 	Id       string `json:"id"`
+	Avatar   string `json:"avatar"`
 	Fullname string `json:"fullname"`
 }
 
