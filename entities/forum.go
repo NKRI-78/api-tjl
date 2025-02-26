@@ -55,12 +55,33 @@ type ForumCommentQuery struct {
 }
 
 type ForumComment struct {
-	Id      string           `json:"id"`
-	Comment string           `json:"comment"`
-	User    ForumCommentUser `json:"user"`
+	Id      string              `json:"id"`
+	Comment string              `json:"comment"`
+	User    ForumCommentUser    `json:"user"`
+	Reply   []ForumCommentReply `json:"replies"`
 }
 
 type ForumCommentUser struct {
+	Id       string `json:"id"`
+	Avatar   string `json:"avatar"`
+	Fullname string `json:"fullname"`
+}
+
+type ForumCommentReplyQuery struct {
+	Id       string `json:"id"`
+	Reply    string `json:"reply"`
+	Avatar   string `json:"avatar"`
+	UserId   string `json:"user_id"`
+	Fullname string `json:"fullname"`
+}
+
+type ForumCommentReply struct {
+	Id    string                `json:"id"`
+	Reply string                `json:"reply"`
+	User  ForumCommentReplyUser `json:"user"`
+}
+
+type ForumCommentReplyUser struct {
 	Id       string `json:"id"`
 	Avatar   string `json:"avatar"`
 	Fullname string `json:"fullname"`
