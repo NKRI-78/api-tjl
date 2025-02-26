@@ -22,10 +22,22 @@ type Profile struct {
 	Avatar   string `json:"avatar"`
 	Fullname string `json:"fullname"`
 	Email    string `json:"email"`
+	JobId    string `json:"job_id"`
 	JobName  string `json:"job_name"`
 }
 
+type ProfileResponse struct {
+	Id       string             `json:"id"`
+	Avatar   string             `json:"avatar"`
+	Fullname string             `json:"fullname"`
+	Email    string             `json:"email"`
+	Job      ProfileJobResponse `json:"job"`
+}
 
+type ProfileJobResponse struct {
+	Id   string `json:"id"`
+	Name string `json:"name"`
+}
 
 type CheckAccount struct {
 	Email string `json:"email"`
