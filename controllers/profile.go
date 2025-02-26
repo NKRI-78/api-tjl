@@ -11,7 +11,7 @@ import (
 
 func Profile(w http.ResponseWriter, r *http.Request) {
 	data := &models.Profile{}
-	
+
 	tokenHeader := r.Header.Get("Authorization")
 
 	token := helper.DecodeJwt(tokenHeader)
@@ -22,7 +22,7 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 
 	data.Id = userId
 
-	result, err := 	services.GetProfile(data)
+	result, err := services.GetProfile(data)
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]interface{}{})
