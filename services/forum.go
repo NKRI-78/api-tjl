@@ -107,7 +107,7 @@ func ForumList(search, page, limit string) (map[string]interface{}, error) {
 
 		var dataForumMedia = make([]entities.ForumMedia, 0)
 
-		rows, errForumMediaQuery := db.Debug().Raw(`SELECT forum_id, path, size 
+		rows, errForumMediaQuery := db.Debug().Raw(`SELECT id, path 
 			FROM forum_medias 
 			WHERE forum_id = '` + forum.Id + `'`).Rows()
 
@@ -124,13 +124,10 @@ func ForumList(search, page, limit string) (map[string]interface{}, error) {
 				return nil, errors.New(errScanRows.Error())
 			}
 
-			if forumMediaAssign.Path != "" {
-				forumMediaAssign.ForumId = forumMedia.ForumId
-				forumMediaAssign.Path = forumMedia.Path
-				forumMediaAssign.Size = forumMedia.Size
+			forumMediaAssign.Id = forumMedia.Id
+			forumMediaAssign.Path = forumMedia.Path
 
-				dataForumMedia = append(dataForumMedia, forumMediaAssign)
-			}
+			dataForumMedia = append(dataForumMedia, forumMediaAssign)
 		}
 
 		// # CLOSE ----- forum media ----- # //
@@ -139,7 +136,8 @@ func ForumList(search, page, limit string) (map[string]interface{}, error) {
 
 		var dataForumLike = make([]entities.ForumLike, 0)
 
-		rows, errForumLike := db.Debug().Raw(`SELECT fl.uid AS id, p.user_id, p.fullname 
+		rows, errForumLike := db.Debug().Raw(`SELECT fl.uid AS id,
+		p.user_id, p.avatar, p.fullname 
 		FROM forum_likes fl 
 		INNER JOIN profiles p ON p.user_id = fl.user_id
 		WHERE fl.forum_id = '` + forum.Id + `'`).Rows()
@@ -160,6 +158,7 @@ func ForumList(search, page, limit string) (map[string]interface{}, error) {
 			forumLikeAssign.Id = forumLike.Id
 			forumLikeAssign.User = entities.ForumLikeUser{
 				Id:       forumLike.UserId,
+				Avatar:   forumLike.Avatar,
 				Fullname: forumLike.Fullname,
 			}
 
@@ -172,7 +171,7 @@ func ForumList(search, page, limit string) (map[string]interface{}, error) {
 
 		var dataForumComment = make([]entities.ForumComment, 0)
 
-		rows, errForumComment := db.Debug().Raw(`SELECT fc.uid AS id, fc.comment, p.user_id, p.fullname 
+		rows, errForumComment := db.Debug().Raw(`SELECT fc.uid AS id, p.avatar, fc.comment, p.user_id, p.fullname 
 		FROM forum_comments fc
 		INNER JOIN profiles p ON p.user_id = fc.user_id
 		WHERE fc.forum_id = '` + forum.Id + `'`).Rows()
@@ -194,6 +193,7 @@ func ForumList(search, page, limit string) (map[string]interface{}, error) {
 			forumCommentAssign.Comment = forumComment.Comment
 			forumCommentAssign.User = entities.ForumCommentUser{
 				Id:       forumComment.UserId,
+				Avatar:   forumComment.Avatar,
 				Fullname: forumComment.Fullname,
 			}
 
