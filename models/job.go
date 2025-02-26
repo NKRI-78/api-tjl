@@ -5,3 +5,4 @@ import (
 )
 
 type JobCategory entities.JobCategory
+type Job entities.Job

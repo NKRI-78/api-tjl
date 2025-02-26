@@ -71,8 +71,8 @@ func main() {
 	// Jobs
 	router.HandleFunc("/api/v1/job-categories", controllers.JobCategories).Methods("GET")
 
-	// Content
-	router.HandleFunc("/api/v1/content", controllers.All).Methods("GET")
+	// Forum
+	router.HandleFunc("/api/v1/forum-type", controllers.GetForumCategory).Methods("GET")
 	router.HandleFunc("/api/v1/content/delete", controllers.DeleteContent).Methods("DELETE")
 	router.HandleFunc("/api/v1/content-upload", controllers.CreateMediaContent).Methods("POST")
 	router.HandleFunc("/api/v1/content", controllers.CreateContent).Methods("POST")
@@ -86,9 +86,6 @@ func main() {
 
 	// Content Unlike
 	router.HandleFunc("/api/v1/content/unlike", controllers.CreateContentUnlike).Methods("POST")
-
-	// Membernear
-	router.HandleFunc("/api/v1/membernear/all", controllers.GetMembernear).Methods("GET")
 
 	// Media
 	router.HandleFunc("/api/v1/media/upload", controllers.Upload).Methods("POST")

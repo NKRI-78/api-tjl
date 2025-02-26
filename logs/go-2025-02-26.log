@@ -1,0 +1,6 @@
+[ERROR]: 2025-02-26 12:25:00 - In Server: Missing auth token
+[ERROR]: 2025-02-26 12:25:05 - In Server: Error 1054: Unknown column 'uid' in 'field list'
+[INFO]: 2025-02-26 12:25:31 - Fetch Forum Category success
+[INFO]: 2025-02-26 12:25:32 - Fetch Forum Category success
+[INFO]: 2025-02-26 12:26:41 - Fetch Forum Category success
+[INFO]: 2025-02-26 12:26:53 - Fetch Forum Category success
