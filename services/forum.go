@@ -22,6 +22,7 @@ func ForumList(search, page, limit string) (map[string]interface{}, error) {
 	var forumLikeAssign entities.ForumLike
 	var forumComment entities.ForumCommentQuery
 	var forumCommentAssign entities.ForumComment
+	var forumCommentReply entities.ForumCommentReplyQuery
 	var forumMedia entities.ForumMedia
 	var forumMediaAssign entities.ForumMedia
 	var user entities.ForumUser
@@ -189,8 +190,42 @@ func ForumList(search, page, limit string) (map[string]interface{}, error) {
 				return nil, errors.New(errScanRows.Error())
 			}
 
+			var dataForumCommentReply = make([]entities.ForumCommentReply, 0)
+
+			rows, errForumCommentReply := db.Debug().Raw(`SELECT fcr.uid AS id, fcr.reply, p.avatar, p.user_id, p.fullname 
+			FROM forum_comment_replies fcr
+			INNER JOIN profiles p ON p.user_id = fcr.user_id
+			WHERE fcr.comment_id = '` + forumComment.Id + `'`).Rows()
+
+			for rows.Next() {
+				errScanRows := db.ScanRows(rows, &forumCommentReply)
+
+				if errScanRows != nil {
+					helper.Logger("error", "In Server: "+errScanRows.Error())
+					return nil, errors.New(errScanRows.Error())
+				}
+
+				// CONTINUE HERE
+
+				dataForumCommentReply = append(dataForumCommentReply, entities.ForumCommentReply{
+					Id:    forumCommentReply.Id,
+					Reply: forumCommentReply.Reply,
+					User: entities.ForumCommentReplyUser{
+						Id:       forumCommentReply.Id,
+						Avatar:   forumCommentReply.Avatar,
+						Fullname: forumCommentReply.Fullname,
+					},
+				})
+			}
+
+			if errForumCommentReply != nil {
+				helper.Logger("error", "In Server: "+errForumComment.Error())
+				return nil, errors.New(errForumComment.Error())
+			}
+
 			forumCommentAssign.Id = forumComment.Id
 			forumCommentAssign.Comment = forumComment.Comment
+			forumCommentAssign.Reply = dataForumCommentReply
 			forumCommentAssign.User = entities.ForumCommentUser{
 				Id:       forumComment.UserId,
 				Avatar:   forumComment.Avatar,
