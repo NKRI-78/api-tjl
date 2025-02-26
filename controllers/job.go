@@ -14,5 +14,6 @@ func JobCategories(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	helper.Logger("info", "Fetch Job Category success")
 	helper.Response(w, http.StatusOK, false, "Successfully", result["data"])
 }
