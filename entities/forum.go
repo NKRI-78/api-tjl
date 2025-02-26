@@ -1,12 +1,14 @@
 package entities
 
 type ForumResponse struct {
-	Id        string       `json:"id"`
-	Title     string       `json:"title"`
-	Caption   string       `json:"caption"`
-	Media     []ForumMedia `json:"media"`
-	ForumType ForumType    `json:"type"`
-	User      ForumUser    `json:"user"`
+	Id        string         `json:"id"`
+	Title     string         `json:"title"`
+	Caption   string         `json:"caption"`
+	Media     []ForumMedia   `json:"medias"`
+	Comment   []ForumComment `json:"comments"`
+	Like      []ForumLike    `json:"likes"`
+	ForumType ForumType      `json:"type"`
+	User      ForumUser      `json:"user"`
 }
 
 type Forum struct {
@@ -33,19 +35,38 @@ type ForumMedia struct {
 	Size    string `json:"size"`
 }
 
+type ForumLikeQuery struct {
+	Id       string `json:"id"`
+	UserId   string `json:"user_id"`
+	Fullname string `json:"fullname"`
+}
+
 type ForumLike struct {
-	Id       string    `json:"id"`
-	UserId   string    `json:"user_id"`
-	Fullname string    `json:"fullname"`
-	User     ForumUser `json:"user"`
+	Id   string        `json:"id"`
+	User ForumLikeUser `json:"user"`
+}
+
+type ForumCommentQuery struct {
+	Id       string `json:"id"`
+	Comment  string `json:"comment"`
+	UserId   string `json:"user_id"`
+	Fullname string `json:"fullname"`
 }
 
 type ForumComment struct {
-	Id       string    `json:"id"`
-	Comment  string    `json:"comment"`
-	UserId   string    `json:"user_id"`
-	Fullname string    `json:"fullname"`
-	User     ForumUser `json:"user"`
+	Id      string           `json:"id"`
+	Comment string           `json:"comment"`
+	User    ForumCommentUser `json:"user"`
+}
+
+type ForumCommentUser struct {
+	Id       string `json:"id"`
+	Fullname string `json:"fullname"`
+}
+
+type ForumLikeUser struct {
+	Id       string `json:"id"`
+	Fullname string `json:"fullname"`
 }
 
 type ForumUser struct {

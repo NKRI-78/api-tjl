@@ -18,9 +18,9 @@ func ForumList(search, page, limit string) (map[string]interface{}, error) {
 	var allForum []models.Forum
 	var appendForumAssign = make([]entities.ForumResponse, 0)
 	var forum entities.Forum
-	var forumLike entities.ForumLike
+	var forumLike entities.ForumLikeQuery
 	var forumLikeAssign entities.ForumLike
-	var forumComment entities.ForumComment
+	var forumComment entities.ForumCommentQuery
 	var forumCommentAssign entities.ForumComment
 	var forumMedia entities.ForumMedia
 	var forumMediaAssign entities.ForumMedia
@@ -103,7 +103,7 @@ func ForumList(search, page, limit string) (map[string]interface{}, error) {
 			userAssign.Phone = user.Phone
 		}
 
-		// # CLOSE ----- forum media ----- # //
+		// # ----- forum media ----- # //
 
 		var dataForumMedia = make([]entities.ForumMedia, 0)
 
@@ -133,9 +133,9 @@ func ForumList(search, page, limit string) (map[string]interface{}, error) {
 			}
 		}
 
-		// # ----- forum media ----- # //
+		// # CLOSE ----- forum media ----- # //
 
-		// # CLOSE ----- forum like ----- # //
+		// # ----- forum like ----- # //
 
 		var dataForumLike = make([]entities.ForumLike, 0)
 
@@ -158,7 +158,7 @@ func ForumList(search, page, limit string) (map[string]interface{}, error) {
 			}
 
 			forumLikeAssign.Id = forumLike.Id
-			forumLikeAssign.User = entities.ForumUser{
+			forumLikeAssign.User = entities.ForumLikeUser{
 				Id:       forumLike.UserId,
 				Fullname: forumLike.Fullname,
 			}
@@ -192,7 +192,7 @@ func ForumList(search, page, limit string) (map[string]interface{}, error) {
 
 			forumCommentAssign.Id = forumComment.Id
 			forumCommentAssign.Comment = forumComment.Comment
-			forumCommentAssign.User = entities.ForumUser{
+			forumCommentAssign.User = entities.ForumCommentUser{
 				Id:       forumComment.UserId,
 				Fullname: forumComment.Fullname,
 			}
@@ -207,6 +207,8 @@ func ForumList(search, page, limit string) (map[string]interface{}, error) {
 			Title:   forum.Title,
 			Caption: forum.Caption,
 			Media:   dataForumMedia,
+			Comment: dataForumComment,
+			Like:    dataForumLike,
 			ForumType: entities.ForumType{
 				Id:   forum.ForumTypeId,
 				Name: forum.ForumTypeName,
