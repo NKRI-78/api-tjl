@@ -54,11 +54,17 @@ func ForumList(search, page, limit string) (map[string]interface{}, error) {
 	nextPage = pageinteger + 1
 
 	rows, errForum := db.Debug().Raw(`SELECT f.uid AS id, f.title, f.caption,
+	p.fullname, 
+	p.user_id,
+	u.email,
+	u.phone,
 	ft.id AS forum_type_id, 
 	ft.name AS forum_type_name, 
 	f.user_id, f.created_at
 	FROM forums f
 	INNER JOIN forum_types ft ON ft.id = f.type
+	INNER JOIN profiles p ON f.user_id = p.user_id
+	INNER JOIN users u ON u.uid = p.user_id
 	WHERE f.title LIKE '%` + search + `%'
 	LIMIT ` + offset + `, ` + limit + ``).Rows()
 
@@ -200,9 +206,16 @@ func ForumList(search, page, limit string) (map[string]interface{}, error) {
 			Id:      forum.Id,
 			Title:   forum.Title,
 			Caption: forum.Caption,
+			Media:   dataForumMedia,
 			ForumType: entities.ForumType{
 				Id:   forum.ForumTypeId,
 				Name: forum.ForumTypeName,
+			},
+			User: entities.ForumUser{
+				Id:       forum.UserId,
+				Fullname: forum.Fullname,
+				Email:    forum.Email,
+				Phone:    forum.Phone,
 			},
 		})
 	}
