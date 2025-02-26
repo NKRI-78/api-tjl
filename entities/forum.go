@@ -1,10 +1,12 @@
 package entities
 
 type ForumResponse struct {
-	Id        string    `json:"id"`
-	Title     string    `json:"title"`
-	Caption   string    `json:"caption"`
-	ForumType ForumType `json:"type"`
+	Id        string       `json:"id"`
+	Title     string       `json:"title"`
+	Caption   string       `json:"caption"`
+	Media     []ForumMedia `json:"media"`
+	ForumType ForumType    `json:"type"`
+	User      ForumUser    `json:"user"`
 }
 
 type Forum struct {
@@ -12,6 +14,9 @@ type Forum struct {
 	Id            string `json:"id"`
 	Title         string `json:"title"`
 	Caption       string `json:"caption"`
+	Fullname      string `json:"fullname"`
+	Email         string `json:"email"`
+	Phone         string `json:"phone"`
 	ForumTypeId   int    `json:"forum_type_id"`
 	ForumTypeName string `json:"forum_type_name"`
 	UserId        string `json:"user_id"`
