@@ -21,5 +21,14 @@ func ForumList(w http.ResponseWriter, r *http.Request) {
 	println(result)
 
 	helper.Logger("info", "Forum Delete success")
-	helper.Response(w, http.StatusOK, false, "Successfully", nil)
+	helper.ResponseWithPagination(w, http.StatusOK, false, "Successfully",
+		result["total"],
+		result["per_page"],
+		result["prev_page"],
+		result["next_page"],
+		result["current_page"],
+		result["next_url"],
+		result["prev_url"],
+		result["data"],
+	)
 }

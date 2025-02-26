@@ -83,3 +83,31 @@
 [ERROR]: 2025-02-26 15:25:10 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 8
 [ERROR]: 2025-02-26 15:25:39 - In Server: Error 1054: Unknown column 'f.type_id' in 'on clause'
 [INFO]: 2025-02-26 15:26:02 - Forum Delete success
+[ERROR]: 2025-02-26 16:31:51 - In Server: Error 1146: Table 'tjl.user_profiles' doesn't exist
+[ERROR]: 2025-02-26 16:32:11 - In Server: Error 1054: Unknown column 'fl.uid' in 'field list'
+[ERROR]: 2025-02-26 16:32:12 - In Server: Error 1054: Unknown column 'fl.uid' in 'field list'
+[INFO]: 2025-02-26 16:32:53 - Forum Delete success
+[INFO]: 2025-02-26 16:40:07 - Forum Delete success
+[INFO]: 2025-02-26 16:41:23 - Forum Delete success
+[INFO]: 2025-02-26 16:54:33 - Forum Delete success
+[INFO]: 2025-02-26 16:54:40 - Forum Delete success
+[INFO]: 2025-02-26 16:55:09 - Forum Delete success
+[INFO]: 2025-02-26 16:55:10 - Forum Delete success
+[INFO]: 2025-02-26 16:55:10 - Forum Delete success
+[INFO]: 2025-02-26 16:55:11 - Forum Delete success
+[INFO]: 2025-02-26 16:55:12 - Forum Delete success
+[INFO]: 2025-02-26 16:55:14 - Forum Delete success
+[INFO]: 2025-02-26 16:55:15 - Forum Delete success
+[INFO]: 2025-02-26 16:55:38 - Forum Delete success
+[INFO]: 2025-02-26 16:55:40 - Forum Delete success
+[INFO]: 2025-02-26 16:55:57 - Forum Delete success
+[INFO]: 2025-02-26 16:55:59 - Forum Delete success
+[INFO]: 2025-02-26 16:55:59 - Forum Delete success
+[INFO]: 2025-02-26 16:56:02 - Forum Delete success
+[INFO]: 2025-02-26 16:56:03 - Forum Delete success
+[INFO]: 2025-02-26 16:56:04 - Forum Delete success
+[INFO]: 2025-02-26 16:56:05 - Forum Delete success
+[INFO]: 2025-02-26 16:56:05 - Forum Delete success
+[INFO]: 2025-02-26 16:56:06 - Forum Delete success
+[INFO]: 2025-02-26 16:56:06 - Forum Delete success
+[INFO]: 2025-02-26 16:56:07 - Forum Delete success
