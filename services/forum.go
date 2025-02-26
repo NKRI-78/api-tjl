@@ -13,14 +13,19 @@ import (
 )
 
 func ForumList(search, page, limit string) (map[string]interface{}, error) {
-	url := os.Getenv("API_URL")
-
-	println(search)
-	print(page)
-	println(limit)
+	url := os.Getenv("API_URL_DEV")
 
 	var allForum []models.Forum
+	var appendForumAssign = make([]entities.ForumResponse, 0)
 	var forum entities.Forum
+	var forumLike entities.ForumLike
+	var forumLikeAssign entities.ForumLike
+	var forumComment entities.ForumComment
+	var forumCommentAssign entities.ForumComment
+	var forumMedia entities.ForumMedia
+	var forumMediaAssign entities.ForumMedia
+	var user entities.ForumUser
+	var userAssign entities.ForumUser
 
 	pageinteger, _ := strconv.Atoi(page)
 	limitinteger, _ := strconv.Atoi(limit)
@@ -70,7 +75,136 @@ func ForumList(search, page, limit string) (map[string]interface{}, error) {
 			return nil, errors.New(errForumRows.Error())
 		}
 
-		
+		rows, errUser := db.Debug().Raw(`SELECT email, phone, fullname FROM users u 
+		INNER JOIN profiles p ON p.user_id = u.uid 
+		WHERE u.uid = '` + forum.UserId + `'`).Rows()
+
+		if errUser != nil {
+			helper.Logger("error", "In Server: "+errUser.Error())
+			return nil, errors.New(errUser.Error())
+		}
+
+		for rows.Next() {
+			errScanRows := db.ScanRows(rows, &user)
+
+			if errScanRows != nil {
+				helper.Logger("error", "In Server: "+errScanRows.Error())
+				return nil, errors.New(errScanRows.Error())
+			}
+
+			userAssign.Fullname = user.Fullname
+			userAssign.Email = user.Email
+			userAssign.Phone = user.Phone
+		}
+
+		// # CLOSE ----- forum media ----- # //
+
+		var dataForumMedia = make([]entities.ForumMedia, 0)
+
+		rows, errForumMediaQuery := db.Debug().Raw(`SELECT forum_id, path, size 
+			FROM forum_medias 
+			WHERE forum_id = '` + forum.Id + `'`).Rows()
+
+		if errForumMediaQuery != nil {
+			helper.Logger("error", "In Server: "+errForumMediaQuery.Error())
+			return nil, errors.New(errForumMediaQuery.Error())
+		}
+
+		for rows.Next() {
+			errScanRows := db.ScanRows(rows, &forumMedia)
+
+			if errScanRows != nil {
+				helper.Logger("error", "In Server: "+errScanRows.Error())
+				return nil, errors.New(errScanRows.Error())
+			}
+
+			if forumMediaAssign.Path != "" {
+				forumMediaAssign.ForumId = forumMedia.ForumId
+				forumMediaAssign.Path = forumMedia.Path
+				forumMediaAssign.Size = forumMedia.Size
+
+				dataForumMedia = append(dataForumMedia, forumMediaAssign)
+			}
+		}
+
+		// # ----- forum media ----- # //
+
+		// # CLOSE ----- forum like ----- # //
+
+		var dataForumLike = make([]entities.ForumLike, 0)
+
+		rows, errForumLike := db.Debug().Raw(`SELECT fl.uid AS id, p.user_id, p.fullname 
+		FROM forum_likes fl 
+		INNER JOIN profiles p ON p.user_id = fl.user_id
+		WHERE fl.forum_id = '` + forum.Id + `'`).Rows()
+
+		if errForumLike != nil {
+			helper.Logger("error", "In Server: "+errForumLike.Error())
+			return nil, errors.New(errForumLike.Error())
+		}
+
+		for rows.Next() {
+			errScanRows := db.ScanRows(rows, &forumLike)
+
+			if errScanRows != nil {
+				helper.Logger("error", "In Server: "+errScanRows.Error())
+				return nil, errors.New(errScanRows.Error())
+			}
+
+			forumLikeAssign.Id = forumLike.Id
+			forumLikeAssign.User = entities.ForumUser{
+				Id:       forumLike.UserId,
+				Fullname: forumLike.Fullname,
+			}
+
+			dataForumLike = append(dataForumLike, forumLikeAssign)
+		}
+
+		// # CLOSE ----- forum like ----- # //
+
+		// # ----- forum comment ----- # //
+
+		var dataForumComment = make([]entities.ForumComment, 0)
+
+		rows, errForumComment := db.Debug().Raw(`SELECT fc.uid AS id, fc.comment, p.user_id, p.fullname 
+		FROM forum_comments fc
+		INNER JOIN profiles p ON p.user_id = fc.user_id
+		WHERE fc.forum_id = '` + forum.Id + `'`).Rows()
+
+		if errForumComment != nil {
+			helper.Logger("error", "In Server: "+errForumComment.Error())
+			return nil, errors.New(errForumComment.Error())
+		}
+
+		for rows.Next() {
+			errScanRows := db.ScanRows(rows, &forumComment)
+
+			if errScanRows != nil {
+				helper.Logger("error", "In Server: "+errScanRows.Error())
+				return nil, errors.New(errScanRows.Error())
+			}
+
+			forumCommentAssign.Id = forumComment.Id
+			forumCommentAssign.Comment = forumComment.Comment
+			forumCommentAssign.User = entities.ForumUser{
+				Id:       forumComment.UserId,
+				Fullname: forumComment.Fullname,
+			}
+
+			dataForumComment = append(dataForumComment, forumCommentAssign)
+		}
+
+		// # CLOSE ----- forum comment ----- # //
+
+		appendForumAssign = append(appendForumAssign, entities.ForumResponse{
+			Id:      forum.Id,
+			Title:   forum.Title,
+			Caption: forum.Caption,
+			ForumType: entities.ForumType{
+				Id:   forum.ForumTypeId,
+				Name: forum.ForumTypeName,
+			},
+		})
 	}
 
 	var nextUrl = strconv.Itoa(nextPage)
@@ -84,6 +218,7 @@ func ForumList(search, page, limit string) (map[string]interface{}, error) {
 		"next_page":    nextPage,
 		"next_url":     url + "?page=" + nextUrl,
 		"prev_url":     url + "?page=" + prevUrl,
+		"data":         &appendForumAssign,
 	}, nil
 }
 
