@@ -31,7 +31,7 @@ func VerifyOtp(u *models.User) (map[string]interface{}, error) {
 	isUserExist := len(users)
 
 	if isUserExist == 0 {
-		return nil, errors.New("user / otp is invalid")
+		return nil, errors.New("USER_OR_OTP_IS_INVALID")
 	}
 
 	uid := users[0].Uid
@@ -40,7 +40,7 @@ func VerifyOtp(u *models.User) (map[string]interface{}, error) {
 
 	if emailActive == 1 {
 		helper.Logger("error", "In Server: Account is already active")
-		return nil, errors.New("account is already active")
+		return nil, errors.New("ACCOUNT_IS_ALREADY_ACTIVE")
 	}
 
 	currentTime := time.Now()
@@ -48,7 +48,7 @@ func VerifyOtp(u *models.User) (map[string]interface{}, error) {
 
 	if elapsed >= 1*time.Minute {
 		helper.Logger("error", "In Server: Otp is expired")
-		return nil, errors.New("otp is expired")
+		return nil, errors.New("OTP_IS_EXPIRED")
 	}
 
 	errUpdateEmailActive := db.Debug().Exec(`UPDATE users SET enabled = 1, email_active_date = NOW()
@@ -87,7 +87,7 @@ func ResendOtp(u *models.User) (map[string]interface{}, error) {
 	isUserExist := len(users)
 
 	if isUserExist == 0 {
-		return nil, errors.New("user not found")
+		return nil, errors.New("USER_NOT_FOUND")
 	}
 
 	emailActive := users[0].Enabled
@@ -95,7 +95,7 @@ func ResendOtp(u *models.User) (map[string]interface{}, error) {
 
 	if emailActive == 1 {
 		helper.Logger("error", "In Server: Account is already active")
-		return nil, errors.New("account is already active")
+		return nil, errors.New("ACCOUNT_IS_ALREADY_ACTIVE")
 	}
 
 	currentTime := time.Now()
@@ -139,7 +139,7 @@ func Login(u *models.User) (map[string]interface{}, error) {
 	isUserExist := len(users)
 
 	if isUserExist == 0 {
-		return nil, errors.New("user not found")
+		return nil, errors.New("USER_NOT_FOUND")
 	}
 
 	otp := helper.CodeOtpSecure()
@@ -162,7 +162,7 @@ func Login(u *models.User) (map[string]interface{}, error) {
 		}
 
 		helper.Logger("error", "In Server: Please activate your account")
-		return nil, errors.New("please activate your account")
+		return nil, errors.New("PLEASE_ACTIVATE_YOUR_ACCOUNT")
 	}
 
 	passHashed := users[0].Password
@@ -171,7 +171,7 @@ func Login(u *models.User) (map[string]interface{}, error) {
 
 	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
 		helper.Logger("error", "In Server: "+err.Error())
-		return nil, errors.New("credentials is incorrect")
+		return nil, errors.New("CREDENTIALS_IS_INCORRECT")
 	}
 
 	token, err := middleware.CreateToken(user.Id)
@@ -227,14 +227,14 @@ func Register(u *models.User) (map[string]interface{}, error) {
 
 	if isUserExist == 1 {
 		helper.Logger("error", "In Server: User already exist")
-		return nil, errors.New("user already exist")
+		return nil, errors.New("USER_ALREADY_EXIST")
 	}
 
 	isJobExist := len(jobs)
 
 	if isJobExist == 0 {
 		helper.Logger("error", "In Server: Job not found")
-		return nil, errors.New("job not found")
+		return nil, errors.New("JOB_NOT_FOUND")
 	}
 
 	errInsertUser := db.Debug().Exec(`INSERT INTO users (uid, email, phone, password, otp) 
