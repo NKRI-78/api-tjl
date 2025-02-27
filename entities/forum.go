@@ -1,14 +1,16 @@
 package entities
 
 type ForumResponse struct {
-	Id        string         `json:"id"`
-	Title     string         `json:"title"`
-	Caption   string         `json:"caption"`
-	Media     []ForumMedia   `json:"medias"`
-	Comment   []ForumComment `json:"comments"`
-	Like      []ForumLike    `json:"likes"`
-	ForumType ForumType      `json:"type"`
-	User      ForumUser      `json:"user"`
+	Id           string         `json:"id"`
+	Title        string         `json:"title"`
+	Caption      string         `json:"caption"`
+	Media        []ForumMedia   `json:"medias"`
+	Comment      []ForumComment `json:"comments"`
+	Like         []ForumLike    `json:"likes"`
+	CommentCount int            `json:"comment_count"`
+	LikeCount    int            `json:"like_count"`
+	ForumType    ForumType      `json:"type"`
+	User         ForumUser      `json:"user"`
 }
 
 type Forum struct {
@@ -55,10 +57,11 @@ type ForumCommentQuery struct {
 }
 
 type ForumComment struct {
-	Id      string              `json:"id"`
-	Comment string              `json:"comment"`
-	User    ForumCommentUser    `json:"user"`
-	Reply   []ForumCommentReply `json:"replies"`
+	Id         string              `json:"id"`
+	Comment    string              `json:"comment"`
+	User       ForumCommentUser    `json:"user"`
+	Reply      []ForumCommentReply `json:"replies"`
+	ReplyCount int                 `json:"reply_count"`
 }
 
 type ForumCommentUser struct {

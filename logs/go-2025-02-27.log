@@ -1,0 +1,25 @@
+[ERROR]: 2025-02-27 10:10:39 - In Server: Missing auth token
+[INFO]: 2025-02-27 10:10:45 - Forum Detail success
+[INFO]: 2025-02-27 10:10:59 - Forum Detail success
+[INFO]: 2025-02-27 10:11:02 - Forum Detail success
+[INFO]: 2025-02-27 10:11:06 - Forum Detail success
+[ERROR]: 2025-02-27 10:30:12 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'abcdefgh' at line 13
+[ERROR]: 2025-02-27 10:30:28 - In Server: Error 1054: Unknown column 'abcdefgh' in 'where clause'
+[INFO]: 2025-02-27 10:30:47 - Forum Detail success
+[INFO]: 2025-02-27 10:31:19 - Forum Detail success
+[INFO]: 2025-02-27 10:31:50 - Forum Detail success
+[INFO]: 2025-02-27 10:32:08 - Forum Detail success
+[INFO]: 2025-02-27 10:33:26 - Forum Detail success
+[INFO]: 2025-02-27 10:44:08 - Forum Detail success
+[INFO]: 2025-02-27 10:44:25 - Forum Detail success
+[INFO]: 2025-02-27 10:45:06 - Forum Detail success
+[INFO]: 2025-02-27 10:46:54 - Forum Detail success
+[INFO]: 2025-02-27 10:47:11 - Forum Detail success
+[INFO]: 2025-02-27 10:47:14 - Forum Detail success
+[INFO]: 2025-02-27 10:50:55 - Forum Delete success
+[INFO]: 2025-02-27 10:52:50 - Forum Delete success
+[INFO]: 2025-02-27 10:53:42 - Forum Delete success
+[INFO]: 2025-02-27 10:53:44 - Forum Detail success
+[INFO]: 2025-02-27 10:55:13 - Forum Detail success
+[INFO]: 2025-02-27 10:55:42 - Forum Detail success
+[INFO]: 2025-02-27 10:55:49 - Forum Delete success
