@@ -10,7 +10,7 @@ import (
 func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 	profiles := []entities.Profile{}
 
-	query := `SELECT p.user_id AS id, p.fullname, p.avatar, u.phone, u.email, 
+	query := `SELECT p.user_id AS id, p.fullname, p.avatar, u.phone, u.email, u.enabled, 
 	jc.uid AS job_id,
 	jc.name AS job_name
 	FROM profiles p 
@@ -34,11 +34,20 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 
 	profile := entities.ProfileResponse{}
 
+	var enabled bool
+
+	if profiles[0].Enabled == 1 {
+		enabled = true
+	} else {
+		enabled = false
+	}
+
 	profile.Id = profiles[0].Id
 	profile.Avatar = profiles[0].Avatar
 	profile.Phone = profiles[0].Phone
 	profile.Email = profiles[0].Email
 	profile.Fullname = profiles[0].Fullname
+	profile.IsEnabled = enabled
 	profile.Job = entities.ProfileJobResponse{
 		Id:   profiles[0].JobId,
 		Name: profiles[0].JobName,
