@@ -57,3 +57,17 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 		"data": profile,
 	}, nil
 }
+
+func UpdateProfile(p *models.Profile) (map[string]interface{}, error) {
+
+	errUpdateProfile := db.Debug().Exec(`
+	UPDATE profiles SET fullname = '` + p.Fullname + `', 
+	avatar = '` + p.Avatar + `' WHERE user_id = '` + p.Id + `'`).Error
+
+	if errUpdateProfile != nil {
+		helper.Logger("error", "In Server: "+errUpdateProfile.Error())
+		return nil, errors.New(errUpdateProfile.Error())
+	}
+
+	return map[string]any{}, nil
+}
