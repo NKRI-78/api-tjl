@@ -61,8 +61,13 @@ func main() {
 	router.HandleFunc("/api/v1/login", controllers.Login).Methods("POST")
 	router.HandleFunc("/api/v1/register", controllers.Register).Methods("POST")
 
+	// Banner
+	router.HandleFunc("/api/v1/banner", controllers.BannerList).Methods("GET")
+	router.HandleFunc("/api/v1/banner-store", controllers.BannerStore).Methods("POST")
+
 	// Profile
 	router.HandleFunc("/api/v1/profile", controllers.Profile).Methods("GET")
+	router.HandleFunc("/api/v1/profile-update", controllers.ProfileUpdate).Methods("PUT")
 
 	// Otp
 	router.HandleFunc("/api/v1/resend-otp", controllers.ResendOtp).Methods("POST")
@@ -76,7 +81,7 @@ func main() {
 	router.HandleFunc("/api/v1/forum-delete", controllers.ForumDelete).Methods("DELETE")
 	router.HandleFunc("/api/v1/forum-list", controllers.ForumList).Methods("GET")
 	router.HandleFunc("/api/v1/forum-type", controllers.ForumCategory).Methods("GET")
-	router.HandleFunc("/api/v1/forum-detail/{id}", controllers.ForumDetail).Methods("GET") 
+	router.HandleFunc("/api/v1/forum-detail/{id}", controllers.ForumDetail).Methods("GET")
 
 	// Content Comment
 	router.HandleFunc("/api/v1/content/comment", controllers.CreateContentComment).Methods("POST")

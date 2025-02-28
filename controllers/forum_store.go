@@ -31,7 +31,8 @@ func ForumStore(w http.ResponseWriter, r *http.Request) {
 
 	Title := data.Title
 	Desc := data.Desc
-	Type := data.Type
+
+	data.UserId = userId
 
 	if Title == "" {
 		helper.Logger("error", "In Server: title is required")
@@ -44,11 +45,6 @@ func ForumStore(w http.ResponseWriter, r *http.Request) {
 		helper.Response(w, 400, true, "desc is required", map[string]interface{}{})
 		return
 	}
-
-	data.Title = Title
-	data.Desc = Desc
-	data.UserId = userId
-	data.Type = Type
 
 	result, err := service.ForumStore(data)
 
