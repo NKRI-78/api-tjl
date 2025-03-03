@@ -4,4 +4,5 @@ import (
 	"superapps/entities"
 )
 
-type DocumentStore entities.Document
+type Document entities.Document
+type DocumentStore entities.DocumentStore
