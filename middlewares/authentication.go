@@ -22,7 +22,7 @@ func JwtAuthentication(next http.Handler) http.Handler {
 			return
 		}
 
-		if r.URL.Path == "/api/v1/login" || r.URL.Path == "/api/v1/register" || r.URL.Path == "/api/v1/verify-otp" || r.URL.Path == "/api/v1/resend-otp" || r.URL.Path == "/api/v1/job-categories" {
+		if r.URL.Path == "/api/v1/login" || r.URL.Path == "/api/v1/register" || r.URL.Path == "/api/v1/verify-otp" || r.URL.Path == "/api/v1/resend-otp" || r.URL.Path == "/api/v1/job-categories" || r.URL.Path == "/api/v1/banner" {
 			next.ServeHTTP(w, r)
 			return
 		}
