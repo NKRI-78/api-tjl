@@ -65,6 +65,9 @@ func main() {
 	router.HandleFunc("/api/v1/banner", controllers.BannerList).Methods("GET")
 	router.HandleFunc("/api/v1/banner-store", controllers.BannerStore).Methods("POST")
 
+	// Document
+	router.HandleFunc("/api/v1/document-store", controllers.DocumentStore).Methods("POST")
+
 	// Profile
 	router.HandleFunc("/api/v1/profile", controllers.Profile).Methods("GET")
 	router.HandleFunc("/api/v1/profile-update", controllers.ProfileUpdate).Methods("PUT")
