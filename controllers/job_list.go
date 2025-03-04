@@ -7,7 +7,7 @@ import (
 )
 
 func JobList(w http.ResponseWriter, r *http.Request) {
-	result, err := services.GetJobCategory()
+	result, err := services.JobList()
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]interface{}{})

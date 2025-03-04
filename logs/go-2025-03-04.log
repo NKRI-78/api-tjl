@@ -34,3 +34,17 @@
 [ERROR]: 2025-03-04 14:44:13 - In Server: Otp is expired
 [ERROR]: 2025-03-04 14:44:46 - In Server: Otp is expired
 [ERROR]: 2025-03-04 14:45:11 - In Server: Otp is expired
+[INFO]: 2025-03-04 14:46:49 - Verify account success
+[INFO]: 2025-03-04 14:59:44 - Register success
+[ERROR]: 2025-03-04 15:00:01 - In Server: record not found
+[INFO]: 2025-03-04 15:00:05 - Verify account success
+[ERROR]: 2025-03-04 15:05:27 - In Server: record not found
+[INFO]: 2025-03-04 15:05:36 - Register success
+[ERROR]: 2025-03-04 15:07:42 - In Server: Otp is expired
+[INFO]: 2025-03-04 15:07:54 - Register success
+[INFO]: 2025-03-04 15:08:01 - Verify account success
+[ERROR]: 2025-03-04 15:25:29 - In Server: dial tcp 157.245.193.49:3306: connect: network is unreachable
+[ERROR]: 2025-03-04 15:35:06 - In Server: Missing auth token
+[ERROR]: 2025-03-04 15:35:10 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ON jc.uid = j.cat_id' at line 7
+[INFO]: 2025-03-04 15:35:10 - Fetch Job List success
+[INFO]: 2025-03-04 15:35:53 - Fetch Job List success
