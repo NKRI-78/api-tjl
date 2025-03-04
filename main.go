@@ -78,6 +78,7 @@ func main() {
 	router.HandleFunc("/api/v1/verify-otp", controllers.VerifyOtp).Methods("POST")
 
 	// Jobs
+	router.HandleFunc("/api/v1/job", controllers.JobList).Methods("GET")
 	router.HandleFunc("/api/v1/job-categories", controllers.JobCategory).Methods("GET")
 
 	// Forum

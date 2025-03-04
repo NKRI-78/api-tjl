@@ -33,10 +33,10 @@ func VerifyOtp(u *models.User) (map[string]interface{}, error) {
 	}
 
 	// Cek expired OTP (lebih efisien dengan time.Since)
-	// if time.Since(user.CreatedAt) >= time.Minute {
-	// 	helper.Logger("error", "In Server: Otp is expired")
-	// 	return nil, errors.New("OTP_IS_EXPIRED")
-	// }
+	if time.Since(user.CreatedAt.UTC()) >= time.Minute {
+		helper.Logger("error", "In Server: Otp is expired")
+		return nil, errors.New("OTP_IS_EXPIRED")
+	}
 
 	// Update status akun dengan parameterized query
 	errUpdate := db.Debug().Exec(`
@@ -55,7 +55,7 @@ func VerifyOtp(u *models.User) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	return map[string]interface{}{"token": token["token"]}, nil
+	return map[string]any{"token": token["token"]}, nil
 }
 
 func ResendOtp(u *models.User) (map[string]interface{}, error) {
@@ -169,10 +169,10 @@ func Login(u *models.User) (map[string]interface{}, error) {
 
 	access := token["token"]
 
-	return map[string]interface{}{"token": access}, nil
+	return map[string]any{"token": access}, nil
 }
 
-func Register(u *models.User) (map[string]interface{}, error) {
+func Register(u *models.User) (map[string]any, error) {
 
 	hashedPassword, err := helper.Hash(u.Password)
 	if err != nil {
@@ -258,5 +258,5 @@ func Register(u *models.User) (map[string]interface{}, error) {
 
 	access := token["token"]
 
-	return map[string]interface{}{"token": access}, nil
+	return map[string]any{"token": access}, nil
 }
