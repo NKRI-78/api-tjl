@@ -16,7 +16,7 @@ import (
 func VerifyOtp(u *models.User) (map[string]interface{}, error) {
 
 	users := []entities.UserOtp{}
-	query := `SELECT uid, enabled, otp_date FROM users 
+	query := `SELECT uid, enabled, created_at FROM users 
 	WHERE (email = '` + u.Val + `' OR phone = '` + u.Val + `') AND otp = '` + u.Otp + `'`
 
 	fmt.Println((query))
