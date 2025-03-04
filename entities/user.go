@@ -60,5 +60,5 @@ type UserLogin struct {
 type UserOtp struct {
 	Uid     string    `json:"uid"`
 	Enabled int       `json:"enabled"`
-	OtpDate time.Time `json:"otp_date"`
+	OtpDate time.Time `json:"created_at"`
 }
