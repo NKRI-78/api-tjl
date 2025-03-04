@@ -43,8 +43,8 @@ func VerifyOtp(u *models.User) (map[string]interface{}, error) {
 		return nil, errors.New("ACCOUNT_IS_ALREADY_ACTIVE")
 	}
 
-	currentTime := time.Now()
-	elapsed := currentTime.Sub(otpDate)
+	currentTime := time.Now().UTC()
+	elapsed := currentTime.Sub(otpDate.UTC())
 
 	if elapsed >= 1*time.Minute {
 		helper.Logger("error", "In Server: Otp is expired")
