@@ -2,7 +2,6 @@ package services
 
 import (
 	"errors"
-	"fmt"
 	entities "superapps/entities"
 	helper "superapps/helpers"
 	middleware "superapps/middlewares"
@@ -14,61 +13,49 @@ import (
 )
 
 func VerifyOtp(u *models.User) (map[string]interface{}, error) {
+	var user entities.UserOtp
 
-	users := []entities.UserOtp{}
-	query := `SELECT uid, enabled, created_at FROM users 
-	WHERE (email = '` + u.Val + `' OR phone = '` + u.Val + `') AND otp = '` + u.Otp + `'`
-
-	fmt.Println((query))
-
-	err := db.Debug().Raw(query).Scan(&users).Error
+	// Gunakan parameterized query untuk mencegah SQL Injection
+	err := db.Debug().Raw(`
+		SELECT uid, enabled, created_at 
+		FROM users 
+		WHERE (email = ? OR phone = ?) AND otp = ?`, u.Val, u.Val, u.Otp).
+		First(&user).Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
-		return nil, errors.New(err.Error())
-	}
-
-	isUserExist := len(users)
-
-	if isUserExist == 0 {
 		return nil, errors.New("USER_OR_OTP_IS_INVALID")
 	}
 
-	uid := users[0].Uid
-	emailActive := users[0].Enabled
-	otpDate := users[0].OtpDate
-
-	if emailActive == 1 {
+	if user.Enabled == 1 {
 		helper.Logger("error", "In Server: Account is already active")
 		return nil, errors.New("ACCOUNT_IS_ALREADY_ACTIVE")
 	}
 
-	currentTime := time.Now().UTC()
-	elapsed := currentTime.Sub(otpDate.UTC())
-
-	if elapsed >= 1*time.Minute {
+	// Cek expired OTP (lebih efisien dengan time.Since)
+	if time.Since(user.OtpDate) >= time.Minute {
 		helper.Logger("error", "In Server: Otp is expired")
 		return nil, errors.New("OTP_IS_EXPIRED")
 	}
 
-	errUpdateEmailActive := db.Debug().Exec(`UPDATE users SET enabled = 1, email_active_date = NOW()
-		WHERE email = '` + u.Val + `'
-	`).Error
+	// Update status akun dengan parameterized query
+	errUpdate := db.Debug().Exec(`
+		UPDATE users SET enabled = 1, email_active_date = NOW() 
+		WHERE uid = ?`, user.Uid).Error
 
-	if errUpdateEmailActive != nil {
-		helper.Logger("error", "In Server: "+errUpdateEmailActive.Error())
-		return nil, errors.New(errUpdateEmailActive.Error())
+	if errUpdate != nil {
+		helper.Logger("error", "In Server: "+errUpdate.Error())
+		return nil, errUpdate
 	}
 
-	token, err := middleware.CreateToken(uid)
+	// Buat token setelah akun diaktifkan
+	token, err := middleware.CreateToken(user.Uid)
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
 		return nil, err
 	}
 
-	access := token["token"]
-
-	return map[string]interface{}{"token": access}, nil
+	return map[string]interface{}{"token": token["token"]}, nil
 }
 
 func ResendOtp(u *models.User) (map[string]interface{}, error) {
