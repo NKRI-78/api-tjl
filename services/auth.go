@@ -33,10 +33,10 @@ func VerifyOtp(u *models.User) (map[string]interface{}, error) {
 	}
 
 	// Cek expired OTP (lebih efisien dengan time.Since)
-	if time.Since(user.OtpDate) >= time.Minute {
-		helper.Logger("error", "In Server: Otp is expired")
-		return nil, errors.New("OTP_IS_EXPIRED")
-	}
+	// if time.Since(user.CreatedAt) >= time.Minute {
+	// 	helper.Logger("error", "In Server: Otp is expired")
+	// 	return nil, errors.New("OTP_IS_EXPIRED")
+	// }
 
 	// Update status akun dengan parameterized query
 	errUpdate := db.Debug().Exec(`
@@ -78,7 +78,7 @@ func ResendOtp(u *models.User) (map[string]interface{}, error) {
 	}
 
 	emailActive := users[0].Enabled
-	otpDate := users[0].OtpDate
+	createdAt := users[0].CreatedAt
 
 	if emailActive == 1 {
 		helper.Logger("error", "In Server: Account is already active")
@@ -86,7 +86,7 @@ func ResendOtp(u *models.User) (map[string]interface{}, error) {
 	}
 
 	currentTime := time.Now()
-	elapsed := currentTime.Sub(otpDate)
+	elapsed := currentTime.Sub(createdAt)
 
 	otp := helper.CodeOtpSecure()
 

@@ -58,7 +58,7 @@ type UserLogin struct {
 }
 
 type UserOtp struct {
-	Uid     string    `json:"uid"`
-	Enabled int       `json:"enabled"`
-	OtpDate time.Time `json:"created_at"`
+	Uid       string    `json:"uid"`
+	Enabled   int       `json:"enabled"`
+	CreatedAt time.Time `json:"created_at"`
 }
