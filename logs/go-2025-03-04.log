@@ -10,3 +10,10 @@
 [INFO]: 2025-03-04 10:46:35 - Get Document success
 [INFO]: 2025-03-04 10:47:57 - Get Document success
 [INFO]: 2025-03-04 10:49:24 - Get Document success
+[INFO]: 2025-03-04 14:29:26 - Register success
+[INFO]: 2025-03-04 14:30:03 - Verify account success
+[ERROR]: 2025-03-04 14:32:01 - In Server: Otp is expired
+[ERROR]: 2025-03-04 14:33:41 - In Server: Otp is expired
+[ERROR]: 2025-03-04 14:33:49 - In Server: Otp is expired
+[ERROR]: 2025-03-04 14:33:57 - In Server: Otp is expired
+[ERROR]: 2025-03-04 14:34:07 - In Server: Otp is expired
