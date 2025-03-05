@@ -145,7 +145,7 @@ func JobDetail(f *models.Job) (map[string]any, error) {
 func JobPlace() (map[string]any, error) {
 	places := []entities.JobPlace{}
 
-	query := `SELECT id, name FROM places`
+	query := `SELECT id, name, currency FROM places`
 
 	err := db.Debug().Raw(query).Scan(&places).Error
 
