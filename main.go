@@ -79,7 +79,9 @@ func main() {
 
 	// Jobs
 	router.HandleFunc("/api/v1/job", controllers.JobList).Methods("GET")
+	router.HandleFunc("/api/v1/job-store", controllers.JobStore).Methods("POST")
 	router.HandleFunc("/api/v1/job-categories", controllers.JobCategory).Methods("GET")
+	router.HandleFunc("/api/v1/job-places", controllers.JobPlace).Methods("GET")
 
 	// Forum
 	router.HandleFunc("/api/v1/forum-store", controllers.ForumStore).Methods("POST")
