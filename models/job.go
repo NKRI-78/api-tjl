@@ -4,7 +4,8 @@ import (
 	"superapps/entities"
 )
 
+type Job entities.Job
+type JobList entities.JobList
 type JobCategory entities.JobCategory
 type JobStore entities.JobStore
-type Job entities.Job
 type JobPlace entities.JobPlace

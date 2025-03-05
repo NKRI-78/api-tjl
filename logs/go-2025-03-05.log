@@ -65,3 +65,20 @@
 [ERROR]: 2025-03-05 11:22:18 - In Server: Error 1054: Unknown column 'description' in 'field list'
 [INFO]: 2025-03-05 11:27:43 - Store Bannner success
 [INFO]: 2025-03-05 11:27:47 - Fetch Job List success
+[INFO]: 2025-03-05 11:33:15 - Fetch Job List success
+[INFO]: 2025-03-05 11:33:16 - Fetch Job List success
+[INFO]: 2025-03-05 11:33:21 - Store Bannner success
+[INFO]: 2025-03-05 11:33:22 - Fetch Job List success
+[INFO]: 2025-03-05 11:33:23 - Fetch Job List success
+[INFO]: 2025-03-05 11:35:02 - Store Bannner success
+[INFO]: 2025-03-05 11:35:04 - Fetch Job List success
+[INFO]: 2025-03-05 11:35:28 - Fetch Job List success
+[INFO]: 2025-03-05 11:35:28 - Fetch Job List success
+[ERROR]: 2025-03-05 11:41:54 - In Server: Missing auth token
+[ERROR]: 2025-03-05 11:41:59 - In Server: Error 1054: Unknown column 'f.uid' in 'where clause'
+[ERROR]: 2025-03-05 11:42:00 - In Server: Error 1054: Unknown column 'f.uid' in 'where clause'
+[INFO]: 2025-03-05 11:42:17 - Job Detail success
+[INFO]: 2025-03-05 11:42:39 - Job Detail success
+[INFO]: 2025-03-05 11:42:50 - Job Detail success
+[INFO]: 2025-03-05 11:46:20 - Job Detail success
+[INFO]: 2025-03-05 11:46:25 - Job Detail success

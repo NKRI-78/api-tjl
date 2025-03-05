@@ -12,6 +12,9 @@ type JobListQuery struct {
 	PlaceId       int       `json:"place_id"`
 	PlaceName     string    `json:"place_name"`
 	PlaceCurrency string    `json:"place_currency"`
+	UserId        string    `json:"user_id"`
+	UserAvatar    string    `json:"user_avatar"`
+	UserName      string    `json:"user_name"`
 	CreatedAt     time.Time `json:"created_at"`
 }
 
@@ -20,9 +23,10 @@ type JobList struct {
 	Title       string      `json:"title"`
 	Caption     string      `json:"caption"`
 	Salary      string      `json:"salary"`
+	Created     time.Time   `json:"created"`
 	JobCategory JobCategory `json:"category"`
 	JobPlace    JobPlace    `json:"place"`
-	Created     time.Time   `json:"created"`
+	JobUser     JobUser     `json:"user"`
 }
 
 type JobStore struct {
@@ -34,6 +38,12 @@ type JobStore struct {
 	PlaceId int    `json:"place_id"`
 	UserId  string `json:"user_id"`
 	IsDraft int    `json:"is_draft"`
+}
+
+type JobUser struct {
+	Id     string `json:"id"`
+	Avatar string `json:"avatar"`
+	Name   string `'json:"name"`
 }
 
 type JobCategory struct {
