@@ -23,6 +23,7 @@ type JobList struct {
 	Title       string      `json:"title"`
 	Caption     string      `json:"caption"`
 	Salary      string      `json:"salary"`
+	Bookmark    bool        `json:"bookmark"`
 	Created     time.Time   `json:"created"`
 	JobCategory JobCategory `json:"category"`
 	JobPlace    JobPlace    `json:"place"`
