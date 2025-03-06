@@ -224,6 +224,75 @@ func JobStore(j *models.JobStore) (map[string]any, error) {
 	return map[string]any{}, nil
 }
 
+func JobFavourite(j *models.JobFavourite) (map[string]any, error) {
+	jobFavourite := []entities.JobFavourite{}
+	jobs := []entities.Job{}
+	users := []entities.User{}
+
+	checkQueryJob := `SELECT uid AS id FROM jobs WHERE uid = '` + j.JobId + `'`
+
+	errCheckJob := db.Debug().Raw(checkQueryJob).Scan(&jobs).Error
+
+	if errCheckJob != nil {
+		helper.Logger("error", "In Server: "+errCheckJob.Error())
+		return nil, errors.New(errCheckJob.Error())
+	}
+
+	isJobExist := len(jobs)
+
+	if isJobExist == 0 {
+		return nil, errors.New("job not found")
+	}
+
+	checkQueryUser := `SELECT uid AS id FROM users WHERE uid = '` + j.UserId + `'`
+
+	errCheckUser := db.Debug().Raw(checkQueryUser).Scan(&users).Error
+
+	if errCheckUser != nil {
+		helper.Logger("error", "In Server: "+errCheckUser.Error())
+		return nil, errors.New(errCheckUser.Error())
+	}
+
+	isUserExist := len(users)
+
+	if isUserExist == 0 {
+		return nil, errors.New("user not found")
+	}
+
+	checkQueryJobFavourite := `SELECT user_id, job_id FROM job_favourites WHERE user_id = '` + j.UserId + `' AND job_id = '` + j.JobId + `'`
+
+	errCheckJobFavourite := db.Debug().Raw(checkQueryJobFavourite).Scan(&jobFavourite).Error
+
+	if errCheckJobFavourite != nil {
+		helper.Logger("error", "In Server: "+errCheckJobFavourite.Error())
+		return nil, errors.New(errCheckJobFavourite.Error())
+	}
+
+	isJobFavouriteExist := len(jobFavourite)
+
+	if isJobFavouriteExist == 0 {
+		query := `INSERT INTO job_favourites (user_id, job_id) VALUES (?, ?)`
+
+		err := db.Debug().Exec(query, j.UserId, j.JobId).Error
+
+		if err != nil {
+			helper.Logger("error", "In Server: "+err.Error())
+			return nil, errors.New(err.Error())
+		}
+	} else {
+		query := `DELETE FROM job_favourites WHERE user_id = ? AND job_id = ?`
+
+		err := db.Debug().Exec(query, j.UserId, j.JobId).Error
+
+		if err != nil {
+			helper.Logger("error", "In Server: "+err.Error())
+			return nil, errors.New(err.Error())
+		}
+	}
+
+	return map[string]any{}, nil
+}
+
 func JobCategory() (map[string]any, error) {
 	categories := []entities.JobCategory{}
 
