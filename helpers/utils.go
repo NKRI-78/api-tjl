@@ -11,6 +11,7 @@ import (
 	"encoding/base32"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"os"
 	"regexp"
@@ -113,6 +114,26 @@ func CodeOtpSecure() string {
 	otp = otp[:4]
 
 	return string(otp)
+}
+
+func FormatIDR(amount float64) string {
+	// Convert amount to a string with no decimal places
+	amountStr := fmt.Sprintf("%.0f", amount)
+	n := len(amountStr)
+
+	if n <= 3 {
+		return "Rp." + amountStr
+	}
+
+	var result []string
+	for i, c := range amountStr {
+		if (n-i)%3 == 0 && i != 0 {
+			result = append(result, ".")
+		}
+		result = append(result, string(c))
+	}
+
+	return "Rp." + strings.Join(result, "")
 }
 
 func IsValidEmail(email string) bool {
