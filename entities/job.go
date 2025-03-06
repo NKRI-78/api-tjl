@@ -27,7 +27,7 @@ type JobList struct {
 	Salary      int         `json:"salary"`
 	SalaryIDR   string      `json:"salary_idr"`
 	Bookmark    bool        `json:"bookmark"`
-	Created     time.Time   `json:"created"`
+	Created     string      `json:"created"`
 	JobCategory JobCategory `json:"category"`
 	JobPlace    JobPlace    `json:"place"`
 	JobUser     JobUser     `json:"user"`
