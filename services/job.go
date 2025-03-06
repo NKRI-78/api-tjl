@@ -91,7 +91,7 @@ func JobList() (map[string]any, error) {
 				Avatar: jobs.UserAvatar,
 				Name:   jobs.UserName,
 			},
-			Created: jobs.CreatedAt.UTC(),
+			Created: jobs.CreatedAt.Format("2006-01-02 15:04:05"),
 		})
 	}
 
@@ -164,7 +164,7 @@ func JobDetail(f *models.Job) (map[string]any, error) {
 				Avatar: jobs.UserAvatar,
 				Name:   jobs.UserName,
 			},
-			Created: jobs.CreatedAt.UTC(),
+			Created: jobs.CreatedAt.Format("2006-01-02 15:04:05"),
 		})
 	}
 
