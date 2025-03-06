@@ -1,13 +1,14 @@
 package entities
 
 type FormBiodata struct {
-	Id       string `json:"id"`
-	Place    string `json:"place"`
-	Height   string `json:"height"`
-	Weight   string `json:"weight"`
-	Gender   string `json:"gender"`
-	Status   string `json:"status"`
-	Religion string `json:"religion"`
+	Id        string `json:"id"`
+	Place     string `json:"place"`
+	Height    string `json:"height"`
+	Birthdate string `json:"birthdate"`
+	Weight    string `json:"weight"`
+	Gender    string `json:"gender"`
+	Status    string `json:"status"`
+	Religion  string `json:"religion"`
 }
 
 type FormRegion struct {
