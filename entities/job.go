@@ -48,7 +48,7 @@ type JobFavourite struct {
 type JobUser struct {
 	Id     string `json:"id"`
 	Avatar string `json:"avatar"`
-	Name   string `'json:"fullname"`
+	Name   string `json:"fullname"`
 }
 
 type JobCategory struct {
