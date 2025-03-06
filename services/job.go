@@ -21,6 +21,8 @@ func JobList() (map[string]any, error) {
 	p.id AS place_id,
 	p.name AS place_name,
 	p.currency AS place_currency,
+	p.kurs AS place_kurs,
+	p.info AS place_info,
 	up.user_id,
 	up.avatar AS user_avatar,
 	up.fullname AS user_name,
@@ -64,12 +66,15 @@ func JobList() (map[string]any, error) {
 			bookmark = false
 		}
 
+		salaryIdr := helper.FormatIDR(jobs.Salary * jobs.PlaceKurs)
+
 		dataJob = append(dataJob, entities.JobList{
-			Id:       jobs.Id,
-			Title:    jobs.Title,
-			Caption:  jobs.Caption,
-			Salary:   jobs.Salary,
-			Bookmark: bookmark,
+			Id:        jobs.Id,
+			Title:     jobs.Title,
+			Caption:   jobs.Caption,
+			Salary:    int(jobs.Salary),
+			SalaryIDR: salaryIdr,
+			Bookmark:  bookmark,
 			JobCategory: entities.JobCategory{
 				Id:   jobs.CatId,
 				Name: jobs.CatName,
@@ -78,6 +83,8 @@ func JobList() (map[string]any, error) {
 				Id:       jobs.PlaceId,
 				Name:     jobs.PlaceName,
 				Currency: jobs.PlaceCurrency,
+				Kurs:     int(jobs.PlaceKurs),
+				Info:     jobs.PlaceInfo,
 			},
 			JobUser: entities.JobUser{
 				Id:     jobs.UserId,
@@ -103,6 +110,8 @@ func JobDetail(f *models.Job) (map[string]any, error) {
 		p.id AS place_id,
 		p.name AS place_name,
 		p.currency AS place_currency,
+		p.kurs AS place_kurs,
+		p.info AS place_info,
 		up.user_id,
 		up.avatar AS user_avatar,
 		up.fullname AS user_name,
@@ -131,11 +140,14 @@ func JobDetail(f *models.Job) (map[string]any, error) {
 			return nil, errors.New(errJobRows.Error())
 		}
 
+		salaryIdr := helper.FormatIDR(jobs.Salary * jobs.PlaceKurs)
+
 		dataJob = append(dataJob, entities.JobList{
-			Id:      jobs.Id,
-			Title:   jobs.Title,
-			Caption: jobs.Caption,
-			Salary:  jobs.Salary,
+			Id:        jobs.Id,
+			Title:     jobs.Title,
+			Caption:   jobs.Caption,
+			Salary:    int(jobs.Salary),
+			SalaryIDR: salaryIdr,
 			JobCategory: entities.JobCategory{
 				Id:   jobs.CatId,
 				Name: jobs.CatName,
@@ -144,6 +156,8 @@ func JobDetail(f *models.Job) (map[string]any, error) {
 				Id:       jobs.PlaceId,
 				Name:     jobs.PlaceName,
 				Currency: jobs.PlaceCurrency,
+				Kurs:     int(jobs.PlaceKurs),
+				Info:     jobs.PlaceInfo,
 			},
 			JobUser: entities.JobUser{
 				Id:     jobs.UserId,
