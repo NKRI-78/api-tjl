@@ -5,12 +5,12 @@ import (
 	"net/http"
 	helper "superapps/helpers"
 	"superapps/models"
-	service "superapps/services"
+	"superapps/services"
 )
 
 func FormBiodata(w http.ResponseWriter, r *http.Request) {
 
-	data := &models.Banner{}
+	data := &models.FormBiodata{}
 
 	err := json.NewDecoder(r.Body).Decode(data)
 
@@ -20,22 +20,57 @@ func FormBiodata(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	Path := data.Path
-	Link := data.Link
+	Place := data.Place
+	Birthdate := data.Birthdate
+	Gender := data.Gender
+	Height := data.Height
+	Weight := data.Weight
+	Religion := data.Religion
+	Status := data.Status
 
-	if Path == "" {
-		helper.Logger("error", "In Server: path is required")
-		helper.Response(w, 400, true, "path is required", map[string]interface{}{})
+	if Place == "" {
+		helper.Logger("error", "In Server: place is required")
+		helper.Response(w, 400, true, "place is required", map[string]interface{}{})
 		return
 	}
 
-	if Link == "" {
-		helper.Logger("error", "In Server: link is required")
-		helper.Response(w, 400, true, "link is required", map[string]interface{}{})
+	if Birthdate == "" {
+		helper.Logger("error", "In Server: birthdate is required")
+		helper.Response(w, 400, true, "birthdate is required", map[string]interface{}{})
 		return
 	}
 
-	result, err := service.BannerStore(data)
+	if Gender == "" {
+		helper.Logger("error", "In Server: gender is required")
+		helper.Response(w, 400, true, "gender is required", map[string]interface{}{})
+		return
+	}
+
+	if Height == "" {
+		helper.Logger("error", "In Server: height is required")
+		helper.Response(w, 400, true, "height is required", map[string]interface{}{})
+		return
+	}
+
+	if Weight == "" {
+		helper.Logger("error", "In Server: weight is required")
+		helper.Response(w, 400, true, "weight is required", map[string]interface{}{})
+		return
+	}
+
+	if Religion == "" {
+		helper.Logger("error", "In Server: religion is required")
+		helper.Response(w, 400, true, "religion is required", map[string]interface{}{})
+		return
+	}
+
+	if Status == "" {
+		helper.Logger("error", "In Server: status is required")
+		helper.Response(w, 400, true, "status is required", map[string]interface{}{})
+		return
+	}
+
+	result, err := services.FormBiodata(data)
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]interface{}{})
