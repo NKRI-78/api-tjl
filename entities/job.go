@@ -40,6 +40,11 @@ type JobStore struct {
 	IsDraft int    `json:"is_draft"`
 }
 
+type JobFavourite struct {
+	UserId string `json:"user_id"`
+	JobId  string `json:"job_id"`
+}
+
 type JobUser struct {
 	Id     string `json:"id"`
 	Avatar string `json:"avatar"`
