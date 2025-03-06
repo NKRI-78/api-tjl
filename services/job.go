@@ -12,6 +12,7 @@ import (
 
 func JobList() (map[string]any, error) {
 	var jobs entities.JobListQuery
+	var jobFavourite []entities.JobFavourite
 	var dataJob = make([]entities.JobList, 0)
 
 	query := `SELECT j.uid AS id, j.title, j.caption, j.salary, 
@@ -44,11 +45,31 @@ func JobList() (map[string]any, error) {
 			return nil, errors.New(errJobRows.Error())
 		}
 
+		bookmarkQuery := `SELECT job_id, user_id FROM job_favourites WHERE user_id = '` + jobs.UserId + `' AND job_id = '` + jobs.Id + `'`
+
+		errBookmark := db.Debug().Raw(bookmarkQuery).Scan(&jobFavourite).Error
+
+		if errBookmark != nil {
+			helper.Logger("error", "In Server: "+errBookmark.Error())
+			return nil, errors.New(errBookmark.Error())
+		}
+
+		isJobFavouriteExist := len(jobFavourite)
+
+		var bookmark bool
+
+		if isJobFavouriteExist == 1 {
+			bookmark = true
+		} else {
+			bookmark = false
+		}
+
 		dataJob = append(dataJob, entities.JobList{
-			Id:      jobs.Id,
-			Title:   jobs.Title,
-			Caption: jobs.Caption,
-			Salary:  jobs.Salary,
+			Id:       jobs.Id,
+			Title:    jobs.Title,
+			Caption:  jobs.Caption,
+			Salary:   jobs.Salary,
+			Bookmark: bookmark,
 			JobCategory: entities.JobCategory{
 				Id:   jobs.CatId,
 				Name: jobs.CatName,
