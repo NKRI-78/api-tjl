@@ -12,21 +12,41 @@ import (
 
 func JwtAuthentication(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
 		var url string = r.URL.Path
 
-		var containImage string = "jpg"
-
-		if strings.Contains(url, containImage) {
+		// Allow images to be accessed without authentication
+		if strings.Contains(url, "jpg") {
 			next.ServeHTTP(w, r)
 			return
 		}
 
-		if r.URL.Path == "/api/v1/login" || r.URL.Path == "/api/v1/register" || r.URL.Path == "/api/v1/verify-otp" || r.URL.Path == "/api/v1/resend-otp" || r.URL.Path == "/api/v1/job-categories" || r.URL.Path == "/api/v1/banner" || r.URL.Path == "/api/v1/job" || r.URL.Path == "/api/v1/job-detail" {
+		// Define public paths that do not require authentication
+		publicPaths := []string{
+			"/api/v1/login",
+			"/api/v1/register",
+			"/api/v1/verify-otp",
+			"/api/v1/resend-otp",
+			"/api/v1/job-categories",
+			"/api/v1/banner",
+			"/api/v1/job",
+			"/api/v1/job-detail", // This covers exact "/api/v1/job-detail"
+		}
+
+		// Allow access to job-detail/:id
+		if strings.HasPrefix(r.URL.Path, "/api/v1/job-detail/") {
 			next.ServeHTTP(w, r)
 			return
 		}
 
+		// Check if the request URL is in the publicPaths list
+		for _, path := range publicPaths {
+			if r.URL.Path == path {
+				next.ServeHTTP(w, r)
+				return
+			}
+		}
+
+		// Authentication required for other routes
 		tokenHeader := r.Header.Get("Authorization")
 
 		if tokenHeader == "" {
@@ -38,26 +58,19 @@ func JwtAuthentication(next http.Handler) http.Handler {
 		splitted := strings.Split(tokenHeader, " ")
 
 		if len(splitted) != 2 {
-			helper.Logger("error", "In Server: Missing auth token")
-			helper.Response(w, http.StatusUnauthorized, true, "Missing auth token", map[string]interface{}{})
+			helper.Logger("error", "In Server: Invalid token format")
+			helper.Response(w, http.StatusUnauthorized, true, "Invalid token format", map[string]interface{}{})
 			return
 		}
 
 		tokenPart := splitted[1]
-
 		claims := jwt.MapClaims{}
 
 		token, err := jwt.ParseWithClaims(tokenPart, claims, func(token *jwt.Token) (interface{}, error) {
 			return []byte(os.Getenv("JWT_SECRET")), nil
 		})
 
-		if err != nil {
-			helper.Logger("error", "In Server: "+err.Error())
-			helper.Response(w, http.StatusUnauthorized, true, err.Error(), map[string]interface{}{})
-			return
-		}
-
-		if !token.Valid {
+		if err != nil || !token.Valid {
 			helper.Logger("error", "In Server: Token is invalid")
 			helper.Response(w, http.StatusUnauthorized, true, "Token is invalid", map[string]interface{}{})
 			return
