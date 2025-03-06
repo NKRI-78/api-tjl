@@ -81,6 +81,7 @@ func main() {
 	router.HandleFunc("/api/v1/job", controllers.JobList).Methods("GET")
 	router.HandleFunc("/api/v1/job-detail/{id}", controllers.JobDetail).Methods("GET")
 	router.HandleFunc("/api/v1/job-store", controllers.JobStore).Methods("POST")
+	router.HandleFunc("/api/v1/job-favourite", controllers.JobFavourite).Methods("POST")
 	router.HandleFunc("/api/v1/job-categories", controllers.JobCategory).Methods("GET")
 	router.HandleFunc("/api/v1/job-places", controllers.JobPlace).Methods("GET")
 
