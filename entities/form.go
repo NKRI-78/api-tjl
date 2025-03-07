@@ -40,6 +40,7 @@ type FormExercise struct {
 	StartYear   string `json:"start_year"`
 	EndMonth    string `json:"end_month"`
 	EndYear     string `json:"end_year"`
+	UserId      string `json:"user_id"`
 }
 
 type FormWork struct {

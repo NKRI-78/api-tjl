@@ -61,7 +61,7 @@ func main() {
 	router.HandleFunc("/api/v1/login", controllers.Login).Methods("POST")
 	router.HandleFunc("/api/v1/register", controllers.Register).Methods("POST")
 
-	// BRANCH
+	// Branch
 	router.HandleFunc("/api/v1/branch", controllers.Branch).Methods("GET")
 
 	// Banner
@@ -92,6 +92,7 @@ func main() {
 	router.HandleFunc("/api/v1/form-biodata", controllers.FormBiodata).Methods("POST")
 	router.HandleFunc("/api/v1/form-region", controllers.FormRegion).Methods("POST")
 	router.HandleFunc("/api/v1/form-education", controllers.FormEducation).Methods("POST")
+	router.HandleFunc("/api/v1/form-exercise", controllers.FormExercise).Methods("POST")
 	router.HandleFunc("/api/v1/form-work", controllers.FormWork).Methods("POST")
 
 	// Forum

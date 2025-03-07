@@ -8,7 +8,6 @@ import (
 )
 
 func FormBiodata(f *models.FormBiodata) (map[string]any, error) {
-
 	query := `INSERT INTO form_biodata (place, birthdate, gender, height, weight, religion, status, user_id) 
 	VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
 
@@ -23,7 +22,6 @@ func FormBiodata(f *models.FormBiodata) (map[string]any, error) {
 }
 
 func FormRegion(f *models.FormRegion) (map[string]any, error) {
-
 	query := `INSERT INTO form_regions (province_id, city_id, district_id, subdistrict_id, user_id, detail_address) 
 	VALUES (?, ?, ?, ?, ?, ?)`
 
