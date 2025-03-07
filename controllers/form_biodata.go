@@ -6,6 +6,8 @@ import (
 	helper "superapps/helpers"
 	"superapps/models"
 	"superapps/services"
+
+	"github.com/dgrijalva/jwt-go"
 )
 
 func FormBiodata(w http.ResponseWriter, r *http.Request) {
@@ -20,6 +22,14 @@ func FormBiodata(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	tokenHeader := r.Header.Get("Authorization")
+
+	token := helper.DecodeJwt(tokenHeader)
+
+	claims, _ := token.Claims.(jwt.MapClaims)
+
+	userId, _ := claims["id"].(string)
+
 	Place := data.Place
 	Birthdate := data.Birthdate
 	Gender := data.Gender
@@ -27,6 +37,7 @@ func FormBiodata(w http.ResponseWriter, r *http.Request) {
 	Weight := data.Weight
 	Religion := data.Religion
 	Status := data.Status
+	UserId := userId
 
 	if Place == "" {
 		helper.Logger("error", "In Server: place is required")
@@ -70,6 +81,8 @@ func FormBiodata(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	data.UserId = UserId
+
 	result, err := services.FormBiodata(data)
 
 	if err != nil {
@@ -77,6 +90,6 @@ func FormBiodata(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	helper.Logger("info", "Store Bannner success")
+	helper.Logger("info", "Form Biodata success")
 	helper.Response(w, http.StatusOK, false, "Successfully", result)
 }

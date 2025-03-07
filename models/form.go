@@ -7,5 +7,5 @@ import (
 type FormBiodata entities.FormBiodata
 type FormRegion entities.FormRegion
 type FormEducation entities.FormEducation
-type FormExecrcise entities.FormExercise
+type FormExercise entities.FormExercise
 type FormWork entities.FormWork
