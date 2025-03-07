@@ -38,10 +38,10 @@ func FormRegion(f *models.FormRegion) (map[string]any, error) {
 }
 
 func FormEducation(f *models.FormEducation) (map[string]any, error) {
-	query := `INSERT INTO form_educations (education_level, major, school_or_college, start_year, start_month, end_year, end_month, detail_address) 
-	VALUES (?, ?, ?, ?, ?, ?)`
+	query := `INSERT INTO form_educations (education_level, major, school_or_college, start_year, start_month, end_year, end_month) 
+	VALUES (?, ?, ?, ?, ?, ?, ?)`
 
-	err := db.Debug().Exec(query, f.EducationLevel, f.Major, f.SchoolOrCollege, f.StartYear, f.StartMonth, f.EndYear, f.EndMonth, f.DetailAddress).Error
+	err := db.Debug().Exec(query, f.EducationLevel, f.Major, f.SchoolOrCollege, f.StartYear, f.StartMonth, f.EndYear, f.EndMonth).Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
