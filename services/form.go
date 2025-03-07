@@ -50,7 +50,7 @@ func FormEducation(f *models.FormEducation) (map[string]any, error) {
 }
 
 func FormExercise(f *models.FormExercise) (map[string]any, error) {
-	query := `INSERT INTO form_exercises (name, institution, start_year, start_month, start_year, end_year, end_month) 
+	query := `INSERT INTO form_exercises (name, institution, start_year, start_month, end_year, end_month) 
 	VALUES (?, ?, ?, ?, ?, ?, ?)`
 
 	err := db.Debug().Exec(query, f.Name, f.Institution, f.StartYear, f.StartMonth, f.EndYear, f.EndMonth).Error
