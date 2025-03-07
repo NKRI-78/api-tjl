@@ -91,6 +91,6 @@ func FormWork(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	helper.Logger("info", "Form Biodata success")
+	helper.Logger("info", "Form Work success")
 	helper.Response(w, http.StatusOK, false, "Successfully", result)
 }

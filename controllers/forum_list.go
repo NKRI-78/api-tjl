@@ -14,7 +14,7 @@ func ForumList(w http.ResponseWriter, r *http.Request) {
 	result, err := services.ForumList(search, page, limit)
 
 	if err != nil {
-		helper.Response(w, 400, true, err.Error(), map[string]interface{}{})
+		helper.Response(w, 400, true, err.Error(), map[string]any{})
 		return
 	}
 

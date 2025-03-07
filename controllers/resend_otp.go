@@ -17,7 +17,7 @@ func ResendOtp(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
-		helper.Response(w, 400, true, "Internal server error ("+err.Error()+")", map[string]interface{}{})
+		helper.Response(w, 400, true, "Internal server error ("+err.Error()+")", map[string]any{})
 		return
 	}
 
@@ -25,14 +25,14 @@ func ResendOtp(w http.ResponseWriter, r *http.Request) {
 
 	if val == "" {
 		helper.Logger("error", "In Server: email field is required")
-		helper.Response(w, 400, true, "val field is required", map[string]interface{}{})
+		helper.Response(w, 400, true, "val field is required", map[string]any{})
 		return
 	}
 
 	result, err := service.ResendOtp(data)
 
 	if err != nil {
-		helper.Response(w, 400, true, err.Error(), map[string]interface{}{})
+		helper.Response(w, 400, true, err.Error(), map[string]any{})
 		return
 	}
 

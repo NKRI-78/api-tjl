@@ -25,7 +25,7 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 	result, err := services.GetProfile(data)
 
 	if err != nil {
-		helper.Response(w, 400, true, err.Error(), map[string]interface{}{})
+		helper.Response(w, 400, true, err.Error(), map[string]any{})
 		return
 	}
 

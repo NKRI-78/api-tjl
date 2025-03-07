@@ -41,43 +41,43 @@ func FormBiodata(w http.ResponseWriter, r *http.Request) {
 
 	if Place == "" {
 		helper.Logger("error", "In Server: place is required")
-		helper.Response(w, 400, true, "place is required", map[string]interface{}{})
+		helper.Response(w, 400, true, "place is required", map[string]any{})
 		return
 	}
 
 	if Birthdate == "" {
 		helper.Logger("error", "In Server: birthdate is required")
-		helper.Response(w, 400, true, "birthdate is required", map[string]interface{}{})
+		helper.Response(w, 400, true, "birthdate is required", map[string]any{})
 		return
 	}
 
 	if Gender == "" {
 		helper.Logger("error", "In Server: gender is required")
-		helper.Response(w, 400, true, "gender is required", map[string]interface{}{})
+		helper.Response(w, 400, true, "gender is required", map[string]any{})
 		return
 	}
 
 	if Height == "" {
 		helper.Logger("error", "In Server: height is required")
-		helper.Response(w, 400, true, "height is required", map[string]interface{}{})
+		helper.Response(w, 400, true, "height is required", map[string]any{})
 		return
 	}
 
 	if Weight == "" {
 		helper.Logger("error", "In Server: weight is required")
-		helper.Response(w, 400, true, "weight is required", map[string]interface{}{})
+		helper.Response(w, 400, true, "weight is required", map[string]any{})
 		return
 	}
 
 	if Religion == "" {
 		helper.Logger("error", "In Server: religion is required")
-		helper.Response(w, 400, true, "religion is required", map[string]interface{}{})
+		helper.Response(w, 400, true, "religion is required", map[string]any{})
 		return
 	}
 
 	if Status == "" {
 		helper.Logger("error", "In Server: status is required")
-		helper.Response(w, 400, true, "status is required", map[string]interface{}{})
+		helper.Response(w, 400, true, "status is required", map[string]any{})
 		return
 	}
 
@@ -86,7 +86,7 @@ func FormBiodata(w http.ResponseWriter, r *http.Request) {
 	result, err := services.FormBiodata(data)
 
 	if err != nil {
-		helper.Response(w, 400, true, err.Error(), map[string]interface{}{})
+		helper.Response(w, 400, true, err.Error(), map[string]any{})
 		return
 	}
 

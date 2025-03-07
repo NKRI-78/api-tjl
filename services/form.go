@@ -50,10 +50,10 @@ func FormEducation(f *models.FormEducation) (map[string]any, error) {
 }
 
 func FormExercise(f *models.FormExercise) (map[string]any, error) {
-	query := `INSERT INTO form_exercises (name, institution, start_year, start_month, end_year, end_month) 
-	VALUES (?, ?, ?, ?, ?, ?)`
+	query := `INSERT INTO form_exercises (name, institution, start_year, start_month, end_year, end_month, user_id) 
+	VALUES (?, ?, ?, ?, ?, ?, ?)`
 
-	err := db.Debug().Exec(query, f.Name, f.Institution, f.StartYear, f.StartMonth, f.EndYear, f.EndMonth).Error
+	err := db.Debug().Exec(query, f.Name, f.Institution, f.StartYear, f.StartMonth, f.EndYear, f.EndMonth, f.UserId).Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
