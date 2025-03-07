@@ -12,11 +12,19 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 
 	query := `SELECT p.user_id AS id, p.fullname, p.avatar, u.phone, u.email, u.enabled, 
 	jc.uid AS job_id,
-	jc.name AS job_name
+	jc.name AS job_name,
+	fb.birthdate AS bio_birthdate,
+	fb.gender AS bio_gender,
+	fb.weight AS bio_weight,
+	fb.height AS bio_height,
+	fb.religion AS bio_religion,
+	fb.status AS bio_status,
+	fb.place AS bio_place
 	FROM profiles p 
 	INNER JOIN users u ON u.uid = p.user_id
 	INNER JOIN user_pick_jobs upj ON upj.user_id = u.uid
 	INNER JOIN job_categories jc ON jc.uid = upj.job_id
+	LEFT JOIN form_biodata fb ON fb.user_id = p.user_id
 	WHERE u.uid = '` + p.Id + `'`
 
 	err := db.Debug().Raw(query).Scan(&profiles).Error
@@ -48,6 +56,15 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 	profile.Email = profiles[0].Email
 	profile.Fullname = profiles[0].Fullname
 	profile.IsEnabled = enabled
+	profile.FormBiodata = entities.ProfileFormBiodata{
+		Birthdate: profiles[0].BioBirthdate,
+		Gender:    profiles[0].BioGender,
+		Height:    profiles[0].BioHeight,
+		Weight:    profiles[0].BioWeight,
+		Religion:  profiles[0].BioReligion,
+		Place:     profiles[0].BioPlace,
+		Status:    profiles[0].BioStatus,
+	}
 	profile.Job = entities.ProfileJobResponse{
 		Id:   profiles[0].JobId,
 		Name: profiles[0].JobName,
