@@ -8,7 +8,7 @@ import (
 )
 
 func Branch() (map[string]any, error) {
-	branches := []entities.Document{}
+	branches := []entities.Branch{}
 
 	query := `SELECT id, name
 	FROM branchs`
