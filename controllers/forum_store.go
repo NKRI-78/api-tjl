@@ -17,7 +17,7 @@ func ForumStore(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
-		helper.Response(w, 400, true, "Internal server error ("+err.Error()+")", map[string]interface{}{})
+		helper.Response(w, 400, true, "Internal server error ("+err.Error()+")", map[string]any{})
 		return
 	}
 
@@ -36,20 +36,20 @@ func ForumStore(w http.ResponseWriter, r *http.Request) {
 
 	if Title == "" {
 		helper.Logger("error", "In Server: title is required")
-		helper.Response(w, 400, true, "title is required", map[string]interface{}{})
+		helper.Response(w, 400, true, "title is required", map[string]any{})
 		return
 	}
 
 	if Desc == "" {
 		helper.Logger("error", "In Server: desc is required")
-		helper.Response(w, 400, true, "desc is required", map[string]interface{}{})
+		helper.Response(w, 400, true, "desc is required", map[string]any{})
 		return
 	}
 
 	result, err := service.ForumStore(data)
 
 	if err != nil {
-		helper.Response(w, 400, true, err.Error(), map[string]interface{}{})
+		helper.Response(w, 400, true, err.Error(), map[string]any{})
 		return
 	}
 

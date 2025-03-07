@@ -18,7 +18,7 @@ func ProfileUpdate(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
-		helper.Response(w, 400, true, "Internal server error ("+err.Error()+")", map[string]interface{}{})
+		helper.Response(w, 400, true, "Internal server error ("+err.Error()+")", map[string]any{})
 		return
 	}
 
@@ -37,20 +37,20 @@ func ProfileUpdate(w http.ResponseWriter, r *http.Request) {
 
 	if Avatar == "" {
 		helper.Logger("error", "In Server: avatar is required")
-		helper.Response(w, 400, true, "avatar is required", map[string]interface{}{})
+		helper.Response(w, 400, true, "avatar is required", map[string]any{})
 		return
 	}
 
 	if Fullname == "" {
 		helper.Logger("error", "In Server: fullname is required")
-		helper.Response(w, 400, true, "fullname is required", map[string]interface{}{})
+		helper.Response(w, 400, true, "fullname is required", map[string]any{})
 		return
 	}
 
 	result, err := services.UpdateProfile(data)
 
 	if err != nil {
-		helper.Response(w, 400, true, err.Error(), map[string]interface{}{})
+		helper.Response(w, 400, true, err.Error(), map[string]any{})
 		return
 	}
 
