@@ -10,6 +10,7 @@ type User struct {
 	Avatar   string `json:"avatar"`
 	Val      string `json:"val"`
 	JobId    string `json:"job_id"`
+	BranchId string `json:"branch_id"`
 	Fullname string `json:"fullname"`
 	Email    string `json:"email"`
 	Phone    string `json:"phone"`

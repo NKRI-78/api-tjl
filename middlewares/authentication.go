@@ -26,6 +26,7 @@ func JwtAuthentication(next http.Handler) http.Handler {
 			"/api/v1/register",
 			"/api/v1/verify-otp",
 			"/api/v1/resend-otp",
+			"/api/v1/branch",
 			"/api/v1/job-categories",
 			"/api/v1/banner",
 			"/api/v1/job",

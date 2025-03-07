@@ -61,6 +61,9 @@ func main() {
 	router.HandleFunc("/api/v1/login", controllers.Login).Methods("POST")
 	router.HandleFunc("/api/v1/register", controllers.Register).Methods("POST")
 
+	// BRANCH
+	router.HandleFunc("/api/v1/branch", controllers.Branch).Methods("GET")
+
 	// Banner
 	router.HandleFunc("/api/v1/banner", controllers.BannerList).Methods("GET")
 	router.HandleFunc("/api/v1/banner-store", controllers.BannerStore).Methods("POST")
@@ -84,6 +87,12 @@ func main() {
 	router.HandleFunc("/api/v1/job-favourite", controllers.JobFavourite).Methods("POST")
 	router.HandleFunc("/api/v1/job-categories", controllers.JobCategory).Methods("GET")
 	router.HandleFunc("/api/v1/job-places", controllers.JobPlace).Methods("GET")
+
+	// Form
+	router.HandleFunc("/api/v1/form-biodata", controllers.FormBiodata).Methods("POST")
+	router.HandleFunc("/api/v1/form-region", controllers.FormRegion).Methods("POST")
+	router.HandleFunc("/api/v1/form-education", controllers.FormEducation).Methods("POST")
+	router.HandleFunc("/api/v1/form-work", controllers.FormWork).Methods("POST")
 
 	// Forum
 	router.HandleFunc("/api/v1/forum-store", controllers.ForumStore).Methods("POST")

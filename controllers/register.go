@@ -19,7 +19,8 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	jobId := data.JobId 
+	jobId := data.JobId
+	branchId := data.BranchId
 	avatar := data.Avatar
 	fullname := data.Fullname
 	email := data.Email
@@ -32,6 +33,12 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if branchId == "" {
+		helper.Logger("error", "In Server: branch_id is required")
+		helper.Response(w, 400, true, "branch_id is required", map[string]interface{}{})
+		return
+	}
+
 	if avatar == "" {
 		helper.Logger("error", "In Server: avatar is required")
 		helper.Response(w, 400, true, "avatar is required", map[string]interface{}{})
@@ -41,7 +48,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	if fullname == "" {
 		helper.Logger("error", "In Server: fullname is required")
 		helper.Response(w, 400, true, "fullname field is required", map[string]interface{}{})
-		return 
+		return
 	}
 
 	if email == "" {

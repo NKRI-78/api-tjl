@@ -185,6 +185,7 @@ func Register(u *models.User) (map[string]any, error) {
 	user.Id = uuid.NewV4().String()
 
 	user.JobId = u.JobId
+	user.BranchId = u.BranchId
 	user.Avatar = u.Avatar
 	user.Fullname = u.Fullname
 	user.Email = u.Email
@@ -246,6 +247,13 @@ func Register(u *models.User) (map[string]any, error) {
 		return nil, errors.New(errInsertUserJobPick.Error())
 	}
 
+	errInsertUserBranch := db.Debug().Exec(`INSERT INTO user_branches (user_id, branch_id) VALUES ('` + user.Id + `', '` + user.BranchId + `')`).Error
+
+	if errInsertUserBranch != nil {
+		helper.Logger("error", "In Server: "+errInsertUserBranch.Error())
+		return nil, errors.New(errInsertUserBranch.Error())
+	}
+
 	errEmail := helper.SendEmail(user.Email, "TJL", otp)
 	if errEmail != nil {
 		helper.Logger("error", "Failed to send email: "+errEmail.Error())
@@ -260,3 +268,6 @@ func Register(u *models.User) (map[string]any, error) {
 
 	return map[string]any{"token": access}, nil
 }
+
+
+
