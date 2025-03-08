@@ -35,6 +35,13 @@ type Profile struct {
 	BioStatus    string `json:"bio_status"`
 	BioReligion  string `json:"bio_religion"`
 	BioPlace     string `json:"bio_place"`
+	BioEducationLevel string `json:"edu_education_level"`
+	BioMajor string `json:"edu_major"`
+	BioSchoolOrCollege string `json:"edu_school_or_college"`
+	BioStartMonth string `json:"edu_start_month"`
+	BioEndMonth string `json:"edu_end_month"`
+	BioStartYear string `json:"edu_start_year"`
+	BioEndYear string `json:"edu_end_year"`
 }
 
 type ProfileResponse struct {
@@ -56,6 +63,16 @@ type ProfileFormBiodata struct {
 	Religion  string `json:"religion"`
 	Place     string `json:"place"`
 	Status    string `json:"status"`
+}
+
+type ProfileFormEducation struct {
+	EducationLevel string `json:"edu_education_level"`
+	Major string `json:"edu_major"`
+	SchoolOrCollege string `json:"edu_school_or_college"`
+	StartMonth string `json:"edu_start_month"`
+	EndMonth string `json:"edu_end_month"`
+	StartYear string `json:"edu_start_year"`
+	EndYear string `json:"edu_end_year"`
 }
 
 type ProfileJobResponse struct {

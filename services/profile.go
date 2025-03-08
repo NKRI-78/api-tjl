@@ -19,12 +19,20 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 	fb.height AS bio_height,
 	fb.religion AS bio_religion,
 	fb.status AS bio_status,
-	fb.place AS bio_place
+	fb.place AS bio_place,
+	fe.education_level AS edu_education_level,
+	fe.major AS edu_major,
+	fe.school_or_college AS edu_school_or_college, 
+	fe.start_year AS edu_start_year,
+	fe.end_year AS edu_end_year,
+	fe.start_month AS edu_start_month,
+	fe.end_month AS edu_end_month
 	FROM profiles p 
 	INNER JOIN users u ON u.uid = p.user_id
 	INNER JOIN user_pick_jobs upj ON upj.user_id = u.uid
 	INNER JOIN job_categories jc ON jc.uid = upj.job_id
 	LEFT JOIN form_biodata fb ON fb.user_id = p.user_id
+	LEFT JOIN form_education fe ON fe.user_id = p.user_id
 	WHERE u.uid = '` + p.Id + `'`
 
 	err := db.Debug().Raw(query).Scan(&profiles).Error
@@ -64,6 +72,15 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 		Religion:  profiles[0].BioReligion,
 		Place:     profiles[0].BioPlace,
 		Status:    profiles[0].BioStatus,
+	}
+	profile.FormEducation = entities.ProfileFormEducation{
+		EducationLevel: profiles[0].BioEducationLevel,
+		Major: profiles[0].BioMajor,
+		SchoolOrCollege: profiles[0].BioSchoolOrCollege,
+		StartMonth: profiles[0].BioStartMonth,
+		EndMonth: profiles[0].BioEndMonth,
+		StartYear: profiles[0].BioStartYear,
+		EndYear: profiles[0].BioEndYear
 	}
 	profile.Job = entities.ProfileJobResponse{
 		Id:   profiles[0].JobId,
