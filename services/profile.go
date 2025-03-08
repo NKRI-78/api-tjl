@@ -26,13 +26,20 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 	fe.start_year AS edu_start_year,
 	fe.end_year AS edu_end_year,
 	fe.start_month AS edu_start_month,
-	fe.end_month AS edu_end_month
+	fe.end_month AS edu_end_month,
+	fex.name AS ex_name,
+	fex.institution AS ex_institution,
+	fex.start_year AS ex_start_year,
+	fex.start_month AS ex_start_month,
+	fex.end_month AS ex_end_month,
+	fex.end_year AS ex_end_year
 	FROM profiles p 
 	INNER JOIN users u ON u.uid = p.user_id
 	INNER JOIN user_pick_jobs upj ON upj.user_id = u.uid
 	INNER JOIN job_categories jc ON jc.uid = upj.job_id
-	LEFT JOIN form_biodata fb ON fb.user_id = p.user_id
-	LEFT JOIN form_education fe ON fe.user_id = p.user_id
+	LEFT JOIN form_biodatas fb ON fb.user_id = p.user_id
+	LEFT JOIN form_educations fe ON fe.user_id = p.user_id
+	LEFT JOIN form_exercises fex ON fex.user_id = p.user_id
 	WHERE u.uid = '` + p.Id + `'`
 
 	err := db.Debug().Raw(query).Scan(&profiles).Error
@@ -74,13 +81,21 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 		Status:    profiles[0].BioStatus,
 	}
 	profile.FormEducation = entities.ProfileFormEducation{
-		EducationLevel: profiles[0].BioEducationLevel,
-		Major: profiles[0].BioMajor,
+		EducationLevel:  profiles[0].BioEducationLevel,
+		Major:           profiles[0].BioMajor,
 		SchoolOrCollege: profiles[0].BioSchoolOrCollege,
-		StartMonth: profiles[0].BioStartMonth,
-		EndMonth: profiles[0].BioEndMonth,
-		StartYear: profiles[0].BioStartYear,
-		EndYear: profiles[0].BioEndYear
+		StartMonth:      profiles[0].BioStartMonth,
+		EndMonth:        profiles[0].BioEndMonth,
+		StartYear:       profiles[0].BioStartYear,
+		EndYear:         profiles[0].BioEndYear,
+	}
+	profile.FormExercise = entities.ProfileFormExercise{
+		Name:        profiles[0].BioName,
+		Institution: profiles[0].BioInstitution,
+		StartMonth:  profiles[0].BioExStartMonth,
+		EndMonth:    profiles[0].BioExEndMonth,
+		StartYear:   profiles[0].BioExStartYear,
+		EndYear:     profiles[0].BioExEndYear,
 	}
 	profile.Job = entities.ProfileJobResponse{
 		Id:   profiles[0].JobId,
