@@ -94,9 +94,13 @@ func main() {
 	router.HandleFunc("/api/v1/job-categories", controllers.JobCategory).Methods("GET")
 	router.HandleFunc("/api/v1/job-places", controllers.JobPlace).Methods("GET")
 
+	// Language
+	router.HandleFunc("/api/v1/language", controllers.Language).Methods("GET")
+	
 	// Form
 	router.HandleFunc("/api/v1/form-biodata", controllers.FormBiodata).Methods("POST")
 	router.HandleFunc("/api/v1/form-region", controllers.FormRegion).Methods("POST")
+	router.HandleFunc("/api/v1/form-address", controllers.FormAddress).Methods("POST")
 	router.HandleFunc("/api/v1/form-education", controllers.FormEducation).Methods("POST")
 	router.HandleFunc("/api/v1/form-exercise", controllers.FormExercise).Methods("POST")
 	router.HandleFunc("/api/v1/form-work", controllers.FormWork).Methods("POST")

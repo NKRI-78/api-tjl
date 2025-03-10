@@ -21,6 +21,15 @@ type FormRegion struct {
 	DetailAddress string `json:"detail_address"`
 }
 
+type FormPlace struct {
+	Province      string `json:"province"`
+	City          string `json:"city"`
+	District      string `json:"district"`
+	Subdistrict   string `json:"subdistrict"`
+	UserId        string `json:"user_id"`
+	DetailAddress string `json:"detail_address"`
+}
+
 type FormEducation struct {
 	Id              string `json:"id"`
 	EducationLevel  string `json:"education_level"`
@@ -55,7 +64,6 @@ type FormWork struct {
 	EndYear    string `json:"end_year"`
 	UserId     string `json:"user_id"`
 }
-
 type FormLanguage struct {
 	Id       int    `json:"id"`
 	Language string `json:"language"`

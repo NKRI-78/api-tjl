@@ -28,6 +28,7 @@ type Profile struct {
 	Email              string `json:"email"`
 	JobId              string `json:"job_id"`
 	JobName            string `json:"job_name"`
+	BioId              int    `json:"bio_id"`
 	BioBirthdate       string `json:"bio_birthdate"`
 	BioGender          string `json:"bio_gender"`
 	BioHeight          string `json:"bio_height"`
@@ -44,10 +45,12 @@ type Profile struct {
 	BioEndYear         string `json:"edu_end_year"`
 	BioName            string `json:"ex_name"`
 	BioInstitution     string `json:"ex_institution"`
-	BioExStartYear     string `json:"ex_start_year"`
-	BioExEndYear       string `json:"ex_end_year"`
-	BioExStartMonth    string `json:"ex_start_month"`
-	BioExEndMonth      string `json:"ex_end_month"`
+	BioAddressId       int    `json:"bio_address_id"`
+	BioProvince        string `json:"bio_province"`
+	BioCity            string `json:"bio_city"`
+	BioDistrict        string `json:"bio_district"`
+	BioSubdistrict     string `json:"bio_subdistrict"`
+	BioDetailAddress   string `json:"bio_detail_address"`
 }
 
 type ProfileResponse struct {
@@ -63,6 +66,7 @@ type ProfileResponse struct {
 
 type Biodata struct {
 	Personal    ProfileFormBiodata     `json:"personal"`
+	Address     ProfileFormPlace       `json:"address"`
 	Educations  []ProfileFormEducation `json:"educations"`
 	Trainings   []ProfileFormExercise  `json:"trainings"`
 	Experiences []ProfileFormWork      `json:"experiences"`
@@ -70,6 +74,7 @@ type Biodata struct {
 }
 
 type ProfileFormBiodata struct {
+	Id        int    `json:"id"`
 	Birthdate string `json:"birthdate"`
 	Gender    string `json:"gender"`
 	Height    string `json:"height"`
@@ -77,6 +82,15 @@ type ProfileFormBiodata struct {
 	Religion  string `json:"religion"`
 	Place     string `json:"place"`
 	Status    string `json:"status"`
+}
+
+type ProfileFormPlace struct {
+	Id            int    `json:"id"`
+	Province      string `json:"province"`
+	City          string `json:"city"`
+	District      string `json:"district"`
+	Subdistrict   string `json:"subdistrict"`
+	DetailAddress string `json:"detail_address"`
 }
 
 type ProfileFormEducation struct {

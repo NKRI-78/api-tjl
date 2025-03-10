@@ -17,6 +17,7 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 	query := `SELECT p.user_id AS id, p.fullname, p.avatar, u.phone, u.email, u.enabled, 
 	jc.uid AS job_id,
 	jc.name AS job_name,
+	fb.id AS bio_id,
 	fb.birthdate AS bio_birthdate,
 	fb.gender AS bio_gender,
 	fb.weight AS bio_weight,
@@ -24,26 +25,18 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 	fb.religion AS bio_religion,
 	fb.status AS bio_status,
 	fb.place AS bio_place,
-	fe.education_level AS edu_education_level,
-	fe.major AS edu_major,
-	fe.school_or_college AS edu_school_or_college, 
-	fe.start_year AS edu_start_year,
-	fe.end_year AS edu_end_year,
-	fe.start_month AS edu_start_month,
-	fe.end_month AS edu_end_month,
-	fex.name AS ex_name,
-	fex.institution AS ex_institution,
-	fex.start_year AS ex_start_year,
-	fex.start_month AS ex_start_month,
-	fex.end_month AS ex_end_month,
-	fex.end_year AS ex_end_year
+	fp.detail_address AS bio_detail_address,
+	fp.id AS bio_address_id,
+	fp.province AS bio_province,
+	fp.city AS bio_city,
+	fp.district AS bio_district, 
+	fp.subdistrict AS bio_subdistrict 
 	FROM profiles p 
 	INNER JOIN users u ON u.uid = p.user_id
 	INNER JOIN user_pick_jobs upj ON upj.user_id = u.uid
 	INNER JOIN job_categories jc ON jc.uid = upj.job_id
 	LEFT JOIN form_biodatas fb ON fb.user_id = p.user_id
-	LEFT JOIN form_educations fe ON fe.user_id = p.user_id
-	LEFT JOIN form_exercises fex ON fex.user_id = p.user_id
+	LEFT JOIN form_places fp ON fp.user_id = p.user_id
 	WHERE u.uid = '` + p.Id + `'`
 
 	err := db.Debug().Raw(query).Scan(&profiles).Error
@@ -189,6 +182,7 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 	}
 	profile.Biodata = entities.Biodata{
 		Personal: entities.ProfileFormBiodata{
+			Id:        profiles[0].BioId,
 			Birthdate: profiles[0].BioBirthdate,
 			Gender:    profiles[0].BioGender,
 			Height:    profiles[0].BioHeight,
@@ -196,6 +190,14 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 			Religion:  profiles[0].BioReligion,
 			Place:     profiles[0].BioPlace,
 			Status:    profiles[0].BioStatus,
+		},
+		Address: entities.ProfileFormPlace{
+			Id:            profiles[0].BioAddressId,
+			Province:      profiles[0].BioProvince,
+			City:          profiles[0].BioCity,
+			District:      profiles[0].BioDistrict,
+			Subdistrict:   profiles[0].BioSubdistrict,
+			DetailAddress: profiles[0].BioDetailAddress,
 		},
 		Educations:  dataEdu,
 		Trainings:   dataTraining,
