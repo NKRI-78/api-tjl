@@ -22,10 +22,24 @@ func FormBiodata(f *models.FormBiodata) (map[string]any, error) {
 }
 
 func FormRegion(f *models.FormRegion) (map[string]any, error) {
-	query := `INSERT INTO form_regions (province_id, city_id, district_id, subdistrict_id, user_id, detail_address) 
+	query := `INSERT INTO form_regions (province_id, city_id, district_id, subdistrict_id, detail_address, user_id) 
 	VALUES (?, ?, ?, ?, ?, ?)`
 
-	err := db.Debug().Exec(query, f.ProvinceId, f.CityId, f.DistrictId, f.SubdistrictId, f.UserId, f.DetailAddress).Error
+	err := db.Debug().Exec(query, f.ProvinceId, f.CityId, f.DistrictId, f.SubdistrictId, f.DetailAddress, f.UserId).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
+func FormPlace(f *models.FormPlace) (map[string]any, error) {
+	query := `INSERT INTO form_places (province, city, district, subdistrict, detail_address, user_id) 
+	VALUES (?, ?, ?, ?, ?, ?)`
+
+	err := db.Debug().Exec(query, f.Province, f.City, f.District, f.Subdistrict, f.DetailAddress, f.UserId).Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
@@ -36,10 +50,10 @@ func FormRegion(f *models.FormRegion) (map[string]any, error) {
 }
 
 func FormEducation(f *models.FormEducation) (map[string]any, error) {
-	query := `INSERT INTO form_educations (education_level, major, school_or_college, start_year, start_month, end_year, end_month) 
-	VALUES (?, ?, ?, ?, ?, ?, ?)`
+	query := `INSERT INTO form_educations (education_level, major, school_or_college, start_year, start_month, end_year, end_month, user_id) 
+	VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
 
-	err := db.Debug().Exec(query, f.EducationLevel, f.Major, f.SchoolOrCollege, f.StartYear, f.StartMonth, f.EndYear, f.EndMonth).Error
+	err := db.Debug().Exec(query, f.EducationLevel, f.Major, f.SchoolOrCollege, f.StartYear, f.StartMonth, f.EndYear, f.EndMonth, f.UserId).Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
