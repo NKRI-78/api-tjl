@@ -20,3 +20,9 @@
 [INFO]: 2025-03-10 13:37:15 - Form Region success
 [ERROR]: 2025-03-10 13:47:33 - In Server: Missing auth token
 [INFO]: 2025-03-10 13:47:38 - Get Language success
+[ERROR]: 2025-03-10 14:05:03 - In Server: Error 1054: Unknown column 'by_user_id' in 'field list'
+[INFO]: 2025-03-10 14:05:16 - Form Region success
+[INFO]: 2025-03-10 14:05:56 - Form Region success
+[INFO]: 2025-03-10 14:06:13 - Form Region success
+[INFO]: 2025-03-10 14:06:37 - Form Region success
+[INFO]: 2025-03-10 14:07:01 - Form Region success
