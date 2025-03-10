@@ -120,7 +120,7 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 
 	var dataWork = make([]entities.ProfileFormWork, 0)
 
-	queryWork := `SELECT id, work, position, start_month, start_year, end_month, end_year, user_id 
+	queryWork := `SELECT id, work, position, country, city, start_month, start_year, end_month, end_year, user_id 
 	FROM form_works WHERE user_id  = '` + profiles[0].Id + `'`
 
 	rows, errWork := db.Debug().Raw(queryWork).Scan(&work).Rows()
