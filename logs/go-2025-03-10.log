@@ -1,0 +1,11 @@
+[ERROR]: 2025-03-10 10:43:11 - In Server: Error 1146: Table 'tjl.form_biodata' doesn't exist
+[INFO]: 2025-03-10 11:17:27 - Form Exercise success
+[INFO]: 2025-03-10 11:19:20 - Form Exercise success
+[ERROR]: 2025-03-10 11:30:02 - In Server: Error 1136: Column count doesn't match value count at row 1
+[INFO]: 2025-03-10 11:31:24 - Form Work success
+[ERROR]: 2025-03-10 11:37:07 - In Server: Error 1054: Unknown column 'work' in 'field list'
+[ERROR]: 2025-03-10 11:37:08 - In Server: Error 1054: Unknown column 'work' in 'field list'
+[ERROR]: 2025-03-10 11:37:19 - In Server: Error 1146: Table 'tjl.form_work' doesn't exist
+[ERROR]: 2025-03-10 11:37:20 - In Server: Error 1146: Table 'tjl.form_work' doesn't exist
+[ERROR]: 2025-03-10 11:37:24 - In Server: Error 1146: Table 'tjl.form_work' doesn't exist
+[INFO]: 2025-03-10 11:48:14 - Form Region success

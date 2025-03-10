@@ -9,6 +9,10 @@ import (
 
 func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 	profiles := []entities.Profile{}
+	education := entities.ProfileFormEducation{}
+	exercise := entities.ProfileFormExercise{}
+	work := entities.ProfileFormWork{}
+	language := entities.ProfileFormLanguage{}
 
 	query := `SELECT p.user_id AS id, p.fullname, p.avatar, u.phone, u.email, u.enabled, 
 	jc.uid AS job_id,
@@ -19,12 +23,27 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 	fb.height AS bio_height,
 	fb.religion AS bio_religion,
 	fb.status AS bio_status,
-	fb.place AS bio_place
+	fb.place AS bio_place,
+	fe.education_level AS edu_education_level,
+	fe.major AS edu_major,
+	fe.school_or_college AS edu_school_or_college, 
+	fe.start_year AS edu_start_year,
+	fe.end_year AS edu_end_year,
+	fe.start_month AS edu_start_month,
+	fe.end_month AS edu_end_month,
+	fex.name AS ex_name,
+	fex.institution AS ex_institution,
+	fex.start_year AS ex_start_year,
+	fex.start_month AS ex_start_month,
+	fex.end_month AS ex_end_month,
+	fex.end_year AS ex_end_year
 	FROM profiles p 
 	INNER JOIN users u ON u.uid = p.user_id
 	INNER JOIN user_pick_jobs upj ON upj.user_id = u.uid
 	INNER JOIN job_categories jc ON jc.uid = upj.job_id
-	LEFT JOIN form_biodata fb ON fb.user_id = p.user_id
+	LEFT JOIN form_biodatas fb ON fb.user_id = p.user_id
+	LEFT JOIN form_educations fe ON fe.user_id = p.user_id
+	LEFT JOIN form_exercises fex ON fex.user_id = p.user_id
 	WHERE u.uid = '` + p.Id + `'`
 
 	err := db.Debug().Raw(query).Scan(&profiles).Error
@@ -50,12 +69,124 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 		enabled = false
 	}
 
+	// Education
+
+	var dataEdu = make([]entities.ProfileFormEducation, 0)
+
+	queryEdu := `SELECT id, education_level, major, school_or_college, start_month, end_month, end_year, user_id 
+	FROM form_educations WHERE user_id  = '` + profiles[0].Id + `'`
+
+	rows, errEdu := db.Debug().Raw(queryEdu).Scan(&education).Rows()
+
+	if errEdu != nil {
+		helper.Logger("error", "In Server: "+errEdu.Error())
+		return nil, errors.New(errEdu.Error())
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		errScanRows := db.ScanRows(rows, &education)
+
+		if errScanRows != nil {
+			helper.Logger("error", "In Server: "+errScanRows.Error())
+			return nil, errors.New(errScanRows.Error())
+		}
+
+		dataEdu = append(dataEdu, education)
+	}
+
+	// Trainning
+
+	var dataTraining = make([]entities.ProfileFormExercise, 0)
+
+	queryTraining := `SELECT id, name, institution, start_month, start_year, end_month, end_year, user_id 
+	FROM form_exercises WHERE user_id  = '` + profiles[0].Id + `'`
+
+	rows, errTrainning := db.Debug().Raw(queryTraining).Scan(&exercise).Rows()
+
+	if errTrainning != nil {
+		helper.Logger("error", "In Server: "+errTrainning.Error())
+		return nil, errors.New(errTrainning.Error())
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		errScanRows := db.ScanRows(rows, &exercise)
+
+		if errScanRows != nil {
+			helper.Logger("error", "In Server: "+errScanRows.Error())
+			return nil, errors.New(errScanRows.Error())
+		}
+
+		dataTraining = append(dataTraining, exercise)
+	}
+
+	// Work
+
+	var dataWork = make([]entities.ProfileFormWork, 0)
+
+	queryWork := `SELECT id, work, position, start_month, start_year, end_month, end_year, user_id 
+	FROM form_works WHERE user_id  = '` + profiles[0].Id + `'`
+
+	rows, errWork := db.Debug().Raw(queryWork).Scan(&work).Rows()
+
+	if errWork != nil {
+		helper.Logger("error", "In Server: "+errWork.Error())
+		return nil, errors.New(errWork.Error())
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		errScanRows := db.ScanRows(rows, &work)
+
+		if errScanRows != nil {
+			helper.Logger("error", "In Server: "+errScanRows.Error())
+			return nil, errors.New(errScanRows.Error())
+		}
+
+		dataWork = append(dataWork, work)
+	}
+
+	// Language
+
+	var dataLanguage = make([]entities.ProfileFormLanguage, 0)
+
+	queryLanguage := `SELECT id, language, level
+	FROM form_languages WHERE user_id  = '` + profiles[0].Id + `'`
+
+	rows, errLanguage := db.Debug().Raw(queryLanguage).Scan(&language).Rows()
+
+	if errLanguage != nil {
+		helper.Logger("error", "In Server: "+errLanguage.Error())
+		return nil, errors.New(errLanguage.Error())
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		errScanRows := db.ScanRows(rows, &language)
+
+		if errScanRows != nil {
+			helper.Logger("error", "In Server: "+errScanRows.Error())
+			return nil, errors.New(errScanRows.Error())
+		}
+
+		dataLanguage = append(dataLanguage, language)
+	}
+
 	profile.Id = profiles[0].Id
 	profile.Avatar = profiles[0].Avatar
 	profile.Phone = profiles[0].Phone
 	profile.Email = profiles[0].Email
 	profile.Fullname = profiles[0].Fullname
 	profile.IsEnabled = enabled
+	profile.Job = entities.ProfileJobResponse{
+		Id:   profiles[0].JobId,
+		Name: profiles[0].JobName,
+	}
 	profile.Biodata = entities.Biodata{
 		Personal: entities.ProfileFormBiodata{
 			Birthdate: profiles[0].BioBirthdate,
@@ -66,10 +197,10 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 			Place:     profiles[0].BioPlace,
 			Status:    profiles[0].BioStatus,
 		},
-	}
-	profile.Job = entities.ProfileJobResponse{
-		Id:   profiles[0].JobId,
-		Name: profiles[0].JobName,
+		Educations:  dataEdu,
+		Trainings:   dataTraining,
+		Experiences: dataWork,
+		Languages:   dataLanguage,
 	}
 
 	return map[string]any{

@@ -57,6 +57,12 @@ func main() {
 		}
 	}
 
+	// Administration
+	router.HandleFunc("/api/v1/province", controllers.Province).Methods("GET")
+	router.HandleFunc("/api/v1/city/{province_id}", controllers.City).Methods("GET")
+	router.HandleFunc("/api/v1/district/{city_id}", controllers.District).Methods("GET")
+	router.HandleFunc("/api/v1/subdistrict/{district_id}", controllers.Subdistrict).Methods("GET")
+
 	// Auth
 	router.HandleFunc("/api/v1/login", controllers.Login).Methods("POST")
 	router.HandleFunc("/api/v1/register", controllers.Register).Methods("POST")
@@ -94,6 +100,7 @@ func main() {
 	router.HandleFunc("/api/v1/form-education", controllers.FormEducation).Methods("POST")
 	router.HandleFunc("/api/v1/form-exercise", controllers.FormExercise).Methods("POST")
 	router.HandleFunc("/api/v1/form-work", controllers.FormWork).Methods("POST")
+	router.HandleFunc("/api/v1/form-language", controllers.FormLanguage).Methods("POST")
 
 	// Forum
 	router.HandleFunc("/api/v1/forum-store", controllers.ForumStore).Methods("POST")
