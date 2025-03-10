@@ -118,6 +118,7 @@ type ProfileFormWork struct {
 	Id         int    `json:"id"`
 	Position   string `json:"position"`
 	Work       string `json:"work"`
+	City       string `json:"city"`
 	Country    string `json:"country"`
 	StartMonth string `json:"start_month"`
 	StartYear  string `json:"start_year"`
