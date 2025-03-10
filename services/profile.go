@@ -56,14 +56,16 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 	profile.Email = profiles[0].Email
 	profile.Fullname = profiles[0].Fullname
 	profile.IsEnabled = enabled
-	profile.FormBiodata = entities.ProfileFormBiodata{
-		Birthdate: profiles[0].BioBirthdate,
-		Gender:    profiles[0].BioGender,
-		Height:    profiles[0].BioHeight,
-		Weight:    profiles[0].BioWeight,
-		Religion:  profiles[0].BioReligion,
-		Place:     profiles[0].BioPlace,
-		Status:    profiles[0].BioStatus,
+	profile.Biodata = entities.Biodata{
+		Personal: entities.ProfileFormBiodata{
+			Birthdate: profiles[0].BioBirthdate,
+			Gender:    profiles[0].BioGender,
+			Height:    profiles[0].BioHeight,
+			Weight:    profiles[0].BioWeight,
+			Religion:  profiles[0].BioReligion,
+			Place:     profiles[0].BioPlace,
+			Status:    profiles[0].BioStatus,
+		},
 	}
 	profile.Job = entities.ProfileJobResponse{
 		Id:   profiles[0].JobId,
