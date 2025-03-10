@@ -1,0 +1,12 @@
+[INFO]: 2025-03-09 06:15:47 - Login success
+[ERROR]: 2025-03-09 06:16:04 - In Server: Error 1146: Table 'tjl.form_education' doesn't exist
+[ERROR]: 2025-03-09 06:17:36 - In Server: Error 1054: Unknown column 'fe.user_id' in 'on clause'
+[ERROR]: 2025-03-09 06:17:37 - In Server: Error 1054: Unknown column 'fe.user_id' in 'on clause'
+[ERROR]: 2025-03-09 06:39:21 - In Server: Missing auth token
+[ERROR]: 2025-03-09 06:39:25 - In Server: Error 1146: Table 'tjl.province' doesn't exist
+[INFO]: 2025-03-09 06:39:35 - Get Province success
+[ERROR]: 2025-03-09 06:41:44 - In Server: Missing auth token
+[INFO]: 2025-03-09 06:41:48 - Get Province success
+[INFO]: 2025-03-09 06:42:01 - Get Province success
+[INFO]: 2025-03-09 06:47:09 - Get District success
+[INFO]: 2025-03-09 06:50:15 - Get Subdistrict success

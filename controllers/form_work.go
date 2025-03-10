@@ -18,7 +18,7 @@ func FormWork(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
-		helper.Response(w, 400, true, "Internal server error ("+err.Error()+")", map[string]interface{}{})
+		helper.Response(w, 400, true, "Internal server error ("+err.Error()+")", map[string]any{})
 		return
 	}
 
@@ -42,43 +42,43 @@ func FormWork(w http.ResponseWriter, r *http.Request) {
 
 	if Position == "" {
 		helper.Logger("error", "In Server: position is required")
-		helper.Response(w, 400, true, "position is required", map[string]interface{}{})
+		helper.Response(w, 400, true, "position is required", map[string]any{})
 		return
 	}
 
 	if City == "" {
 		helper.Logger("error", "In Server: city is required")
-		helper.Response(w, 400, true, "city is required", map[string]interface{}{})
+		helper.Response(w, 400, true, "city is required", map[string]any{})
 		return
 	}
 
 	if Work == "" {
 		helper.Logger("error", "In Server: work is required")
-		helper.Response(w, 400, true, "work is required", map[string]interface{}{})
+		helper.Response(w, 400, true, "work is required", map[string]any{})
 		return
 	}
 
 	if StartYear == "" {
 		helper.Logger("error", "In Server: start_year is required")
-		helper.Response(w, 400, true, "start_year is required", map[string]interface{}{})
+		helper.Response(w, 400, true, "start_year is required", map[string]any{})
 		return
 	}
 
 	if StartMonth == "" {
 		helper.Logger("error", "In Server: start_month is required")
-		helper.Response(w, 400, true, "start_month is required", map[string]interface{}{})
+		helper.Response(w, 400, true, "start_month is required", map[string]any{})
 		return
 	}
 
 	if EndMonth == "" {
 		helper.Logger("error", "In Server: end_month is required")
-		helper.Response(w, 400, true, "end_month is required", map[string]interface{}{})
+		helper.Response(w, 400, true, "end_month is required", map[string]any{})
 		return
 	}
 
 	if EndYear == "" {
 		helper.Logger("error", "In Server: end_year is required")
-		helper.Response(w, 400, true, "end_year is required", map[string]interface{}{})
+		helper.Response(w, 400, true, "end_year is required", map[string]any{})
 		return
 	}
 
@@ -87,7 +87,7 @@ func FormWork(w http.ResponseWriter, r *http.Request) {
 	result, err := services.FormWork(data)
 
 	if err != nil {
-		helper.Response(w, 400, true, err.Error(), map[string]interface{}{})
+		helper.Response(w, 400, true, err.Error(), map[string]any{})
 		return
 	}
 

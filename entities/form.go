@@ -22,6 +22,7 @@ type FormRegion struct {
 }
 
 type FormEducation struct {
+	Id              string `json:"id"`
 	EducationLevel  string `json:"education_level"`
 	Major           string `json:"major"`
 	SchoolOrCollege string `json:"school_or_college"`
@@ -53,4 +54,11 @@ type FormWork struct {
 	EndMonth   string `json:"end_month"`
 	EndYear    string `json:"end_year"`
 	UserId     string `json:"user_id"`
+}
+
+type FormLanguage struct {
+	Id       int    `json:"id"`
+	Language string `json:"language"`
+	Level    string `json:"level"`
+	UserId   string `json:"user_id"`
 }
