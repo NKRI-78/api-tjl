@@ -52,7 +52,7 @@ func JwtAuthentication(next http.Handler) http.Handler {
 
 		if tokenHeader == "" {
 			helper.Logger("error", "In Server: Missing auth token")
-			helper.Response(w, http.StatusUnauthorized, true, "Missing auth token", map[string]interface{}{})
+			helper.Response(w, http.StatusUnauthorized, true, "Missing auth token", map[string]any{})
 			return
 		}
 
@@ -60,20 +60,20 @@ func JwtAuthentication(next http.Handler) http.Handler {
 
 		if len(splitted) != 2 {
 			helper.Logger("error", "In Server: Invalid token format")
-			helper.Response(w, http.StatusUnauthorized, true, "Invalid token format", map[string]interface{}{})
+			helper.Response(w, http.StatusUnauthorized, true, "Invalid token format", map[string]any{})
 			return
 		}
 
 		tokenPart := splitted[1]
 		claims := jwt.MapClaims{}
 
-		token, err := jwt.ParseWithClaims(tokenPart, claims, func(token *jwt.Token) (interface{}, error) {
+		token, err := jwt.ParseWithClaims(tokenPart, claims, func(token *jwt.Token) (any, error) {
 			return []byte(os.Getenv("JWT_SECRET")), nil
 		})
 
 		if err != nil || !token.Valid {
 			helper.Logger("error", "In Server: Token is invalid")
-			helper.Response(w, http.StatusUnauthorized, true, "Token is invalid", map[string]interface{}{})
+			helper.Response(w, http.StatusUnauthorized, true, "Token is invalid", map[string]any{})
 			return
 		}
 
