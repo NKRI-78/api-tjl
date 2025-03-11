@@ -7,7 +7,10 @@ import (
 )
 
 func JobList(w http.ResponseWriter, r *http.Request) {
-	result, err := services.JobList()
+
+	salary := r.URL.Query().Get("salary")
+
+	result, err := services.JobList(salary)
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]any{})
