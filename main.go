@@ -87,6 +87,8 @@ func main() {
 	router.HandleFunc("/api/v1/verify-otp", controllers.VerifyOtp).Methods("POST")
 
 	// Jobs
+	router.HandleFunc("/api/v1/apply/job", controllers.ApplyJob).Methods("POST")
+	router.HandleFunc("/api/v1/admin/job", controllers.AdminJobList).Methods("GET")
 	router.HandleFunc("/api/v1/job", controllers.JobList).Methods("GET")
 	router.HandleFunc("/api/v1/job-detail/{id}", controllers.JobDetail).Methods("GET")
 	router.HandleFunc("/api/v1/job-store", controllers.JobStore).Methods("POST")
@@ -96,7 +98,7 @@ func main() {
 
 	// Language
 	router.HandleFunc("/api/v1/language", controllers.Language).Methods("GET")
-	
+
 	// Form
 	router.HandleFunc("/api/v1/form-biodata", controllers.FormBiodata).Methods("POST")
 	router.HandleFunc("/api/v1/form-region", controllers.FormRegion).Methods("POST")
