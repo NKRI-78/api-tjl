@@ -2,46 +2,48 @@ package middlewares
 
 import (
 	"net/http"
+	helper "superapps/helpers"
 	"sync"
-
-	"golang.org/x/time/rate"
+	"time"
 )
 
-// Create a struct to hold each client's rate limiter
-type Client struct {
-	limiter *rate.Limiter
-}
+var rateLimit = struct {
+	requests map[string][]time.Time
+	mutex    sync.Mutex
+}{requests: make(map[string][]time.Time)}
 
-// In-memory storage for clients
-var clients = make(map[string]*Client)
-var mu sync.Mutex
-
-// Get a client's rate limiter or create one if it doesn't exist
-func GetClientLimiter(ip string) *rate.Limiter {
-	mu.Lock()
-	defer mu.Unlock()
-
-	// If the client already exists, return the existing limiter
-	if client, exists := clients[ip]; exists {
-		return client.limiter
-	}
-
-	// Create a new limiter with 2 requests per minute
-	limiter := rate.NewLimiter(2, 1)
-	clients[ip] = &Client{limiter: limiter}
-	return limiter
-}
-
+// RateLimitingMiddleware allows up to 2 requests per minute per IP
 func RateLimitingMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		ip := r.RemoteAddr
-		limiter := GetClientLimiter(ip)
+		ip := r.Header.Get("X-Forwarded-For")
+		if ip == "" {
+			ip = r.RemoteAddr
+		}
 
-		// Check if the request is allowed
-		if !limiter.Allow() {
-			http.Error(w, "Too Many Requests", http.StatusTooManyRequests)
+		rateLimit.mutex.Lock()
+		timestamps := rateLimit.requests[ip]
+
+		// Remove expired requests older than 1 minute
+		now := time.Now()
+		validTimestamps := []time.Time{}
+		for _, t := range timestamps {
+			if now.Sub(t) < time.Minute {
+				validTimestamps = append(validTimestamps, t)
+			}
+		}
+
+		// Check if request limit is exceeded
+		if len(validTimestamps) >= 2 {
+			helper.Logger("error", "In Server: Too many requests, slow down!")
+			helper.Response(w, 500, true, "Too many requests, slow down!", map[string]any{})
+			rateLimit.mutex.Unlock()
 			return
 		}
+
+		// Add the current request timestamp
+		validTimestamps = append(validTimestamps, now)
+		rateLimit.requests[ip] = validTimestamps
+		rateLimit.mutex.Unlock()
 
 		next.ServeHTTP(w, r)
 	})
