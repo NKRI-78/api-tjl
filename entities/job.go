@@ -12,7 +12,6 @@ type JobListQuery struct {
 	Id            string    `json:"id"`
 	Title         string    `json:"title"`
 	Caption       string    `json:"caption"`
-	Salary        float64   `json:"salary"`
 	CatId         string    `json:"cat_id"`
 	CatName       string    `json:"cat_name"`
 	PlaceId       int       `json:"place_id"`
@@ -20,6 +19,8 @@ type JobListQuery struct {
 	PlaceCurrency string    `json:"place_currency"`
 	PlaceKurs     float64   `json:"place_kurs"`
 	PlaceInfo     string    `json:"place_info"`
+	Salary        float64   `json:"salary"`
+	SalaryIDR     float64   `json:"salary_id"`
 	UserId        string    `json:"user_id"`
 	UserAvatar    string    `json:"user_avatar"`
 	UserName      string    `json:"user_name"`

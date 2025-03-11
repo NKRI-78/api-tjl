@@ -1,6 +1,7 @@
 package services
 
 import (
+	"database/sql"
 	"errors"
 	"strconv"
 	entities "superapps/entities"
@@ -123,11 +124,12 @@ func AdminJobList() (map[string]any, error) {
 	}, nil
 }
 
-func JobList() (map[string]any, error) {
+func JobList(salary string) (map[string]any, error) {
 	var jobs entities.JobListQuery
 	var jobFavourite []entities.JobFavourite
 	var dataJob = make([]entities.JobList, 0)
 
+	// Query dasar dengan konversi salary ke IDR
 	query := `SELECT j.uid AS id, j.title, j.caption, j.salary, 
 	jc.uid as cat_id,
 	jc.name AS cat_name, 
@@ -139,16 +141,32 @@ func JobList() (map[string]any, error) {
 	up.user_id,
 	up.avatar AS user_avatar,
 	up.fullname AS user_name,
-	j.created_at
+	j.created_at,
+	j.salary,
+	(j.salary * p.kurs) AS salary_idr
 	FROM jobs j
 	INNER JOIN job_categories jc ON jc.uid = j.cat_id
 	INNER JOIN places p ON p.id = j.place_id
 	INNER JOIN profiles up ON up.user_id = j.user_id
 	`
-	rows, err := db.Debug().Raw(query).Rows()
+
+	// Tambahkan filter jika salary tidak kosong
+	if salary != "" {
+		query += " WHERE (j.salary * p.kurs) >= ?"
+	}
+
+	// Jalankan query dengan parameter jika ada salary
+	var rows *sql.Rows
+	var err error
+	if salary != "" {
+		rows, err = db.Debug().Raw(query, salary).Rows() // Pakai parameter binding
+	} else {
+		rows, err = db.Debug().Raw(query).Rows()
+	}
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
+		return nil, err
 	}
 	defer rows.Close()
 
@@ -160,9 +178,8 @@ func JobList() (map[string]any, error) {
 			return nil, errors.New(errJobRows.Error())
 		}
 
-		bookmarkQuery := `SELECT job_id, user_id FROM job_favourites WHERE user_id = '` + jobs.UserId + `' AND job_id = '` + jobs.Id + `'`
-
-		errBookmark := db.Debug().Raw(bookmarkQuery).Scan(&jobFavourite).Error
+		bookmarkQuery := `SELECT job_id, user_id FROM job_favourites WHERE user_id = ? AND job_id = ?`
+		errBookmark := db.Debug().Raw(bookmarkQuery, jobs.UserId, jobs.Id).Scan(&jobFavourite).Error
 
 		if errBookmark != nil {
 			helper.Logger("error", "In Server: "+errBookmark.Error())
@@ -170,14 +187,7 @@ func JobList() (map[string]any, error) {
 		}
 
 		isJobFavouriteExist := len(jobFavourite)
-
-		var bookmark bool
-
-		if isJobFavouriteExist == 1 {
-			bookmark = true
-		} else {
-			bookmark = false
-		}
+		bookmark := isJobFavouriteExist == 1
 
 		salaryIdr := helper.FormatIDR(jobs.Salary * jobs.PlaceKurs)
 
