@@ -4,6 +4,23 @@ import (
 	"time"
 )
 
+type Biodata struct {
+	Personal    ProfileFormBiodata     `json:"personal"`
+	Address     ProfileFormPlace       `json:"address"`
+	Educations  []ProfileFormEducation `json:"educations"`
+	Trainings   []ProfileFormExercise  `json:"trainings"`
+	Experiences []ProfileFormWork      `json:"experiences"`
+	Languages   []ProfileFormLanguage  `json:"languages"`
+}
+
+type CheckAccount struct {
+	Email string `json:"email"`
+}
+
+type CheckJobs struct {
+	JobId string `json:"job_id"`
+}
+
 type User struct {
 	Uid      string `json:"uid"`
 	Id       string `json:"id"`
@@ -62,15 +79,6 @@ type ProfileResponse struct {
 	Email     string             `json:"email"`
 	Job       ProfileJobResponse `json:"job"`
 	Biodata   Biodata            `json:"biodata"`
-}
-
-type Biodata struct {
-	Personal    ProfileFormBiodata     `json:"personal"`
-	Address     ProfileFormPlace       `json:"address"`
-	Educations  []ProfileFormEducation `json:"educations"`
-	Trainings   []ProfileFormExercise  `json:"trainings"`
-	Experiences []ProfileFormWork      `json:"experiences"`
-	Languages   []ProfileFormLanguage  `json:"languages"`
 }
 
 type ProfileFormBiodata struct {
@@ -135,14 +143,6 @@ type ProfileFormLanguage struct {
 type ProfileJobResponse struct {
 	Id   string `json:"id"`
 	Name string `json:"name"`
-}
-
-type CheckAccount struct {
-	Email string `json:"email"`
-}
-
-type CheckJobs struct {
-	JobId string `json:"job_id"`
 }
 
 type UserLogin struct {

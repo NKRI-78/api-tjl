@@ -10,6 +10,119 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+func ApplyJob(aj *models.ApplyJob) (map[string]any, error) {
+
+	query := `INSERT INTO apply_jobs (job_id, user_id, status) VALUES (?, ?, ?)`
+
+	err := db.Debug().Exec(query, aj.JobId, aj.UserId, aj.Status).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
+func AdminJobList() (map[string]any, error) {
+	var jobs entities.JobListAdminQuery
+	var jobFavourite []entities.JobFavourite
+
+	var dataJob = make([]entities.JobListAdmin, 0)
+
+	query := `SELECT j.uid AS id, j.title, j.caption, j.salary, 
+	jc.uid as cat_id,
+	jc.name AS cat_name, 
+	p.id AS place_id,
+	p.name AS place_name,
+	p.currency AS place_currency,
+	p.kurs AS place_kurs,
+	p.info AS place_info,
+	up.user_id,
+	up.avatar AS user_avatar,
+	up.fullname AS user_name,
+	j.created_at,
+	js.id AS job_status_id,
+	js.name AS job_status_name
+	FROM jobs j
+	INNER JOIN job_categories jc ON jc.uid = j.cat_id
+	INNER JOIN apply_jobs aj ON aj.job_id = j.uid
+	INNER JOIN job_statuses js ON js.id = aj.status
+	INNER JOIN places p ON p.id = j.place_id
+	INNER JOIN profiles up ON up.user_id = j.user_id
+	`
+	rows, err := db.Debug().Raw(query).Rows()
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		errJobRows := db.ScanRows(rows, &jobs)
+
+		if errJobRows != nil {
+			helper.Logger("error", "In Server: "+errJobRows.Error())
+			return nil, errors.New(errJobRows.Error())
+		}
+
+		bookmarkQuery := `SELECT job_id, user_id FROM job_favourites WHERE user_id = '` + jobs.UserId + `' AND job_id = '` + jobs.Id + `'`
+
+		errBookmark := db.Debug().Raw(bookmarkQuery).Scan(&jobFavourite).Error
+
+		if errBookmark != nil {
+			helper.Logger("error", "In Server: "+errBookmark.Error())
+			return nil, errors.New(errBookmark.Error())
+		}
+
+		isJobFavouriteExist := len(jobFavourite)
+
+		var bookmark bool
+
+		if isJobFavouriteExist == 1 {
+			bookmark = true
+		} else {
+			bookmark = false
+		}
+
+		salaryIdr := helper.FormatIDR(jobs.Salary * jobs.PlaceKurs)
+
+		dataJob = append(dataJob, entities.JobListAdmin{
+			Id:        jobs.Id,
+			Title:     jobs.Title,
+			Caption:   jobs.Caption,
+			Salary:    int(jobs.Salary),
+			SalaryIDR: salaryIdr,
+			Bookmark:  bookmark,
+			Status: entities.JobStatus{
+				Id:   jobs.JobStatusId,
+				Name: jobs.JobStatusName,
+			},
+			JobCategory: entities.JobCategory{
+				Id:   jobs.CatId,
+				Name: jobs.CatName,
+			},
+			JobPlace: entities.JobPlace{
+				Id:       jobs.PlaceId,
+				Name:     jobs.PlaceName,
+				Currency: jobs.PlaceCurrency,
+				Kurs:     int(jobs.PlaceKurs),
+				Info:     jobs.PlaceInfo,
+			},
+			JobUser: entities.JobUser{
+				Id:     jobs.UserId,
+				Avatar: jobs.UserAvatar,
+				Name:   jobs.UserName,
+			},
+			Created: jobs.CreatedAt.Format("2006-01-02 15:04:05"),
+		})
+	}
+
+	return map[string]any{
+		"data": dataJob,
+	}, nil
+}
+
 func JobList() (map[string]any, error) {
 	var jobs entities.JobListQuery
 	var jobFavourite []entities.JobFavourite

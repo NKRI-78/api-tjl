@@ -5,7 +5,7 @@ import (
 	"net/http"
 	helper "superapps/helpers"
 	"superapps/models"
-	service "superapps/services"
+	"superapps/services"
 )
 
 func BannerStore(w http.ResponseWriter, r *http.Request) {
@@ -35,7 +35,7 @@ func BannerStore(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result, err := service.BannerStore(data)
+	result, err := services.BannerStore(data)
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]any{})

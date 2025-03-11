@@ -1,0 +1,34 @@
+[ERROR]: 2025-03-11 11:06:31 - In Server: Missing auth token
+[ERROR]: 2025-03-11 11:06:37 - In Server: job_id is required
+[ERROR]: 2025-03-11 11:06:59 - In Server: Error 1366: Incorrect integer value: '' for column 'status' at row 1
+[ERROR]: 2025-03-11 11:07:23 - In Server: status is required
+[ERROR]: 2025-03-11 11:07:26 - In Server: status is required
+[INFO]: 2025-03-11 11:07:32 - Apply Job success
+[INFO]: 2025-03-11 11:23:55 - Fetch Admin Job List success
+[INFO]: 2025-03-11 11:26:24 - Apply Job success
+[INFO]: 2025-03-11 11:26:26 - Fetch Admin Job List success
+[INFO]: 2025-03-11 11:32:54 - Fetch Admin Job List success
+[INFO]: 2025-03-11 11:34:21 - Fetch Admin Job List success
+[INFO]: 2025-03-11 11:35:03 - Fetch Admin Job List success
+[INFO]: 2025-03-11 11:43:35 - Fetch Admin Job List success
+[ERROR]: 2025-03-11 11:50:14 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROM jobs j
+	INNER JOIN job_categories jc ON jc.uid = j.cat_id
+	INNER JOIN apply' at line 15
+[ERROR]: 2025-03-11 11:50:15 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROM jobs j
+	INNER JOIN job_categories jc ON jc.uid = j.cat_id
+	INNER JOIN apply' at line 15
+[ERROR]: 2025-03-11 11:50:16 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROM jobs j
+	INNER JOIN job_categories jc ON jc.uid = j.cat_id
+	INNER JOIN apply' at line 15
+[ERROR]: 2025-03-11 11:50:17 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROM jobs j
+	INNER JOIN job_categories jc ON jc.uid = j.cat_id
+	INNER JOIN apply' at line 15
+[ERROR]: 2025-03-11 11:50:18 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROM jobs j
+	INNER JOIN job_categories jc ON jc.uid = j.cat_id
+	INNER JOIN apply' at line 15
+[ERROR]: 2025-03-11 11:50:19 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROM jobs j
+	INNER JOIN job_categories jc ON jc.uid = j.cat_id
+	INNER JOIN apply' at line 15
+[INFO]: 2025-03-11 11:50:31 - Fetch Admin Job List success
+[INFO]: 2025-03-11 11:51:04 - Fetch Admin Job List success
+[INFO]: 2025-03-11 11:51:25 - Fetch Admin Job List success
