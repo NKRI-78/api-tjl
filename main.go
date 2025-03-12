@@ -24,7 +24,7 @@ func main() {
 	router := mux.NewRouter()
 
 	router.Use(middleware.JwtAuthentication)
-	router.Use(middleware.RateLimitingMiddleware)
+	// router.Use(middleware.RateLimitingMiddleware)
 
 	// Check if the directory exists, create if it doesn't
 	errMkidr := os.MkdirAll("public", os.ModePerm) // os.ModePerm ensures directory is created with the correct permissions
