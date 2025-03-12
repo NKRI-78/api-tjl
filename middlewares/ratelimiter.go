@@ -33,7 +33,7 @@ func RateLimitingMiddleware(next http.Handler) http.Handler {
 		}
 
 		// Check if request limit is exceeded
-		if len(validTimestamps) >= 2 {
+		if len(validTimestamps) >= 5 {
 			helper.Logger("error", "In Server: Too many requests, slow down!")
 			helper.Response(w, 500, true, "Too many requests, slow down!", map[string]any{})
 			rateLimit.mutex.Unlock()
