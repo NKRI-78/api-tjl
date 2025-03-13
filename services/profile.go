@@ -27,16 +27,24 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 	fb.place AS bio_place,
 	fp.detail_address AS bio_detail_address,
 	fp.id AS bio_address_id,
-	fp.province AS bio_province,
-	fp.city AS bio_city,
-	fp.district AS bio_district, 
-	fp.subdistrict AS bio_subdistrict 
+	pro.id AS bio_province_id,
+	pro.name AS bio_province,
+	reg.id AS bio_city_id,
+	reg.name AS bio_city,
+	dis.id AS bio_district_id,
+	dis.name AS bio_district, 
+	vil.id AS bio_subdistrict_id,
+	vil.name AS bio_subdistrict 
 	FROM profiles p 
 	INNER JOIN users u ON u.uid = p.user_id
 	INNER JOIN user_pick_jobs upj ON upj.user_id = u.uid
 	INNER JOIN job_categories jc ON jc.uid = upj.job_id
 	LEFT JOIN form_biodatas fb ON fb.user_id = p.user_id
 	LEFT JOIN form_places fp ON fp.user_id = p.user_id
+	LEFT JOIN provinces pro ON pro.id = fp.province_id
+	LEFT JOIN regencies reg ON reg.id = fp.city_id
+	LEFT JOIN districts dis ON dis.id = fp.district_id
+	LEFT JOIN villages vil ON vil.id = fp.subdistrict_id
 	WHERE u.uid = '` + p.Id + `'`
 
 	err := db.Debug().Raw(query).Scan(&profiles).Error
@@ -192,11 +200,23 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 			Status:    profiles[0].BioStatus,
 		},
 		Address: entities.ProfileFormPlace{
-			Id:            profiles[0].BioAddressId,
-			Province:      profiles[0].BioProvince,
-			City:          profiles[0].BioCity,
-			District:      profiles[0].BioDistrict,
-			Subdistrict:   profiles[0].BioSubdistrict,
+			Id: profiles[0].BioAddressId,
+			Province: entities.ProfileFormPlaceData{
+				Id:   0,
+				Name: "-",
+			},
+			City: entities.ProfileCityPlaceData{
+				Id:   0,
+				Name: "-",
+			},
+			District: entities.ProfileDistrictPlaceData{
+				Id:   0,
+				Name: "-",
+			},
+			Subdistrict: entities.ProfileSubdistrictPlaceData{
+				Id:   0,
+				Name: "-",
+			},
 			DetailAddress: profiles[0].BioDetailAddress,
 		},
 		Educations:  dataEdu,
