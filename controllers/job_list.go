@@ -9,8 +9,9 @@ import (
 func JobList(w http.ResponseWriter, r *http.Request) {
 
 	salary := r.URL.Query().Get("salary")
+	country := r.URL.Query().Get("country")
 
-	result, err := services.JobList(salary)
+	result, err := services.JobList(salary, country)
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]any{})
