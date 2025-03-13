@@ -24,7 +24,6 @@ func main() {
 	router := mux.NewRouter()
 
 	router.Use(middleware.JwtAuthentication)
-	// router.Use(middleware.RateLimitingMiddleware)
 
 	// Check if the directory exists, create if it doesn't
 	errMkidr := os.MkdirAll("public", os.ModePerm) // os.ModePerm ensures directory is created with the correct permissions
@@ -59,6 +58,9 @@ func main() {
 		}
 	}
 
+	// Inisialisasi rate limiter: 5 permintaan per menit
+	rateLimiter := middleware.NewRateLimiter(2, 1)
+
 	// Administration
 	router.HandleFunc("/api/v1/province", controllers.Province).Methods("GET")
 	router.HandleFunc("/api/v1/city/{province_id}", controllers.City).Methods("GET")
@@ -66,8 +68,8 @@ func main() {
 	router.HandleFunc("/api/v1/subdistrict/{district_id}", controllers.Subdistrict).Methods("GET")
 
 	// Auth
-	router.HandleFunc("/api/v1/login", controllers.Login).Methods("POST")
-	router.HandleFunc("/api/v1/register", controllers.Register).Methods("POST")
+	router.Handle("/api/v1/login", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.Login))).Methods("POST")
+	router.Handle("/api/v1/register", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.Register))).Methods("POST")
 
 	// Branch
 	router.HandleFunc("/api/v1/branch", controllers.Branch).Methods("GET")
