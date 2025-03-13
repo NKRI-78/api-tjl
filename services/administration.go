@@ -8,6 +8,23 @@ import (
 	models "superapps/models"
 )
 
+func Country() (map[string]any, error) {
+	countries := []entities.Country{}
+
+	query := `SELECT id, name FROM places`
+
+	err := db.Debug().Raw(query).Scan(&countries).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{
+		"data": countries,
+	}, nil
+}
+
 func Province() (map[string]any, error) {
 	provinces := []entities.Province{}
 

@@ -100,3 +100,8 @@
 [INFO]: 2025-03-13 10:52:36 - Login success
 [INFO]: 2025-03-13 10:52:44 - Login success
 [ERROR]: 2025-03-13 10:52:44 - In Server: Too many requests. Please try again later
+[ERROR]: 2025-03-13 11:11:33 - In Server: Missing auth token
+[INFO]: 2025-03-13 11:11:38 - Get Country success
+[INFO]: 2025-03-13 11:11:52 - Get Country success
+[INFO]: 2025-03-13 11:11:53 - Get Country success
+[INFO]: 2025-03-13 11:12:11 - Get Country success

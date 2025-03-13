@@ -58,7 +58,7 @@ func main() {
 		}
 	}
 
-	// Inisialisasi rate limiter: 5 permintaan per menit
+	// Inisialisasi rate limiter: 2 permintaan per menit
 	rateLimiter := middleware.NewRateLimiter(2, 1)
 
 	// Administration
@@ -66,6 +66,7 @@ func main() {
 	router.HandleFunc("/api/v1/city/{province_id}", controllers.City).Methods("GET")
 	router.HandleFunc("/api/v1/district/{city_id}", controllers.District).Methods("GET")
 	router.HandleFunc("/api/v1/subdistrict/{district_id}", controllers.Subdistrict).Methods("GET")
+	router.HandleFunc("/api/v1/country", controllers.Country).Methods("GET")
 
 	// Auth
 	router.Handle("/api/v1/login", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.Login))).Methods("POST")
