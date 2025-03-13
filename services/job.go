@@ -124,7 +124,7 @@ func AdminJobList() (map[string]any, error) {
 	}, nil
 }
 
-func JobList(salary string) (map[string]any, error) {
+func JobList(salary, country string) (map[string]any, error) {
 	var jobs entities.JobListQuery
 	var jobFavourite []entities.JobFavourite
 	var dataJob = make([]entities.JobList, 0)
@@ -153,6 +153,10 @@ func JobList(salary string) (map[string]any, error) {
 	// Tambahkan filter jika salary tidak kosong
 	if salary != "" {
 		query += " WHERE (j.salary * p.kurs) >= ?"
+	}
+
+	if country != "" {
+		query += ` WHERE p.name LIKE '%` + country + `%' `
 	}
 
 	// Jalankan query dengan parameter jika ada salary
