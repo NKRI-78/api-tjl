@@ -124,12 +124,11 @@ func AdminJobList() (map[string]any, error) {
 	}, nil
 }
 
-func JobList(salary, country string) (map[string]any, error) {
+func JobList(salary, country, position string) (map[string]any, error) {
 	var jobs entities.JobListQuery
 	var jobFavourite []entities.JobFavourite
 	var dataJob = make([]entities.JobList, 0)
 
-	// Query dasar dengan konversi salary ke IDR
 	query := `SELECT j.uid AS id, j.title, j.caption, j.salary, 
 	jc.uid as cat_id,
 	jc.name AS cat_name, 
@@ -148,25 +147,18 @@ func JobList(salary, country string) (map[string]any, error) {
 	INNER JOIN job_categories jc ON jc.uid = j.cat_id
 	INNER JOIN places p ON p.id = j.place_id
 	INNER JOIN profiles up ON up.user_id = j.user_id
+	WHERE p.name LIKE '%` + country + `%'
+	AND jc.name LIKE '%` + position + `%'
 	`
 
-	// Tambahkan filter jika salary tidak kosong
 	if salary != "" {
-		query += " WHERE (j.salary * p.kurs) >= ?"
+		query += ` AND (j.salary * p.kurs) >= '` + salary + `' `
 	}
 
-	if country != "" {
-		query += ` WHERE p.name LIKE '%` + country + `%' `
-	}
-
-	// Jalankan query dengan parameter jika ada salary
 	var rows *sql.Rows
 	var err error
-	if salary != "" {
-		rows, err = db.Debug().Raw(query, salary).Rows() // Pakai parameter binding
-	} else {
-		rows, err = db.Debug().Raw(query).Rows()
-	}
+
+	rows, err = db.Debug().Raw(query).Rows()
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())

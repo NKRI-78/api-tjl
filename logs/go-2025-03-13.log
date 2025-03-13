@@ -107,3 +107,53 @@
 [INFO]: 2025-03-13 11:12:11 - Get Country success
 [INFO]: 2025-03-13 11:17:35 - Fetch Job List success
 [INFO]: 2025-03-13 11:23:44 - Register success
+[ERROR]: 2025-03-13 12:21:26 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE p.name LIKE '%Saudi Arabia%'' at line 19
+[ERROR]: 2025-03-13 12:21:48 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE p.name LIKE %'Saudi Arabia'%' at line 19
+[ERROR]: 2025-03-13 12:22:11 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE p.name LIKE %Saudi Arabia%' at line 19
+[ERROR]: 2025-03-13 12:22:11 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE p.name LIKE %Saudi Arabia%' at line 19
+[ERROR]: 2025-03-13 12:22:21 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE p.name LIKE %'Saudi Arabia'%' at line 19
+[ERROR]: 2025-03-13 12:22:40 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE p.name LIKE '%'Saudi Arabia'%'' at line 19
+[ERROR]: 2025-03-13 12:22:53 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE p.name LIKE %Saudi Arabia%' at line 19
+[ERROR]: 2025-03-13 12:23:04 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE p.name LIKE '%Saudi Arabia%'' at line 19
+[ERROR]: 2025-03-13 12:25:28 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',? AND p.name LIKE ?' at line 19
+[ERROR]: 2025-03-13 12:25:29 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',? AND p.name LIKE ?' at line 19
+[ERROR]: 2025-03-13 12:29:15 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',? AND p.name LIKE ?' at line 19
+[ERROR]: 2025-03-13 12:30:26 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '%Saudi Arabia%' 
+	 WHERE (j.salary * p.kurs) >= ?' at line 19
+[ERROR]: 2025-03-13 12:30:27 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '%Saudi Arabia%' 
+	 WHERE (j.salary * p.kurs) >= ?' at line 19
+[ERROR]: 2025-03-13 12:30:36 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '%Saudi Arabia%' 
+	 AND (j.salary * p.kurs) >= ?' at line 19
+[ERROR]: 2025-03-13 12:30:37 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '%Saudi Arabia%' 
+	 AND (j.salary * p.kurs) >= ?' at line 19
+[ERROR]: 2025-03-13 12:31:33 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '%Saudi Arabia%' 
+	 AND (j.salary * p.kurs) >= 440000' at line 19
+[ERROR]: 2025-03-13 12:31:34 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '%Saudi Arabia%' 
+	 AND (j.salary * p.kurs) >= 440000' at line 19
+[ERROR]: 2025-03-13 12:31:48 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '%Saudi Arabia%' 
+	 AND (j.salary * p.kurs) >= '440000'' at line 19
+[ERROR]: 2025-03-13 12:31:48 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '%Saudi Arabia%' 
+	 AND (j.salary * p.kurs) >= '440000'' at line 19
+[ERROR]: 2025-03-13 12:32:42 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '/ WHERE p.name LIKE %Saudi Arabia%' 
+	 AND (j.salary * p.kurs) >= '440000'' at line 19
+[ERROR]: 2025-03-13 12:32:43 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '/ WHERE p.name LIKE %Saudi Arabia%' 
+	 AND (j.salary * p.kurs) >= '440000'' at line 19
+[INFO]: 2025-03-13 12:32:53 - Fetch Job List success
+[ERROR]: 2025-03-13 12:33:58 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '%'test'%
+	 AND (j.salary * p.kurs) >= '440000'' at line 19
+[ERROR]: 2025-03-13 12:33:59 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '%'test'%
+	 AND (j.salary * p.kurs) >= '440000'' at line 19
+[ERROR]: 2025-03-13 12:34:08 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '%'test'%' at line 19
+[ERROR]: 2025-03-13 12:34:09 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '%'test'%' at line 19
+[ERROR]: 2025-03-13 12:34:16 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '%test%' at line 19
+[INFO]: 2025-03-13 12:36:28 - Fetch Job List success
+[INFO]: 2025-03-13 12:36:29 - Fetch Job List success
+[INFO]: 2025-03-13 12:36:37 - Fetch Job List success
+[INFO]: 2025-03-13 12:36:44 - Fetch Job List success
+[INFO]: 2025-03-13 12:36:49 - Fetch Job List success
+[INFO]: 2025-03-13 12:36:52 - Fetch Job List success
+[INFO]: 2025-03-13 12:39:57 - Fetch Job List success
+[INFO]: 2025-03-13 12:39:59 - Fetch Job List success
+[INFO]: 2025-03-13 12:40:08 - Fetch Job List success
+[INFO]: 2025-03-13 12:40:10 - Fetch Job List success
+[INFO]: 2025-03-13 12:40:13 - Fetch Job List success
