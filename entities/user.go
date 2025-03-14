@@ -63,10 +63,13 @@ type Profile struct {
 	BioName            string `json:"ex_name"`
 	BioInstitution     string `json:"ex_institution"`
 	BioAddressId       int    `json:"bio_address_id"`
-	BioProvinceId      int    `json:"bio_province_Id"`
+	BioProvinceId      int    `json:"bio_province_id"`
 	BioProvince        string `json:"bio_province"`
+	BioCityId          int    `json:"bio_city_id"`
 	BioCity            string `json:"bio_city"`
+	BioDistrictId      int    `json:"bio_district_id"`
 	BioDistrict        string `json:"bio_district"`
+	BioSubdistrictId   int    `json:"bio_subdistrict_id"`
 	BioSubdistrict     string `json:"bio_subdistrict"`
 	BioDetailAddress   string `json:"bio_detail_address"`
 }
@@ -95,11 +98,11 @@ type ProfileFormBiodata struct {
 
 type ProfileFormPlace struct {
 	Id            int                         `json:"id"`
+	DetailAddress string                      `json:"detail_address"`
 	Province      ProfileFormPlaceData        `json:"province"`
 	City          ProfileCityPlaceData        `json:"city"`
 	District      ProfileDistrictPlaceData    `json:"district"`
 	Subdistrict   ProfileSubdistrictPlaceData `json:"subdistrict"`
-	DetailAddress string                      `json:"detail_address"`
 }
 
 type ProfileFormPlaceData struct {

@@ -201,23 +201,23 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 		},
 		Address: entities.ProfileFormPlace{
 			Id: profiles[0].BioAddressId,
+			DetailAddress: profiles[0].BioDetailAddress,
 			Province: entities.ProfileFormPlaceData{
-				Id:   0,
-				Name: "-",
+				Id:   profiles[0].BioProvinceId,
+				Name: profiles[0].BioProvince,
 			},
 			City: entities.ProfileCityPlaceData{
-				Id:   0,
-				Name: "-",
+				Id:   profiles[0].BioCityId,
+				Name: profiles[0].BioCity,
 			},
 			District: entities.ProfileDistrictPlaceData{
-				Id:   0,
-				Name: "-",
+				Id:   profiles[0].BioDistrictId,
+				Name: profiles[0].BioDistrict,
 			},
 			Subdistrict: entities.ProfileSubdistrictPlaceData{
-				Id:   0,
-				Name: "-",
+				Id:   profiles[0].BioSubdistrictId,
+				Name: profiles[0].BioSubdistrict,
 			},
-			DetailAddress: profiles[0].BioDetailAddress,
 		},
 		Educations:  dataEdu,
 		Trainings:   dataTraining,
