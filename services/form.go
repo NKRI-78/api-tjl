@@ -66,15 +66,7 @@ func FormPlace(f *models.FormPlace) (map[string]any, error) {
 func FormEducation(f *models.FormEducation) (map[string]any, error) {
 	query := `INSERT INTO form_educations 
 	(education_level, major, school_or_college, start_year, start_month, end_year, end_month, user_id) 
-	VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-	ON DUPLICATE KEY UPDATE 
-	education_level = VALUES(education_level), 
-	major = VALUES(major), 
-	school_or_college = VALUES(school_or_college), 
-	start_year = VALUES(start_year), 
-	start_month = VALUES(start_month), 
-	end_year = VALUES(end_year), 
-	end_month = VALUES(end_month)`
+	VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
 
 	err := db.Debug().Exec(query, f.EducationLevel, f.Major, f.SchoolOrCollege, f.StartYear, f.StartMonth, f.EndYear, f.EndMonth, f.UserId).Error
 
