@@ -44,13 +44,13 @@ func FormRegion(f *models.FormRegion) (map[string]any, error) {
 }
 
 func FormPlace(f *models.FormPlace) (map[string]any, error) {
-	query := `INSERT INTO form_places (province, city, district, subdistrict, detail_address, user_id) 
+	query := `INSERT INTO form_places (province_id, city_id, district_id, subdistrict_id, detail_address, user_id) 
 	VALUES (?, ?, ?, ?, ?, ?)
 	ON DUPLICATE KEY UPDATE 
-	province = VALUES(province), 
-	city = VALUES(city), 
-	district = VALUES(district), 
-	subdistrict = VALUES(subdistrict), 
+	province_id = VALUES(province_id), 
+	city_id = VALUES(city_id), 
+	district_id = VALUES(district_id), 
+	subdistrict_id = VALUES(subdistrict_id), 
 	detail_address = VALUES(detail_address)`
 
 	err := db.Debug().Exec(query, f.Province, f.City, f.District, f.Subdistrict, f.DetailAddress, f.UserId).Error
@@ -65,8 +65,8 @@ func FormPlace(f *models.FormPlace) (map[string]any, error) {
 
 func FormEducation(f *models.FormEducation) (map[string]any, error) {
 	query := `INSERT INTO form_educations 
-	(education_level, major, school_or_college, start_year, start_month, end_year, end_month) 
-	VALUES (?, ?, ?, ?, ?, ?, ?)
+	(education_level, major, school_or_college, start_year, start_month, end_year, end_month, user_id) 
+	VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 	ON DUPLICATE KEY UPDATE 
 	education_level = VALUES(education_level), 
 	major = VALUES(major), 
