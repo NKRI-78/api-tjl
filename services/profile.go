@@ -74,7 +74,7 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 
 	var dataEdu = make([]entities.ProfileFormEducation, 0)
 
-	queryEdu := `SELECT id, education_level, major, school_or_college, start_month, end_month, end_year, user_id 
+	queryEdu := `SELECT id, education_level, major, school_or_college, start_year, start_month, end_month, end_year, user_id 
 	FROM form_educations WHERE user_id  = '` + profiles[0].Id + `'`
 
 	rows, errEdu := db.Debug().Raw(queryEdu).Scan(&education).Rows()
@@ -200,7 +200,7 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 			Status:    profiles[0].BioStatus,
 		},
 		Address: entities.ProfileFormPlace{
-			Id: profiles[0].BioAddressId,
+			Id:            profiles[0].BioAddressId,
 			DetailAddress: profiles[0].BioDetailAddress,
 			Province: entities.ProfileFormPlaceData{
 				Id:   profiles[0].BioProvinceId,
