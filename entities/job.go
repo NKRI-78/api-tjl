@@ -101,6 +101,11 @@ type JobUser struct {
 	Name   string `json:"fullname"`
 }
 
+type JobCategoryCount struct {
+	Name  string `json:"name"`
+	Total int    `json:"total"`
+}
+
 type JobCategory struct {
 	Id   string `json:"id"`
 	Name string `json:"name"`
