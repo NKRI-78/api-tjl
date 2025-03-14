@@ -22,10 +22,10 @@ type FormRegion struct {
 }
 
 type FormPlace struct {
-	Province      string `json:"province"`
-	City          string `json:"city"`
-	District      string `json:"district"`
-	Subdistrict   string `json:"subdistrict"`
+	ProvinceId    string `json:"province_id"`
+	CityId        string `json:"city_id"`
+	DistrictId    string `json:"district_id"`
+	SubdistrictId string `json:"subdistrict_id"`
 	UserId        string `json:"user_id"`
 	DetailAddress string `json:"detail_address"`
 }

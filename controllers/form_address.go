@@ -30,10 +30,10 @@ func FormAddress(w http.ResponseWriter, r *http.Request) {
 
 	userId, _ := claims["id"].(string)
 
-	Province := data.Province
-	City := data.City
-	District := data.District
-	Subdistrict := data.Subdistrict
+	Province := data.ProvinceId
+	City := data.CityId
+	District := data.DistrictId
+	Subdistrict := data.SubdistrictId
 	DetailAddress := data.DetailAddress
 
 	UserId := userId
