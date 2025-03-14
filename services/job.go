@@ -447,6 +447,27 @@ func JobFavourite(j *models.JobFavourite) (map[string]any, error) {
 	return map[string]any{}, nil
 }
 
+func JobCategoryCount() (map[string]any, error) {
+	categoryCounts := []entities.JobCategoryCount{}
+
+	query := `SELECT jc.name, COUNT(*) AS total
+	FROM jobs j
+	INNER JOIN job_categories jc ON jc.uid = j.cat_id
+	GROUP BY jc.name
+	ORDER BY total DESC`
+
+	err := db.Debug().Raw(query).Scan(&categoryCounts).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{
+		"data": categoryCounts,
+	}, nil
+}
+
 func JobCategory() (map[string]any, error) {
 	categories := []entities.JobCategory{}
 

@@ -100,6 +100,7 @@ func main() {
 	router.HandleFunc("/api/v1/job-favourite", controllers.JobFavourite).Methods("POST")
 	router.HandleFunc("/api/v1/job-categories", controllers.JobCategory).Methods("GET")
 	router.HandleFunc("/api/v1/job-places", controllers.JobPlace).Methods("GET")
+	router.HandleFunc("/api/v1/job-category-count", controllers.JobCategoryCount).Methods("GET")
 
 	// Language
 	router.HandleFunc("/api/v1/language", controllers.Language).Methods("GET")
