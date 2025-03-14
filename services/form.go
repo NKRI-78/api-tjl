@@ -86,6 +86,21 @@ func FormEducation(f *models.FormEducation) (map[string]any, error) {
 	return map[string]any{}, nil
 }
 
+func UpdateFormEducation(f *models.FormEducation) (map[string]any, error) {
+	query := `UPDATE form_educations SET education_level = ?, 
+	major = ?, school_or_college = ?, start_year = ?, start_month = ?, end_year = ?, 
+	end_month = ? WHERE id = ?`
+
+	err := db.Debug().Exec(query, f.EducationLevel, f.Major, f.SchoolOrCollege, f.StartYear, f.StartMonth, f.EndYear, f.EndMonth, f.Id).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
 func FormExercise(f *models.FormExercise) (map[string]any, error) {
 	query := `INSERT INTO form_exercises (name, institution, start_year, start_month, end_year, end_month, user_id) 
 	VALUES (?, ?, ?, ?, ?, ?, ?)`
