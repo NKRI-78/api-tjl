@@ -53,7 +53,7 @@ func FormPlace(f *models.FormPlace) (map[string]any, error) {
 	subdistrict_id = VALUES(subdistrict_id), 
 	detail_address = VALUES(detail_address)`
 
-	err := db.Debug().Exec(query, f.Province, f.City, f.District, f.Subdistrict, f.DetailAddress, f.UserId).Error
+	err := db.Debug().Exec(query, f.ProvinceId, f.CityId, f.DistrictId, f.SubdistrictId, f.DetailAddress, f.UserId).Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
