@@ -78,6 +78,19 @@ func FormEducation(f *models.FormEducation) (map[string]any, error) {
 	return map[string]any{}, nil
 }
 
+func DeleteFormEducation(f *models.FormEducation) (map[string]any, error) {
+	query := `DELETE FROM form_educations WHERE id = ?`
+
+	err := db.Debug().Exec(query, f.Id).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
 func UpdateFormEducation(f *models.FormEducation) (map[string]any, error) {
 	query := `UPDATE form_educations SET education_level = ?, 
 	major = ?, school_or_college = ?, start_year = ?, start_month = ?, end_year = ?, 
