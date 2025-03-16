@@ -111,6 +111,7 @@ func main() {
 	router.HandleFunc("/api/v1/form-address", controllers.FormAddress).Methods("POST")
 	router.HandleFunc("/api/v1/form-education", controllers.FormEducation).Methods("POST")
 	router.HandleFunc("/api/v1/update-form-education", controllers.UpdateFormEducation).Methods("PUT")
+	router.HandleFunc("/api/v1/delete-form-education", controllers.DeleteFormEducation).Methods("DELETE")
 	router.HandleFunc("/api/v1/form-exercise", controllers.FormExercise).Methods("POST")
 	router.HandleFunc("/api/v1/form-work", controllers.FormWork).Methods("POST")
 	router.HandleFunc("/api/v1/form-language", controllers.FormLanguage).Methods("POST")
