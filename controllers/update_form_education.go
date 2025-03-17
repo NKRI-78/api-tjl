@@ -91,7 +91,7 @@ func UpdateFormEducation(w http.ResponseWriter, r *http.Request) {
 
 	data.UserId = UserId
 
-	result, err := services.FormEducation(data)
+	result, err := services.UpdateFormEducation(data)
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]interface{}{})
