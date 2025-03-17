@@ -78,8 +78,60 @@ func FormEducation(f *models.FormEducation) (map[string]any, error) {
 	return map[string]any{}, nil
 }
 
+func DeleteFormBiodata(f *models.FormBiodata) (map[string]any, error) {
+	query := `DELETE FROM form_biodatas WHERE id = ?`
+
+	err := db.Debug().Exec(query, f.Id).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
 func DeleteFormEducation(f *models.FormEducation) (map[string]any, error) {
 	query := `DELETE FROM form_educations WHERE id = ?`
+
+	err := db.Debug().Exec(query, f.Id).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
+func DeleteFormAddress(f *models.FormPlace) (map[string]any, error) {
+	query := `DELETE FROM form_places WHERE id = ?`
+
+	err := db.Debug().Exec(query, f.Id).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
+func DeleteFormWork(f *models.FormWork) (map[string]any, error) {
+	query := `DELETE FROM form_works WHERE id = ?`
+
+	err := db.Debug().Exec(query, f.Id).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
+func DeleteFormExercise(f *models.FormExercise) (map[string]any, error) {
+	query := `DELETE FROM form_exercises WHERE id = ?`
 
 	err := db.Debug().Exec(query, f.Id).Error
 

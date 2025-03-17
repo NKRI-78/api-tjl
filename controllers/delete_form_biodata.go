@@ -8,9 +8,9 @@ import (
 	"superapps/services"
 )
 
-func DeleteFormEducation(w http.ResponseWriter, r *http.Request) {
+func DeleteFormBiodata(w http.ResponseWriter, r *http.Request) {
 
-	data := &models.FormEducation{}
+	data := &models.FormBiodata{}
 
 	err := json.NewDecoder(r.Body).Decode(data)
 
@@ -28,13 +28,13 @@ func DeleteFormEducation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result, err := services.DeleteFormEducation(data)
+	result, err := services.DeleteFormBiodata(data)
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]interface{}{})
 		return
 	}
 
-	helper.Logger("info", "Delete Form Education success")
+	helper.Logger("info", "Delete Form Biodata success")
 	helper.Response(w, http.StatusOK, false, "Successfully", result)
 }

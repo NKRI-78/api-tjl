@@ -107,13 +107,17 @@ func main() {
 
 	// Form
 	router.HandleFunc("/api/v1/form-biodata", controllers.FormBiodata).Methods("POST")
+	router.HandleFunc("/api/v1/delete-form-biodata", controllers.DeleteFormBiodata).Methods("DELETE")
 	router.HandleFunc("/api/v1/form-region", controllers.FormRegion).Methods("POST")
 	router.HandleFunc("/api/v1/form-address", controllers.FormAddress).Methods("POST")
+	router.HandleFunc("/api/v1/delete-form-address", controllers.DeleteFormAddress).Methods("DELETE")
 	router.HandleFunc("/api/v1/form-education", controllers.FormEducation).Methods("POST")
-	router.HandleFunc("/api/v1/update-form-education", controllers.UpdateFormEducation).Methods("PUT")
 	router.HandleFunc("/api/v1/delete-form-education", controllers.DeleteFormEducation).Methods("DELETE")
+	router.HandleFunc("/api/v1/update-form-education", controllers.UpdateFormEducation).Methods("PUT")
 	router.HandleFunc("/api/v1/form-exercise", controllers.FormExercise).Methods("POST")
+	router.HandleFunc("/api/v1/delete-form-exercise", controllers.DeleteFormExercise).Methods("DELETE")
 	router.HandleFunc("/api/v1/form-work", controllers.FormWork).Methods("POST")
+	router.HandleFunc("/api/v1/delete-form-work", controllers.DeleteFormWork).Methods("DELETE")
 	router.HandleFunc("/api/v1/form-language", controllers.FormLanguage).Methods("POST")
 
 	// Forum
