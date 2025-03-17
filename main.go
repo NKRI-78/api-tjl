@@ -105,19 +105,27 @@ func main() {
 	// Language
 	router.HandleFunc("/api/v1/language", controllers.Language).Methods("GET")
 
-	// Form
+	// Form Biodata
 	router.HandleFunc("/api/v1/form-biodata", controllers.FormBiodata).Methods("POST")
 	router.HandleFunc("/api/v1/delete-form-biodata", controllers.DeleteFormBiodata).Methods("DELETE")
-	router.HandleFunc("/api/v1/form-region", controllers.FormRegion).Methods("POST")
+
+	// Form Address
 	router.HandleFunc("/api/v1/form-address", controllers.FormAddress).Methods("POST")
 	router.HandleFunc("/api/v1/delete-form-address", controllers.DeleteFormAddress).Methods("DELETE")
+
+	// Form Education
 	router.HandleFunc("/api/v1/form-education", controllers.FormEducation).Methods("POST")
 	router.HandleFunc("/api/v1/delete-form-education", controllers.DeleteFormEducation).Methods("DELETE")
 	router.HandleFunc("/api/v1/update-form-education", controllers.UpdateFormEducation).Methods("PUT")
+
+	// Form Exercise
 	router.HandleFunc("/api/v1/form-exercise", controllers.FormExercise).Methods("POST")
 	router.HandleFunc("/api/v1/delete-form-exercise", controllers.DeleteFormExercise).Methods("DELETE")
+
+	// Form Work
 	router.HandleFunc("/api/v1/form-work", controllers.FormWork).Methods("POST")
 	router.HandleFunc("/api/v1/delete-form-work", controllers.DeleteFormWork).Methods("DELETE")
+
 	router.HandleFunc("/api/v1/form-language", controllers.FormLanguage).Methods("POST")
 
 	// Forum
