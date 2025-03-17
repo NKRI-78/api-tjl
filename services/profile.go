@@ -11,7 +11,7 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 	profiles := []entities.Profile{}
 	education := entities.ProfileFormEducation{}
 	exercise := entities.ProfileFormExercise{}
-	work := entities.ProfileFormWork{}
+	work := entities.ProfileFormWorkQuery{}
 	language := entities.ProfileFormLanguage{}
 
 	query := `SELECT p.user_id AS id, p.fullname, p.avatar, u.phone, u.email, u.enabled, 
@@ -128,7 +128,7 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 
 	var dataWork = make([]entities.ProfileFormWork, 0)
 
-	queryWork := `SELECT id, work, position, country, city, start_month, start_year, end_month, end_year, user_id 
+	queryWork := `SELECT id, work, position, is_work, country, city, start_month, start_year, end_month, end_year, user_id 
 	FROM form_works WHERE user_id  = '` + profiles[0].Id + `'`
 
 	rows, errWork := db.Debug().Raw(queryWork).Scan(&work).Rows()
@@ -148,7 +148,26 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 			return nil, errors.New(errScanRows.Error())
 		}
 
-		dataWork = append(dataWork, work)
+		var isWork bool
+
+		if work.IsWork == 1 {
+			isWork = true
+		} else {
+			isWork = false
+		}
+
+		dataWork = append(dataWork, entities.ProfileFormWork{
+			Id:         work.Id,
+			Position:   work.Position,
+			Work:       work.Work,
+			IsWork:     isWork,
+			City:       work.City,
+			Country:    work.Country,
+			StartMonth: work.StartMonth,
+			EndMonth:   work.EndMonth,
+			StartYear:  work.StartYear,
+			EndYear:    work.EndYear,
+		})
 	}
 
 	// Language

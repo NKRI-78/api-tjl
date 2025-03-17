@@ -173,10 +173,10 @@ func FormExercise(f *models.FormExercise) (map[string]any, error) {
 }
 
 func FormWork(f *models.FormWork) (map[string]any, error) {
-	query := `INSERT INTO form_works (position, work, country, city, start_year, start_month, end_year, end_month, user_id) 
-	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
+	query := `INSERT INTO form_works (position, work, is_work, country, city, start_year, start_month, end_year, end_month, user_id) 
+	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 
-	err := db.Debug().Exec(query, f.Position, f.Work, f.Country, f.City, f.StartYear, f.StartMonth, f.EndYear, f.EndMonth, f.UserId).Error
+	err := db.Debug().Exec(query, f.Position, f.Work, f.IsWork, f.Country, f.City, f.StartYear, f.StartMonth, f.EndYear, f.EndMonth, f.UserId).Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())

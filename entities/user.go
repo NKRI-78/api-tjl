@@ -146,10 +146,24 @@ type ProfileFormExercise struct {
 	EndMonth    string `json:"end_month"`
 }
 
+type ProfileFormWorkQuery struct {
+	Id         int    `json:"id"`
+	Position   string `json:"position"`
+	Work       string `json:"work"`
+	IsWork     int    `json:"is_work"`
+	City       string `json:"city"`
+	Country    string `json:"country"`
+	StartMonth string `json:"start_month"`
+	StartYear  string `json:"start_year"`
+	EndMonth   string `json:"end_month"`
+	EndYear    string `json:"end_year"`
+}
+
 type ProfileFormWork struct {
 	Id         int    `json:"id"`
 	Position   string `json:"position"`
 	Work       string `json:"work"`
+	IsWork     bool   `json:"is_work"`
 	City       string `json:"city"`
 	Country    string `json:"country"`
 	StartMonth string `json:"start_month"`
