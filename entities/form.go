@@ -60,6 +60,7 @@ type FormWork struct {
 	Position   string `json:"position"`
 	Work       string `json:"work"`
 	IsWork     int    `json:"is_work"`
+	StillWork  bool   `json:"still_work"`
 	Country    string `json:"country"`
 	City       string `json:"city"`
 	StartMonth string `json:"start_month"`

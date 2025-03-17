@@ -82,6 +82,12 @@ func FormWork(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if data.StillWork {
+		data.IsWork = 1
+	} else {
+		data.IsWork = 0
+	}
+
 	data.UserId = UserId
 
 	result, err := services.FormWork(data)
