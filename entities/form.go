@@ -22,6 +22,7 @@ type FormRegion struct {
 }
 
 type FormPlace struct {
+	Id            string `json:"id"`
 	ProvinceId    string `json:"province_id"`
 	CityId        string `json:"city_id"`
 	DistrictId    string `json:"district_id"`
@@ -44,6 +45,7 @@ type FormEducation struct {
 }
 
 type FormExercise struct {
+	Id          string `json:"id"`
 	Name        string `json:"name"`
 	Institution string `json:"institution"`
 	StartMonth  string `json:"start_month"`
@@ -54,6 +56,7 @@ type FormExercise struct {
 }
 
 type FormWork struct {
+	Id         string `json:"id"`
 	Position   string `json:"position"`
 	Work       string `json:"work"`
 	Country    string `json:"country"`
