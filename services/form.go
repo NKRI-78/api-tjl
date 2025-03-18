@@ -78,6 +78,19 @@ func FormEducation(f *models.FormEducation) (map[string]any, error) {
 	return map[string]any{}, nil
 }
 
+func DeleteFormLanguage(f *models.FormLanguage) (map[string]any, error) {
+	query := `DELETE FROM form_languages WHERE id = ?`
+
+	err := db.Debug().Exec(query, f.Id).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
 func DeleteFormBiodata(f *models.FormBiodata) (map[string]any, error) {
 	query := `DELETE FROM form_biodatas WHERE id = ?`
 
@@ -134,6 +147,50 @@ func DeleteFormExercise(f *models.FormExercise) (map[string]any, error) {
 	query := `DELETE FROM form_exercises WHERE id = ?`
 
 	err := db.Debug().Exec(query, f.Id).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
+func UpdateFormLanguage(f *models.FormLanguage) (map[string]any, error) {
+	query := `UPDATE form_languages SET level = ?, 
+	language = ? WHERE id = ?`
+
+	err := db.Debug().Exec(query, f.Level, f.Language, f.Id).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
+func UpdateFormExercise(f *models.FormExercise) (map[string]any, error) {
+	query := `UPDATE form_exercises SET institution = ?, 
+	name = ?, start_year = ?, start_month = ?, end_year = ?, 
+	end_month = ? WHERE id = ?`
+
+	err := db.Debug().Exec(query, f.Institution, f.Name, f.StartYear, f.StartMonth, f.EndYear, f.EndMonth, f.Id).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
+func UpdateFormWork(f *models.FormWork) (map[string]any, error) {
+	query := `UPDATE form_works SET position = ?, 
+	city = ?, work = ?, start_year = ?, start_month = ?, end_year = ?, 
+	end_month = ? WHERE id = ?`
+
+	err := db.Debug().Exec(query, f.Position, f.City, f.Work, f.StartYear, f.StartMonth, f.EndYear, f.EndMonth, f.Id).Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())

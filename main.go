@@ -121,12 +121,17 @@ func main() {
 	// Form Exercise
 	router.HandleFunc("/api/v1/form-exercise", controllers.FormExercise).Methods("POST")
 	router.HandleFunc("/api/v1/delete-form-exercise", controllers.DeleteFormExercise).Methods("DELETE")
+	router.HandleFunc("/api/v1/update-form-exercise", controllers.UpdateFormExercise).Methods("PUT")
 
 	// Form Work
 	router.HandleFunc("/api/v1/form-work", controllers.FormWork).Methods("POST")
 	router.HandleFunc("/api/v1/delete-form-work", controllers.DeleteFormWork).Methods("DELETE")
+	router.HandleFunc("/api/v1/update-form-work", controllers.UpdateFormWork).Methods("PUT")
 
+	// Form Language
 	router.HandleFunc("/api/v1/form-language", controllers.FormLanguage).Methods("POST")
+	router.HandleFunc("/api/v1/delete-form-language", controllers.DeleteFormLanguage).Methods("DELETE")
+	router.HandleFunc("/api/v1/update-form-language", controllers.UpdateFormLanguage).Methods("PUT")
 
 	// Forum
 	router.HandleFunc("/api/v1/forum-store", controllers.ForumStore).Methods("POST")

@@ -98,6 +98,6 @@ func UpdateFormEducation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	helper.Logger("info", "Form Education success")
+	helper.Logger("info", "Update Form Education success")
 	helper.Response(w, http.StatusOK, false, "Successfully", result)
 }

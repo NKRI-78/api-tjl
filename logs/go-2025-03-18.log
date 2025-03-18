@@ -1,0 +1,11 @@
+[ERROR]: 2025-03-18 12:42:05 - In Server: Missing auth token
+[ERROR]: 2025-03-18 12:42:11 - In Server: education_level is required
+[INFO]: 2025-03-18 12:43:40 - Form Education success
+[ERROR]: 2025-03-18 12:49:03 - In Server: Missing auth token
+[INFO]: 2025-03-18 12:49:09 - Form Education success
+[ERROR]: 2025-03-18 12:55:13 - In Server: Missing auth token
+[ERROR]: 2025-03-18 12:55:18 - In Server: json: cannot unmarshal string into Go struct field FormLanguage.id of type int
+[INFO]: 2025-03-18 12:55:47 - Form Education success
+[ERROR]: 2025-03-18 13:00:24 - In Server: Missing auth token
+[INFO]: 2025-03-18 13:00:28 - Delete Form Work success
+[INFO]: 2025-03-18 13:00:57 - Delete Form Language success
