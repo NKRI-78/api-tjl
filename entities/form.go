@@ -70,7 +70,7 @@ type FormWork struct {
 	UserId     string `json:"user_id"`
 }
 type FormLanguage struct {
-	Id       int    `json:"id"`
+	Id       string `json:"id"`
 	Language string `json:"language"`
 	Level    string `json:"level"`
 	UserId   string `json:"user_id"`
