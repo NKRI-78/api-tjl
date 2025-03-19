@@ -187,10 +187,18 @@ func UpdateFormExercise(f *models.FormExercise) (map[string]any, error) {
 
 func UpdateFormWork(f *models.FormWork) (map[string]any, error) {
 	query := `UPDATE form_works SET position = ?, 
-	city = ?, work = ?, start_year = ?, start_month = ?, end_year = ?, 
+	city = ?, work = ?, is_work = ?, start_year = ?, start_month = ?, end_year = ?, 
 	end_month = ? WHERE id = ?`
 
-	err := db.Debug().Exec(query, f.Position, f.City, f.Work, f.StartYear, f.StartMonth, f.EndYear, f.EndMonth, f.Id).Error
+	var isWork int
+
+	if f.StillWork {
+		isWork = 1
+	} else {
+		isWork = 0
+	}
+
+	err := db.Debug().Exec(query, f.Position, f.City, f.Work, isWork, f.StartYear, f.StartMonth, f.EndYear, f.EndMonth, f.Id).Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
