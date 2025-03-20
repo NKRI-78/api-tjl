@@ -16,6 +16,7 @@ type ApplyJobQuery struct {
 }
 
 type InfoApplyJobQuery struct {
+	ApplyJobId      string    `json:"apply_job_id"`
 	ApplyUserId     string    `json:"apply_user_id"`
 	ApplyUserName   string    `json:"apply_user_name"`
 	ConfirmUserId   string    `json:"confirm_user_id"`
@@ -29,6 +30,7 @@ type InfoApplyJobQuery struct {
 //
 
 type ResultInfoJob struct {
+	Id          string      `json:"id"`
 	Status      string      `json:"status"`
 	CreatedAt   string      `json:"created_at"`
 	Schedule    string      `json:"schedule"`
