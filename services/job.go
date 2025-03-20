@@ -11,15 +11,130 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
+
+	var dataQuery entities.InfoApplyJobQuery
+	var data []entities.ResultInfoJob
+
+	query := `SELECT paa.user_id AS apply_user_id, paa.fullname AS apply_user_name, 
+		pac.user_id AS confirm_user_id, pac.fullname AS confirm_user_name,
+		js.name AS status, aj.created_at, aj.link, aj.schedule
+		FROM apply_job_histories aj 
+		INNER JOIN job_statuses js ON js.id = aj.status
+		INNER JOIN profiles paa ON paa.user_id = aj.user_id
+		LEFT JOIN profiles pac ON pac.user_id = aj.user_confirm_id 
+		WHERE aj.uid = ?
+	`
+	rows, err := db.Debug().Raw(query, iaj.Id).Rows()
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		errJobRows := db.ScanRows(rows, &dataQuery)
+
+		if errJobRows != nil {
+			helper.Logger("error", "In Server: "+errJobRows.Error())
+			return nil, errors.New(errJobRows.Error())
+		}
+
+		defaultIfEmpty := func(value, defaultValue string) string {
+			if value == "" {
+				return defaultValue
+			}
+			return value
+		}
+
+		data = append(data, entities.ResultInfoJob{
+			Status:    dataQuery.Status,
+			CreatedAt: helper.FormatDate(dataQuery.CreatedAt),
+			Link:      defaultIfEmpty(dataQuery.Link, "-"),
+			Schedule:  defaultIfEmpty(dataQuery.Schedule, "-"),
+			UserApply: entities.UserApply{
+				Id:   dataQuery.ApplyUserId,
+				Name: dataQuery.ApplyUserName,
+			},
+			UserConfirm: entities.UserConfirm{
+				Id:   defaultIfEmpty(dataQuery.ConfirmUserId, "-"),
+				Name: defaultIfEmpty(dataQuery.ConfirmUserName, "-"),
+			},
+		})
+	}
+
+	return map[string]any{
+		"data": data,
+	}, nil
+}
+
 func ApplyJob(aj *models.ApplyJob) (map[string]any, error) {
 
-	query := `INSERT INTO apply_jobs (job_id, user_id, status) VALUES (?, ?, ?)`
+	query := `INSERT INTO apply_jobs (uid, job_id, user_id) VALUES (?, ?, ?)`
 
-	err := db.Debug().Exec(query, aj.JobId, aj.UserId, aj.Status).Error
+	err := db.Debug().Exec(query, aj.Id, aj.JobId, aj.UserId).Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
 		return nil, errors.New(err.Error())
+	}
+
+	queryHistory := `INSERT INTO apply_job_histories (uid, job_id, user_id) VALUES (?, ?, ?)`
+
+	errHistory := db.Debug().Exec(queryHistory, aj.Id, aj.JobId, aj.UserId).Error
+
+	if errHistory != nil {
+		helper.Logger("error", "In Server: "+errHistory.Error())
+		return nil, errors.New(errHistory.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
+func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
+
+	var dataQuery entities.ApplyJobQuery
+
+	query := `UPDATE apply_jobs SET user_confirm_id = ?, status = ? WHERE uid = ?`
+
+	err := db.Debug().Exec(query, uaj.UserConfirmId, uaj.Status, uaj.ApplyJobId).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	queryInfo := `SELECT * FROM apply_jobs WHERE uid = ?`
+
+	rows, errInfo := db.Debug().Raw(queryInfo, uaj.ApplyJobId).Rows()
+
+	if errInfo != nil {
+		helper.Logger("error", "In Server: "+errInfo.Error())
+		return nil, errors.New(errInfo.Error())
+	}
+
+	for rows.Next() {
+		errJobRows := db.ScanRows(rows, &dataQuery)
+
+		if errJobRows != nil {
+			helper.Logger("error", "In Server: "+errJobRows.Error())
+			return nil, errors.New(errJobRows.Error())
+		}
+
+		queryHistory := `INSERT INTO apply_job_histories 
+		(uid, job_id, user_id, user_confirm_id, status, link, schedule) 
+		VALUES (?, ?, ?, ?, ?, ?, ?)`
+
+		errHistory := db.Debug().Exec(queryHistory,
+			dataQuery.Uid, dataQuery.JobId,
+			dataQuery.UserId, dataQuery.UserConfirmId,
+			uaj.Status, uaj.Link, uaj.Schedule,
+		).Error
+
+		if errHistory != nil {
+			helper.Logger("error", "In Server: "+errHistory.Error())
+			return nil, errors.New(errHistory.Error())
+		}
 	}
 
 	return map[string]any{}, nil

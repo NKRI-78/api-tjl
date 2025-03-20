@@ -91,9 +91,19 @@ func main() {
 	router.HandleFunc("/api/v1/resend-otp", controllers.ResendOtp).Methods("POST")
 	router.HandleFunc("/api/v1/verify-otp", controllers.VerifyOtp).Methods("POST")
 
-	// Jobs
-	router.HandleFunc("/api/v1/apply/job", controllers.ApplyJob).Methods("POST")
+	// Admin
 	router.HandleFunc("/api/v1/admin/job", controllers.AdminJobList).Methods("GET")
+
+	// Apply Job
+	router.HandleFunc("/api/v1/apply/job", controllers.ApplyJob).Methods("POST")
+
+	// Update Apply Job
+	router.HandleFunc("/api/v1/update/apply/job", controllers.UpdateApplyJob).Methods("PUT")
+
+	// Info Apply Job
+	router.HandleFunc("/api/v1/info/apply/job/{id}", controllers.InfoApplyJob).Methods("GET")
+
+	// Jobs
 	router.HandleFunc("/api/v1/job", controllers.JobList).Methods("GET")
 	router.HandleFunc("/api/v1/job-detail/{id}", controllers.JobDetail).Methods("GET")
 	router.HandleFunc("/api/v1/job-store", controllers.JobStore).Methods("POST")
