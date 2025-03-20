@@ -100,6 +100,9 @@ func main() {
 	// Update Apply Job
 	router.HandleFunc("/api/v1/update/apply/job", controllers.UpdateApplyJob).Methods("PUT")
 
+	// List Apply Job
+	router.HandleFunc("/api/v1/list/apply/job", controllers.ListApplyJob).Methods("GET")
+
 	// Info Apply Job
 	router.HandleFunc("/api/v1/info/apply/job/{id}", controllers.InfoApplyJob).Methods("GET")
 

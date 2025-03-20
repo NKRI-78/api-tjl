@@ -11,6 +11,67 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+func ListInfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
+
+	var dataQuery entities.InfoApplyJobQuery
+	var data []entities.ResultInfoJob
+
+	query := `SELECT paa.user_id AS apply_user_id, paa.fullname AS apply_user_name, 
+		pac.user_id AS confirm_user_id, pac.fullname AS confirm_user_name,
+		js.name AS status, aj.created_at, aj.link, aj.schedule
+		FROM apply_job_histories aj 
+		INNER JOIN job_statuses js ON js.id = aj.status
+		INNER JOIN profiles paa ON paa.user_id = aj.user_id
+		LEFT JOIN profiles pac ON pac.user_id = aj.user_confirm_id 
+		WHERE aj.user_id = ?
+	`
+	rows, err := db.Debug().Raw(query, iaj.UserId).Rows()
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		errJobRows := db.ScanRows(rows, &dataQuery)
+
+		if errJobRows != nil {
+			helper.Logger("error", "In Server: "+errJobRows.Error())
+			return nil, errors.New(errJobRows.Error())
+		}
+
+		defaultIfEmpty := func(value, defaultValue string) string {
+			if value == "" {
+				return defaultValue
+			}
+			return value
+		}
+
+		data = append(data, entities.ResultInfoJob{
+			Status:    dataQuery.Status,
+			CreatedAt: helper.FormatDate(dataQuery.CreatedAt),
+			Link:      defaultIfEmpty(dataQuery.Link, "-"),
+			Schedule:  defaultIfEmpty(dataQuery.Schedule, "-"),
+			UserApply: entities.UserApply{
+				Id:   dataQuery.ApplyUserId,
+				Name: dataQuery.ApplyUserName,
+			},
+			UserConfirm: entities.UserConfirm{
+				Id:   defaultIfEmpty(dataQuery.ConfirmUserId, "-"),
+				Name: defaultIfEmpty(dataQuery.ConfirmUserName, "-"),
+			},
+		})
+	}
+
+	if data == nil {
+		data = []entities.ResultInfoJob{}
+	}
+
+	return map[string]any{
+		"data": data,
+	}, nil
+}
+
 func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 
 	var dataQuery entities.InfoApplyJobQuery
