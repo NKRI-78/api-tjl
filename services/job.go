@@ -18,7 +18,7 @@ func ListInfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 
 	query := `SELECT paa.user_id AS apply_user_id, paa.fullname AS apply_user_name, 
 		pac.user_id AS confirm_user_id, pac.fullname AS confirm_user_name,
-		js.name AS status, aj.created_at, aj.link, aj.schedule
+		js.name AS status, aj.created_at, aj.uid AS apply_job_id, aj.link, aj.schedule
 		FROM apply_job_histories aj 
 		INNER JOIN job_statuses js ON js.id = aj.status
 		INNER JOIN profiles paa ON paa.user_id = aj.user_id
@@ -48,6 +48,7 @@ func ListInfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 		}
 
 		data = append(data, entities.ResultInfoJob{
+			Id:        dataQuery.ApplyJobId,
 			Status:    dataQuery.Status,
 			CreatedAt: helper.FormatDate(dataQuery.CreatedAt),
 			Link:      defaultIfEmpty(dataQuery.Link, "-"),
@@ -79,7 +80,7 @@ func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 
 	query := `SELECT paa.user_id AS apply_user_id, paa.fullname AS apply_user_name, 
 		pac.user_id AS confirm_user_id, pac.fullname AS confirm_user_name,
-		js.name AS status, aj.created_at, aj.link, aj.schedule
+		js.name AS status, aj.created_at, aj.uid AS apply_job_id, aj.link, aj.schedule
 		FROM apply_job_histories aj 
 		INNER JOIN job_statuses js ON js.id = aj.status
 		INNER JOIN profiles paa ON paa.user_id = aj.user_id
@@ -109,6 +110,7 @@ func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 		}
 
 		data = append(data, entities.ResultInfoJob{
+			Id:        dataQuery.ApplyJobId,
 			Status:    dataQuery.Status,
 			CreatedAt: helper.FormatDate(dataQuery.CreatedAt),
 			Link:      defaultIfEmpty(dataQuery.Link, "-"),

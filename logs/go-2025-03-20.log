@@ -71,3 +71,15 @@
 [INFO]: 2025-03-20 14:01:28 - Get List Info Apply Job success
 [INFO]: 2025-03-20 14:01:51 - Get List Info Apply Job success
 [INFO]: 2025-03-20 14:03:16 - Get List Info Apply Job success
+[INFO]: 2025-03-20 14:04:34 - Login success
+[ERROR]: 2025-03-20 14:53:44 - In Server: Error 1054: Unknown column 'atj.uid' in 'field list'
+[ERROR]: 2025-03-20 14:53:45 - In Server: Error 1054: Unknown column 'atj.uid' in 'field list'
+[ERROR]: 2025-03-20 14:53:46 - In Server: Error 1054: Unknown column 'atj.uid' in 'field list'
+[ERROR]: 2025-03-20 14:53:46 - In Server: Error 1054: Unknown column 'atj.uid' in 'field list'
+[ERROR]: 2025-03-20 14:53:56 - In Server: Error 1054: Unknown column 'atj.uid' in 'field list'
+[INFO]: 2025-03-20 14:54:16 - Get List Info Apply Job success
+[INFO]: 2025-03-20 14:56:33 - Get List Info Apply Job success
+[INFO]: 2025-03-20 14:56:34 - Get List Info Apply Job success
+[INFO]: 2025-03-20 14:58:20 - Get List Info Apply Job success
+[INFO]: 2025-03-20 14:59:10 - Get List Info Apply Job success
+[INFO]: 2025-03-20 14:59:26 - Get Info Apply Job success
