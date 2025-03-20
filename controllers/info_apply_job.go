@@ -25,6 +25,6 @@ func InfoApplyJob(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	helper.Logger("info", "Get Info Aply Job success")
+	helper.Logger("info", "Get Info Apply Job success")
 	helper.Response(w, http.StatusOK, false, "Successfully", result["data"])
 }

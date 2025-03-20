@@ -48,7 +48,8 @@ type UserApply struct {
 }
 
 type InfoApplyJob struct {
-	Id string `json:"id"`
+	Id     string `json:"id"`
+	UserId string `json:"user_id"`
 }
 
 type ApplyJob struct {

@@ -57,3 +57,17 @@
 [INFO]: 2025-03-20 13:40:56 - Get Info Aply Job success
 [INFO]: 2025-03-20 13:45:08 - Get Info Aply Job success
 [INFO]: 2025-03-20 13:46:24 - Get Info Aply Job success
+[ERROR]: 2025-03-20 13:56:34 - In Server: Missing auth token
+[ERROR]: 2025-03-20 13:56:39 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?' at line 8
+[ERROR]: 2025-03-20 13:56:41 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?' at line 8
+[INFO]: 2025-03-20 13:56:55 - Get List Info Apply Job success
+[INFO]: 2025-03-20 13:56:56 - Get List Info Apply Job success
+[INFO]: 2025-03-20 13:59:45 - Get List Info Apply Job success
+[INFO]: 2025-03-20 13:59:46 - Get List Info Apply Job success
+[INFO]: 2025-03-20 14:00:04 - Login success
+[INFO]: 2025-03-20 14:00:06 - Get List Info Apply Job success
+[INFO]: 2025-03-20 14:00:37 - Get List Info Apply Job success
+[INFO]: 2025-03-20 14:01:21 - Get List Info Apply Job success
+[INFO]: 2025-03-20 14:01:28 - Get List Info Apply Job success
+[INFO]: 2025-03-20 14:01:51 - Get List Info Apply Job success
+[INFO]: 2025-03-20 14:03:16 - Get List Info Apply Job success
