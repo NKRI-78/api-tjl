@@ -24,6 +24,8 @@ func ListInfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 		INNER JOIN profiles paa ON paa.user_id = aj.user_id
 		LEFT JOIN profiles pac ON pac.user_id = aj.user_confirm_id 
 		WHERE aj.user_id = ?
+		ORDER BY aj.created_at DESC
+		LIMIT 1
 	`
 	rows, err := db.Debug().Raw(query, iaj.UserId).Rows()
 
