@@ -2,10 +2,64 @@ package entities
 
 import "time"
 
+// MYSQL SCAN
+
+type ApplyJobQuery struct {
+	Id            int       `json:"id"`
+	Uid           string    `json:"uid"`
+	UserId        string    `json:"user_id"`
+	UserConfirmId string    `json:"user_confirm_id"`
+	JobId         string    `json:"job_id"`
+	Status        int       `json:"status"`
+	CreatedAt     time.Time `json:"created_at"`
+	UpdatedAt     time.Time `json:"updated_at"`
+}
+
+type InfoApplyJobQuery struct {
+	ApplyUserId     string    `json:"apply_user_id"`
+	ApplyUserName   string    `json:"apply_user_name"`
+	ConfirmUserId   string    `json:"confirm_user_id"`
+	ConfirmUserName string    `json:"confirm_user_name"`
+	Status          string    `json:"status"`
+	Link            string    `json:"link"`
+	Schedule        string    `json:"schedule"`
+	CreatedAt       time.Time `json:"created_at"`
+}
+
+//
+
+type ResultInfoJob struct {
+	Status      string      `json:"status"`
+	CreatedAt   string      `json:"created_at"`
+	Schedule    string      `json:"schedule"`
+	Link        string      `json:"link"`
+	UserApply   UserApply   `json:"user_apply"`
+	UserConfirm UserConfirm `json:"user_confirm"`
+}
+
+type UserConfirm struct {
+	Id   string `json:"id"`
+	Name string `json:"name"`
+}
+
+type UserApply struct {
+	Id   string `json:"id"`
+	Name string `json:"name"`
+}
+
+type InfoApplyJob struct {
+	Id string `json:"id"`
+}
+
 type ApplyJob struct {
-	UserId string `json:"user_id"`
-	JobId  string `json:"job_id"`
-	Status string `json:"status"`
+	Id            string `json:"uid"`
+	Link          string `json:"link"`
+	Schedule      string `json:"schedule"`
+	UserId        string `json:"user_id"`
+	UserConfirmId string `json:"user_confirm_id"`
+	ApplyJobId    string `json:"apply_job_id"`
+	JobId         string `json:"job_id"`
+	Status        int    `json:"status"`
 }
 
 type JobListQuery struct {

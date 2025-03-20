@@ -1,0 +1,59 @@
+[INFO]: 2025-03-20 10:58:53 - Apply Job success
+[INFO]: 2025-03-20 11:01:48 - Apply Job success
+[INFO]: 2025-03-20 11:02:18 - Apply Job success
+[ERROR]: 2025-03-20 11:03:22 - In Server: json: cannot unmarshal number into Go struct field ApplyJob.status of type string
+[ERROR]: 2025-03-20 11:03:48 - In Server: Error 1452: Cannot add or update a child row: a foreign key constraint fails (`tjl`.`apply_jobs`, CONSTRAINT `apply_jobs_ibfk_2` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE)
+[ERROR]: 2025-03-20 11:06:05 - In Server: Error 1452: Cannot add or update a child row: a foreign key constraint fails (`tjl`.`apply_jobs`, CONSTRAINT `apply_jobs_ibfk_2` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE)
+[ERROR]: 2025-03-20 11:06:48 - In Server: Error 1452: Cannot add or update a child row: a foreign key constraint fails (`tjl`.`apply_jobs`, CONSTRAINT `apply_jobs_ibfk_2` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE)
+[ERROR]: 2025-03-20 11:06:56 - In Server: Error 1452: Cannot add or update a child row: a foreign key constraint fails (`tjl`.`apply_jobs`, CONSTRAINT `apply_jobs_ibfk_2` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE)
+[ERROR]: 2025-03-20 11:07:55 - In Server: sql: expected 3 arguments, got 4
+[INFO]: 2025-03-20 11:08:10 - Update Form Education success
+[INFO]: 2025-03-20 11:14:23 - Apply Job success
+[ERROR]: 2025-03-20 11:23:25 - In Server: Missing auth token
+[INFO]: 2025-03-20 11:23:29 - Get City success
+[INFO]: 2025-03-20 11:37:34 - Get City success
+[ERROR]: 2025-03-20 12:13:33 - In Server: Error 1364: Field 'id' doesn't have a default value
+[INFO]: 2025-03-20 12:14:20 - Apply Job success
+[ERROR]: 2025-03-20 12:14:52 - In Server: sql: expected 1 arguments, got 3
+[ERROR]: 2025-03-20 12:15:46 - In Server: sql: expected 1 arguments, got 3
+[ERROR]: 2025-03-20 12:17:05 - In Server: sql: expected 1 arguments, got 3
+[ERROR]: 2025-03-20 12:17:06 - In Server: sql: expected 1 arguments, got 3
+[INFO]: 2025-03-20 12:18:15 - Update Form Education success
+[INFO]: 2025-03-20 12:18:15 - Update Form Education success
+[INFO]: 2025-03-20 12:18:30 - Update Form Education success
+[INFO]: 2025-03-20 12:18:58 - Update Form Education success
+[INFO]: 2025-03-20 12:18:58 - Update Form Education success
+[INFO]: 2025-03-20 12:22:30 - Apply Job success
+[INFO]: 2025-03-20 12:22:48 - Update Form Education success
+[INFO]: 2025-03-20 12:25:02 - Apply Job success
+[INFO]: 2025-03-20 12:25:23 - Update Form Education success
+[INFO]: 2025-03-20 12:47:47 - Get City success
+[INFO]: 2025-03-20 12:50:14 - Get City success
+[INFO]: 2025-03-20 12:50:29 - Get City success
+[INFO]: 2025-03-20 12:50:30 - Get City success
+[INFO]: 2025-03-20 12:51:22 - Get City success
+[INFO]: 2025-03-20 12:52:02 - Get City success
+[INFO]: 2025-03-20 12:52:22 - Get Info Aply Job success
+[INFO]: 2025-03-20 12:52:38 - Get Info Aply Job success
+[INFO]: 2025-03-20 12:53:06 - Get Info Aply Job success
+[INFO]: 2025-03-20 12:53:09 - Get Info Aply Job success
+[INFO]: 2025-03-20 12:55:21 - Get Info Aply Job success
+[INFO]: 2025-03-20 13:03:03 - Get Info Aply Job success
+[INFO]: 2025-03-20 13:04:55 - Get Info Aply Job success
+[INFO]: 2025-03-20 13:05:36 - Get Info Aply Job success
+[INFO]: 2025-03-20 13:06:04 - Get Info Aply Job success
+[INFO]: 2025-03-20 13:09:00 - Get Info Aply Job success
+[INFO]: 2025-03-20 13:10:37 - Get Info Aply Job success
+[INFO]: 2025-03-20 13:22:06 - Update Form Education success
+[INFO]: 2025-03-20 13:22:38 - Apply Job success
+[INFO]: 2025-03-20 13:22:47 - Get Info Aply Job success
+[ERROR]: 2025-03-20 13:22:58 - In Server: sql: expected 7 arguments, got 5
+[INFO]: 2025-03-20 13:24:13 - Apply Job success
+[INFO]: 2025-03-20 13:24:29 - Update Apply Job success
+[INFO]: 2025-03-20 13:27:13 - Get Info Aply Job success
+[INFO]: 2025-03-20 13:27:53 - Get Info Aply Job success
+[INFO]: 2025-03-20 13:36:48 - Get Info Aply Job success
+[INFO]: 2025-03-20 13:40:47 - Update Apply Job success
+[INFO]: 2025-03-20 13:40:56 - Get Info Aply Job success
+[INFO]: 2025-03-20 13:45:08 - Get Info Aply Job success
+[INFO]: 2025-03-20 13:46:24 - Get Info Aply Job success

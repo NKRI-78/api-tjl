@@ -16,6 +16,7 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"time"
 
 	// "time"
 	entities "superapps/entities"
@@ -33,6 +34,38 @@ func Contains(s []string, e string) bool {
 		}
 	}
 	return false
+}
+
+// Kamis, 20 Maret 2025 13:24 WIB
+func FormatDate(t time.Time) string {
+	days := map[string]string{
+		"Sunday":    "Minggu",
+		"Monday":    "Senin",
+		"Tuesday":   "Selasa",
+		"Wednesday": "Rabu",
+		"Thursday":  "Kamis",
+		"Friday":    "Jumat",
+		"Saturday":  "Sabtu",
+	}
+
+	months := map[string]string{
+		"January":   "Januari",
+		"February":  "Februari",
+		"March":     "Maret",
+		"April":     "April",
+		"May":       "Mei",
+		"June":      "Juni",
+		"July":      "Juli",
+		"August":    "Agustus",
+		"September": "September",
+		"October":   "Oktober",
+		"November":  "November",
+		"December":  "Desember",
+	}
+
+	day := days[t.Weekday().String()]
+	month := months[t.Month().String()]
+	return fmt.Sprintf("%s, %02d %s %d %02d:%02d WIB", day, t.Day(), month, t.Year(), t.Hour(), t.Minute())
 }
 
 func SendEmail(to, app, otp string) error {

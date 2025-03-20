@@ -8,6 +8,7 @@ import (
 	"superapps/services"
 
 	"github.com/dgrijalva/jwt-go"
+	uuid "github.com/satori/go.uuid"
 )
 
 func ApplyJob(w http.ResponseWriter, r *http.Request) {
@@ -30,19 +31,13 @@ func ApplyJob(w http.ResponseWriter, r *http.Request) {
 
 	userId, _ := claims["id"].(string)
 
+	data.Id = uuid.NewV4().String()
 	data.UserId = userId
 	JobId := data.JobId
-	Status := data.Status
 
 	if JobId == "" {
 		helper.Logger("error", "In Server: job_id is required")
 		helper.Response(w, 400, true, "job_id is required", map[string]any{})
-		return
-	}
-
-	if Status == "0" || Status == "" {
-		helper.Logger("error", "In Server: status is required")
-		helper.Response(w, 400, true, "status is required", map[string]any{})
 		return
 	}
 
