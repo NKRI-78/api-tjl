@@ -74,9 +74,8 @@ func ListInfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 }
 
 func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
-
 	var dataQuery entities.InfoApplyJobQuery
-	var data []entities.ResultInfoJob
+	var data entities.ResultInfoJob
 
 	query := `SELECT paa.user_id AS apply_user_id, paa.fullname AS apply_user_name, 
 		pac.user_id AS confirm_user_id, pac.fullname AS confirm_user_name,
@@ -86,17 +85,18 @@ func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 		INNER JOIN profiles paa ON paa.user_id = aj.user_id
 		LEFT JOIN profiles pac ON pac.user_id = aj.user_confirm_id 
 		WHERE aj.uid = ?
+		LIMIT 1
 	`
-	rows, err := db.Debug().Raw(query, iaj.Id).Rows()
 
+	rows, err := db.Debug().Raw(query, iaj.Id).Rows()
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
 	}
 	defer rows.Close()
 
-	for rows.Next() {
+	if rows.Next() {
 		errJobRows := db.ScanRows(rows, &dataQuery)
-
 		if errJobRows != nil {
 			helper.Logger("error", "In Server: "+errJobRows.Error())
 			return nil, errors.New(errJobRows.Error())
@@ -109,7 +109,7 @@ func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 			return value
 		}
 
-		data = append(data, entities.ResultInfoJob{
+		data = entities.ResultInfoJob{
 			Id:        dataQuery.ApplyJobId,
 			Status:    dataQuery.Status,
 			CreatedAt: helper.FormatDate(dataQuery.CreatedAt),
@@ -123,7 +123,7 @@ func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 				Id:   defaultIfEmpty(dataQuery.ConfirmUserId, "-"),
 				Name: defaultIfEmpty(dataQuery.ConfirmUserName, "-"),
 			},
-		})
+		}
 	}
 
 	return map[string]any{
