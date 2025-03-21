@@ -128,7 +128,7 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 
 	var dataWork = make([]entities.ProfileFormWork, 0)
 
-	queryWork := `SELECT id, work, position, is_work, country, city, start_month, start_year, end_month, end_year, user_id 
+	queryWork := `SELECT id, work, position, institution, is_work, country, city, start_month, start_year, end_month, end_year, user_id 
 	FROM form_works WHERE user_id  = '` + profiles[0].Id + `'`
 
 	rows, errWork := db.Debug().Raw(queryWork).Scan(&work).Rows()
@@ -157,16 +157,17 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 		}
 
 		dataWork = append(dataWork, entities.ProfileFormWork{
-			Id:         work.Id,
-			Position:   work.Position,
-			Work:       work.Work,
-			IsWork:     isWork,
-			City:       work.City,
-			Country:    work.Country,
-			StartMonth: work.StartMonth,
-			EndMonth:   work.EndMonth,
-			StartYear:  work.StartYear,
-			EndYear:    work.EndYear,
+			Id:          work.Id,
+			Position:    work.Position,
+			Institution: work.Institution,
+			Work:        work.Work,
+			IsWork:      isWork,
+			City:        work.City,
+			Country:     work.Country,
+			StartMonth:  work.StartMonth,
+			EndMonth:    work.EndMonth,
+			StartYear:   work.StartYear,
+			EndYear:     work.EndYear,
 		})
 	}
 
