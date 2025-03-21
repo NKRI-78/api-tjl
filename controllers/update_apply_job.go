@@ -36,6 +36,12 @@ func UpdateApplyJob(w http.ResponseWriter, r *http.Request) {
 
 	UserId := userId
 
+	if data.Status == 1 {
+		helper.Logger("error", "In Server: status [in progress] already used")
+		helper.Response(w, 400, true, "status [in progress] already used", map[string]any{})
+		return
+	}
+
 	if ApplyJobId == "" {
 		helper.Logger("error", "In Server: apply job id is required")
 		helper.Response(w, 400, true, "apply job id is required", map[string]any{})

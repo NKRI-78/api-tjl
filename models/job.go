@@ -7,6 +7,7 @@ import (
 // SCAN MYSQL
 type InfoApplyJobQuery entities.InfoApplyJobQuery
 type ApplyJobQuery entities.ApplyJobQuery
+type CheckApplyJobQuery entities.CheckApplyJobQuery
 
 type ApplyJob entities.ApplyJob
 type ResultInfoJob entities.ResultInfoJob
