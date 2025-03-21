@@ -149,7 +149,7 @@ func ApplyJob(aj *models.ApplyJob) (map[string]any, error) {
 
 	if isUserAppliedJob == 1 {
 		helper.Logger("error", "In Server: user already applied job")
-		return nil, errors.New("user already applied job")
+		return nil, errors.New("USER_ALREADY_APPLIED_JOB")
 	}
 
 	queryInsert := `INSERT INTO apply_jobs (uid, job_id, user_id) VALUES (?, ?, ?)`
