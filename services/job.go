@@ -47,19 +47,12 @@ func ListInfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 			return nil, errors.New(errJobRows.Error())
 		}
 
-		defaultIfEmpty := func(value, defaultValue string) string {
-			if value == "" {
-				return defaultValue
-			}
-			return value
-		}
-
 		data = append(data, entities.ResultInfoJob{
 			Id:        dataQuery.ApplyJobId,
 			Status:    dataQuery.Status,
 			CreatedAt: helper.FormatDate(dataQuery.CreatedAt),
-			Link:      defaultIfEmpty(dataQuery.Link, "-"),
-			Schedule:  defaultIfEmpty(dataQuery.Schedule, "-"),
+			Link:      helper.DefaultIfEmpty(dataQuery.Link, "-"),
+			Schedule:  helper.DefaultIfEmpty(dataQuery.Schedule, "-"),
 			Job: entities.JobApply{
 				JobTitle:    dataQuery.JobTitle,
 				JobCategory: dataQuery.JobCategory,
@@ -70,8 +63,8 @@ func ListInfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 				Name: dataQuery.ApplyUserName,
 			},
 			UserConfirm: entities.UserConfirm{
-				Id:   defaultIfEmpty(dataQuery.ConfirmUserId, "-"),
-				Name: defaultIfEmpty(dataQuery.ConfirmUserName, "-"),
+				Id:   helper.DefaultIfEmpty(dataQuery.ConfirmUserId, "-"),
+				Name: helper.DefaultIfEmpty(dataQuery.ConfirmUserName, "-"),
 			},
 		})
 	}
@@ -120,19 +113,12 @@ func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 			return nil, errors.New(errJobRows.Error())
 		}
 
-		defaultIfEmpty := func(value, defaultValue string) string {
-			if value == "" {
-				return defaultValue
-			}
-			return value
-		}
-
 		data = append(data, entities.ResultInfoJob{
 			Id:        dataQuery.ApplyJobId,
 			Status:    dataQuery.Status,
 			CreatedAt: helper.FormatDate(dataQuery.CreatedAt),
-			Link:      defaultIfEmpty(dataQuery.Link, "-"),
-			Schedule:  defaultIfEmpty(dataQuery.Schedule, "-"),
+			Link:      helper.DefaultIfEmpty(dataQuery.Link, "-"),
+			Schedule:  helper.DefaultIfEmpty(dataQuery.Schedule, "-"),
 			Job: entities.JobApply{
 				JobTitle:    dataQuery.JobTitle,
 				JobCategory: dataQuery.JobCategory,
@@ -143,8 +129,8 @@ func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 				Name: dataQuery.ApplyUserName,
 			},
 			UserConfirm: entities.UserConfirm{
-				Id:   defaultIfEmpty(dataQuery.ConfirmUserId, "-"),
-				Name: defaultIfEmpty(dataQuery.ConfirmUserName, "-"),
+				Id:   helper.DefaultIfEmpty(dataQuery.ConfirmUserId, "-"),
+				Name: helper.DefaultIfEmpty(dataQuery.ConfirmUserName, "-"),
 			},
 		})
 	}
