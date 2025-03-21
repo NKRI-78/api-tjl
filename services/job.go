@@ -25,7 +25,6 @@ func ListInfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 		LEFT JOIN profiles pac ON pac.user_id = aj.user_confirm_id 
 		WHERE aj.user_id = ?
 		ORDER BY aj.created_at DESC
-		LIMIT 1
 	`
 	rows, err := db.Debug().Raw(query, iaj.UserId).Rows()
 
@@ -135,13 +134,31 @@ func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 
 func ApplyJob(aj *models.ApplyJob) (map[string]any, error) {
 
-	query := `INSERT INTO apply_jobs (uid, job_id, user_id) VALUES (?, ?, ?)`
+	var allJob []models.CheckApplyJobQuery
 
-	err := db.Debug().Exec(query, aj.Id, aj.JobId, aj.UserId).Error
+	queryCheck := `SELECT uid FROM apply_jobs WHERE user_id = ? AND job_id = ?`
 
-	if err != nil {
-		helper.Logger("error", "In Server: "+err.Error())
-		return nil, errors.New(err.Error())
+	errAllJob := db.Debug().Raw(queryCheck, aj.UserId, aj.JobId).Scan(&allJob).Error
+
+	if errAllJob != nil {
+		helper.Logger("error", "In Server: "+errAllJob.Error())
+		return nil, errors.New(errAllJob.Error())
+	}
+
+	var isUserAppliedJob = len(allJob)
+
+	if isUserAppliedJob == 1 {
+		helper.Logger("error", "In Server: user already applied job")
+		return nil, errors.New("user already applied job")
+	}
+
+	queryInsert := `INSERT INTO apply_jobs (uid, job_id, user_id) VALUES (?, ?, ?)`
+
+	errInsert := db.Debug().Exec(queryInsert, aj.Id, aj.JobId, aj.UserId).Error
+
+	if errInsert != nil {
+		helper.Logger("error", "In Server: "+errInsert.Error())
+		return nil, errors.New(errInsert.Error())
 	}
 
 	queryHistory := `INSERT INTO apply_job_histories (uid, job_id, user_id) VALUES (?, ?, ?)`
@@ -157,49 +174,40 @@ func ApplyJob(aj *models.ApplyJob) (map[string]any, error) {
 }
 
 func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
-
 	var dataQuery entities.ApplyJobQuery
 
 	query := `UPDATE apply_jobs SET user_confirm_id = ?, status = ? WHERE uid = ?`
-
 	err := db.Debug().Exec(query, uaj.UserConfirmId, uaj.Status, uaj.ApplyJobId).Error
-
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
 		return nil, errors.New(err.Error())
 	}
 
-	queryInfo := `SELECT * FROM apply_jobs WHERE uid = ?`
+	queryInfo := `SELECT uid, job_id, user_id, user_confirm_id FROM apply_jobs WHERE uid = ?`
+	row := db.Debug().Raw(queryInfo, uaj.ApplyJobId).Row()
 
-	rows, errInfo := db.Debug().Raw(queryInfo, uaj.ApplyJobId).Rows()
+	errJobRow := row.Scan(
+		&dataQuery.Uid, &dataQuery.JobId, &dataQuery.UserId,
+		&dataQuery.UserConfirmId,
+	)
 
-	if errInfo != nil {
-		helper.Logger("error", "In Server: "+errInfo.Error())
-		return nil, errors.New(errInfo.Error())
+	if errJobRow != nil {
+		helper.Logger("error", "In Server: "+errJobRow.Error())
+		return nil, errors.New(errJobRow.Error())
 	}
 
-	for rows.Next() {
-		errJobRows := db.ScanRows(rows, &dataQuery)
-
-		if errJobRows != nil {
-			helper.Logger("error", "In Server: "+errJobRows.Error())
-			return nil, errors.New(errJobRows.Error())
-		}
-
-		queryHistory := `INSERT INTO apply_job_histories 
+	queryHistory := `INSERT INTO apply_job_histories 
 		(uid, job_id, user_id, user_confirm_id, status, link, schedule) 
 		VALUES (?, ?, ?, ?, ?, ?, ?)`
 
-		errHistory := db.Debug().Exec(queryHistory,
-			dataQuery.Uid, dataQuery.JobId,
-			dataQuery.UserId, dataQuery.UserConfirmId,
-			uaj.Status, uaj.Link, uaj.Schedule,
-		).Error
+	errHistory := db.Debug().Exec(queryHistory,
+		dataQuery.Uid, dataQuery.JobId, dataQuery.UserId,
+		dataQuery.UserConfirmId, uaj.Status, uaj.Link, uaj.Schedule,
+	).Error
 
-		if errHistory != nil {
-			helper.Logger("error", "In Server: "+errHistory.Error())
-			return nil, errors.New(errHistory.Error())
-		}
+	if errHistory != nil {
+		helper.Logger("error", "In Server: "+errHistory.Error())
+		return nil, errors.New(errHistory.Error())
 	}
 
 	return map[string]any{}, nil

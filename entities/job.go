@@ -27,6 +27,10 @@ type InfoApplyJobQuery struct {
 	CreatedAt       time.Time `json:"created_at"`
 }
 
+type CheckApplyJobQuery struct {
+	Id string `json:"uid"`
+}
+
 //
 
 type ResultInfoJob struct {
