@@ -56,18 +56,19 @@ type FormExercise struct {
 }
 
 type FormWork struct {
-	Id         string `json:"id"`
-	Position   string `json:"position"`
-	Work       string `json:"work"`
-	IsWork     int    `json:"is_work"`
-	StillWork  bool   `json:"still_work"`
-	Country    string `json:"country"`
-	City       string `json:"city"`
-	StartMonth string `json:"start_month"`
-	StartYear  string `json:"start_year"`
-	EndMonth   string `json:"end_month"`
-	EndYear    string `json:"end_year"`
-	UserId     string `json:"user_id"`
+	Id          string `json:"id"`
+	Position    string `json:"position"`
+	Institution string `json:"institution"`
+	Work        string `json:"work"`
+	IsWork      int    `json:"is_work"`
+	StillWork   bool   `json:"still_work"`
+	Country     string `json:"country"`
+	City        string `json:"city"`
+	StartMonth  string `json:"start_month"`
+	StartYear   string `json:"start_year"`
+	EndMonth    string `json:"end_month"`
+	EndYear     string `json:"end_year"`
+	UserId      string `json:"user_id"`
 }
 type FormLanguage struct {
 	Id       string `json:"id"`

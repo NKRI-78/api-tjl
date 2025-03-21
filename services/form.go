@@ -78,6 +78,34 @@ func FormEducation(f *models.FormEducation) (map[string]any, error) {
 	return map[string]any{}, nil
 }
 
+func FormExercise(f *models.FormExercise) (map[string]any, error) {
+	query := `INSERT INTO form_exercises (name, institution, start_year, start_month, end_year, end_month, user_id) 
+	VALUES (?, ?, ?, ?, ?, ?, ?)`
+
+	err := db.Debug().Exec(query, f.Name, f.Institution, f.StartYear, f.StartMonth, f.EndYear, f.EndMonth, f.UserId).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
+func FormWork(f *models.FormWork) (map[string]any, error) {
+	query := `INSERT INTO form_works (position, institution, work, is_work, country, city, start_year, start_month, end_year, end_month, user_id) 
+	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+
+	err := db.Debug().Exec(query, f.Position, f.Institution, f.Work, f.IsWork, f.Country, f.City, f.StartYear, f.StartMonth, f.EndYear, f.EndMonth, f.UserId).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
 func DeleteFormLanguage(f *models.FormLanguage) (map[string]any, error) {
 	query := `DELETE FROM form_languages WHERE id = ?`
 
@@ -186,7 +214,7 @@ func UpdateFormExercise(f *models.FormExercise) (map[string]any, error) {
 }
 
 func UpdateFormWork(f *models.FormWork) (map[string]any, error) {
-	query := `UPDATE form_works SET position = ?, 
+	query := `UPDATE form_works SET position = ?, institution = ?,
 	city = ?, work = ?, is_work = ?, start_year = ?, start_month = ?, end_year = ?, 
 	end_month = ? WHERE id = ?`
 
@@ -198,7 +226,7 @@ func UpdateFormWork(f *models.FormWork) (map[string]any, error) {
 		isWork = 0
 	}
 
-	err := db.Debug().Exec(query, f.Position, f.City, f.Work, isWork, f.StartYear, f.StartMonth, f.EndYear, f.EndMonth, f.Id).Error
+	err := db.Debug().Exec(query, f.Position, f.Institution, f.City, f.Work, isWork, f.StartYear, f.StartMonth, f.EndYear, f.EndMonth, f.Id).Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
@@ -214,34 +242,6 @@ func UpdateFormEducation(f *models.FormEducation) (map[string]any, error) {
 	end_month = ? WHERE id = ?`
 
 	err := db.Debug().Exec(query, f.EducationLevel, f.Major, f.SchoolOrCollege, f.StartYear, f.StartMonth, f.EndYear, f.EndMonth, f.Id).Error
-
-	if err != nil {
-		helper.Logger("error", "In Server: "+err.Error())
-		return nil, errors.New(err.Error())
-	}
-
-	return map[string]any{}, nil
-}
-
-func FormExercise(f *models.FormExercise) (map[string]any, error) {
-	query := `INSERT INTO form_exercises (name, institution, start_year, start_month, end_year, end_month, user_id) 
-	VALUES (?, ?, ?, ?, ?, ?, ?)`
-
-	err := db.Debug().Exec(query, f.Name, f.Institution, f.StartYear, f.StartMonth, f.EndYear, f.EndMonth, f.UserId).Error
-
-	if err != nil {
-		helper.Logger("error", "In Server: "+err.Error())
-		return nil, errors.New(err.Error())
-	}
-
-	return map[string]any{}, nil
-}
-
-func FormWork(f *models.FormWork) (map[string]any, error) {
-	query := `INSERT INTO form_works (position, work, is_work, country, city, start_year, start_month, end_year, end_month, user_id) 
-	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-
-	err := db.Debug().Exec(query, f.Position, f.Work, f.IsWork, f.Country, f.City, f.StartYear, f.StartMonth, f.EndYear, f.EndMonth, f.UserId).Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())

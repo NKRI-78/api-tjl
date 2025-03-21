@@ -31,6 +31,7 @@ func FormWork(w http.ResponseWriter, r *http.Request) {
 	userId, _ := claims["id"].(string)
 
 	Position := data.Position
+	Institution := data.Institution
 	City := data.City
 	Work := data.Work
 	StartYear := data.StartYear
@@ -43,6 +44,12 @@ func FormWork(w http.ResponseWriter, r *http.Request) {
 	if Position == "" {
 		helper.Logger("error", "In Server: position is required")
 		helper.Response(w, 400, true, "position is required", map[string]any{})
+		return
+	}
+
+	if Institution == "" {
+		helper.Logger("error", "In Server: institution is required")
+		helper.Response(w, 400, true, "institution is required", map[string]interface{}{})
 		return
 	}
 
