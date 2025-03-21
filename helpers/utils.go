@@ -36,6 +36,13 @@ func Contains(s []string, e string) bool {
 	return false
 }
 
+func DefaultIfEmpty(value, defaultValue string) string {
+	if value == "" {
+		return defaultValue
+	}
+	return value
+}
+
 // Kamis, 20 Maret 2025 13:24 WIB
 func FormatDate(t time.Time) string {
 	days := map[string]string{
