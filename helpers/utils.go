@@ -43,7 +43,7 @@ func DefaultIfEmpty(value, defaultValue string) string {
 	return value
 }
 
-// Kamis, 20 Maret 2025 13:24 WIB
+// Ex : Kamis, 20 Maret 2025 13:24 WIB
 func FormatDate(t time.Time) string {
 	days := map[string]string{
 		"Sunday":    "Minggu",
