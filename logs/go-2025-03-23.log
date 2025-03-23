@@ -1,3 +1,32 @@
 [ERROR]: 2025-03-23 10:54:14 - In Server: Missing auth token
 [ERROR]: 2025-03-23 10:57:14 - In Server: path is required
 [INFO]: 2025-03-23 11:00:34 - Apply Job success
+[INFO]: 2025-03-23 11:58:41 - Get Info Apply Job success
+[INFO]: 2025-03-23 11:59:04 - Get Info Apply Job success
+[INFO]: 2025-03-23 11:59:19 - Get Info Apply Job success
+[INFO]: 2025-03-23 11:59:30 - Get Info Apply Job success
+[INFO]: 2025-03-23 11:59:31 - Get Info Apply Job success
+[ERROR]: 2025-03-23 11:59:53 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '/ LEFT JOIN apply_job_documents ajd ON ajd.apply_job_id = aj.uid
+		// LEFT JOIN ' at line 17
+[ERROR]: 2025-03-23 11:59:54 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '/ LEFT JOIN apply_job_documents ajd ON ajd.apply_job_id = aj.uid
+		// LEFT JOIN ' at line 17
+[ERROR]: 2025-03-23 11:59:55 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '/ LEFT JOIN apply_job_documents ajd ON ajd.apply_job_id = aj.uid
+		// LEFT JOIN ' at line 17
+[ERROR]: 2025-03-23 11:59:56 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '/ LEFT JOIN apply_job_documents ajd ON ajd.apply_job_id = aj.uid
+		// LEFT JOIN ' at line 17
+[ERROR]: 2025-03-23 11:59:56 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '/ LEFT JOIN apply_job_documents ajd ON ajd.apply_job_id = aj.uid
+		// LEFT JOIN ' at line 17
+[ERROR]: 2025-03-23 12:00:11 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '// d.id AS doc_id,
+		// d.name AS doc_name,
+		// ajd.path AS doc_path
+		FROM app' at line 7
+[ERROR]: 2025-03-23 12:00:12 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '// d.id AS doc_id,
+		// d.name AS doc_name,
+		// ajd.path AS doc_path
+		FROM app' at line 7
+[INFO]: 2025-03-23 12:00:24 - Get Info Apply Job success
+[INFO]: 2025-03-23 12:00:33 - Get Info Apply Job success
+[INFO]: 2025-03-23 12:00:58 - Login success
+[INFO]: 2025-03-23 12:05:20 - Get Info Apply Job success
+[INFO]: 2025-03-23 12:06:24 - Apply Job success
+[INFO]: 2025-03-23 12:06:26 - Get Info Apply Job success
