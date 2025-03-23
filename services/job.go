@@ -88,7 +88,10 @@ func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 		js.name AS status, aj.created_at, aj.uid AS apply_job_id, aj.link, aj.schedule,
 		j.title AS job_title,
 		jc.name AS job_category,
-		p.fullname AS job_author
+		p.fullname AS job_author,
+		d.id AS doc_id,
+		d.name AS doc_name,
+		ajd.path AS doc_path
 		FROM apply_job_histories aj 
 		INNER JOIN jobs j ON j.uid = aj.job_id
 		INNER JOIN job_categories jc ON jc.id = j.cat_id
@@ -96,6 +99,8 @@ func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 		INNER JOIN job_statuses js ON js.id = aj.status
 		INNER JOIN profiles paa ON paa.user_id = aj.user_id
 		LEFT JOIN profiles pac ON pac.user_id = aj.user_confirm_id 
+		LEFT JOIN apply_job_documents ajd ON ajd.apply_job_id = aj.uid
+		LEFT JOIN documents d ON d.id = ajd.doc_id
 		WHERE aj.uid = ?
 	`
 	rows, err := db.Debug().Raw(query, iaj.Id).Rows()
@@ -119,6 +124,11 @@ func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 			CreatedAt: helper.FormatDate(dataQuery.CreatedAt),
 			Link:      helper.DefaultIfEmpty(dataQuery.Link, "-"),
 			Schedule:  helper.DefaultIfEmpty(dataQuery.Schedule, "-"),
+			Doc: entities.DocApply{
+				DocId:   dataQuery.DocId,
+				DocName: dataQuery.DocName,
+				DocPath: dataQuery.DocPath,
+			},
 			Job: entities.JobApply{
 				JobTitle:    dataQuery.JobTitle,
 				JobCategory: dataQuery.JobCategory,

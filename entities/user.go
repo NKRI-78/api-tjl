@@ -81,8 +81,15 @@ type ProfileResponse struct {
 	Fullname  string             `json:"fullname"`
 	IsEnabled bool               `json:"enabled"`
 	Email     string             `json:"email"`
+	Doc       ProfileDocResponse `json:"doc"`
 	Job       ProfileJobResponse `json:"job"`
 	Biodata   Biodata            `json:"biodata"`
+}
+
+type ProfileDocResponse struct {
+	Id   string `json:"id"`
+	Name string `json:"name"`
+	Path string `json:"path"`
 }
 
 type ProfileFormBiodata struct {
