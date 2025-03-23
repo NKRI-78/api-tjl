@@ -79,6 +79,12 @@ type ApplyJob struct {
 	Status        int    `json:"status"`
 }
 
+type AssignDocumentApplyJob struct {
+	ApplyJobId string `json:"apply_job_id"`
+	DocId      int    `json:"doc_id"`
+	Path       string `json:"path"`
+}
+
 type JobListQuery struct {
 	Id            string    `json:"id"`
 	Title         string    `json:"title"`
