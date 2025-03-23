@@ -81,17 +81,16 @@ func ListInfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 
 	var dataQuery entities.InfoApplyJobQuery
+	var dataDocQuery entities.DocApplyQuery
 	var data []entities.ResultInfoJob
+	var dataDoc []entities.DocApply
 
 	query := `SELECT paa.user_id AS apply_user_id, paa.fullname AS apply_user_name, 
 		pac.user_id AS confirm_user_id, pac.fullname AS confirm_user_name,
 		js.name AS status, aj.created_at, aj.uid AS apply_job_id, aj.link, aj.schedule,
 		j.title AS job_title,
 		jc.name AS job_category,
-		p.fullname AS job_author,
-		d.id AS doc_id,
-		d.name AS doc_name,
-		ajd.path AS doc_path
+		p.fullname AS job_author
 		FROM apply_job_histories aj 
 		INNER JOIN jobs j ON j.uid = aj.job_id
 		INNER JOIN job_categories jc ON jc.id = j.cat_id
@@ -99,8 +98,6 @@ func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 		INNER JOIN job_statuses js ON js.id = aj.status
 		INNER JOIN profiles paa ON paa.user_id = aj.user_id
 		LEFT JOIN profiles pac ON pac.user_id = aj.user_confirm_id 
-		LEFT JOIN apply_job_documents ajd ON ajd.apply_job_id = aj.uid
-		LEFT JOIN documents d ON d.id = ajd.doc_id
 		WHERE aj.uid = ?
 	`
 	rows, err := db.Debug().Raw(query, iaj.Id).Rows()
@@ -118,17 +115,48 @@ func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 			return nil, errors.New(errJobRows.Error())
 		}
 
+		queryDoc := `SELECT 
+			d.id, 
+			d.name, 
+		  COALESCE(ajd.path, '-') AS path 
+		FROM 
+			documents d
+		LEFT JOIN 
+			apply_job_documents ajd 
+			ON ajd.doc_id = d.id 
+			AND ajd.apply_job_id = ?`
+
+		rowsDoc, errDoc := db.Debug().Raw(queryDoc, dataQuery.ApplyJobId).Rows()
+
+		if errDoc != nil {
+			helper.Logger("error", "In Server: "+errDoc.Error())
+		}
+		defer rowsDoc.Close()
+
+		dataDoc = []entities.DocApply{}
+
+		for rowsDoc.Next() {
+			errDocRows := db.ScanRows(rowsDoc, &dataDocQuery)
+
+			if errDocRows != nil {
+				helper.Logger("error", "In Server: "+errDocRows.Error())
+				return nil, errors.New(errDocRows.Error())
+			}
+
+			dataDoc = append(dataDoc, entities.DocApply{
+				DocId:   dataDocQuery.Id,
+				DocName: dataDocQuery.Name,
+				DocPath: dataDocQuery.Path,
+			})
+		}
+
 		data = append(data, entities.ResultInfoJob{
 			Id:        dataQuery.ApplyJobId,
 			Status:    dataQuery.Status,
+			Doc:       dataDoc,
 			CreatedAt: helper.FormatDate(dataQuery.CreatedAt),
 			Link:      helper.DefaultIfEmpty(dataQuery.Link, "-"),
 			Schedule:  helper.DefaultIfEmpty(dataQuery.Schedule, "-"),
-			Doc: entities.DocApply{
-				DocId:   dataQuery.DocId,
-				DocName: dataQuery.DocName,
-				DocPath: dataQuery.DocPath,
-			},
 			Job: entities.JobApply{
 				JobTitle:    dataQuery.JobTitle,
 				JobCategory: dataQuery.JobCategory,

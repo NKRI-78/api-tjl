@@ -37,6 +37,12 @@ type CheckApplyJobQuery struct {
 	Id string `json:"uid"`
 }
 
+type DocApplyQuery struct {
+	Id   int    `json:"id"`
+	Name string `json:"name"`
+	Path string `json:"path"`
+}
+
 //
 
 type ResultInfoJob struct {
@@ -46,7 +52,7 @@ type ResultInfoJob struct {
 	Schedule    string      `json:"schedule"`
 	Link        string      `json:"link"`
 	Job         JobApply    `json:"job"`
-	Doc         DocApply    `json:"doc"`
+	Doc         []DocApply  `json:"doc"`
 	UserApply   UserApply   `json:"user_apply"`
 	UserConfirm UserConfirm `json:"user_confirm"`
 }
