@@ -82,7 +82,7 @@ func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 
 	var dataQuery entities.InfoApplyJobQuery
 	var dataDocQuery entities.DocApplyQuery
-	var data []entities.ResultInfoJob
+	var data []entities.ResultInfoJobDetail
 	var dataDoc []entities.DocApply
 
 	query := `SELECT paa.user_id AS apply_user_id, paa.fullname AS apply_user_name, 
@@ -150,7 +150,7 @@ func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 			})
 		}
 
-		data = append(data, entities.ResultInfoJob{
+		data = append(data, entities.ResultInfoJobDetail{
 			Id:        dataQuery.ApplyJobId,
 			Status:    dataQuery.Status,
 			Doc:       dataDoc,
