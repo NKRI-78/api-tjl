@@ -37,8 +37,8 @@ func UpdateApplyJob(w http.ResponseWriter, r *http.Request) {
 	UserId := userId
 
 	if data.Status == 1 {
-		helper.Logger("error", "In Server: status [in progress] already used")
-		helper.Response(w, 400, true, "status [in progress] already used", map[string]any{})
+		helper.Logger("error", "In Server: status [IN_PROGRESS] already used")
+		helper.Response(w, 400, true, "status [IN_PROGRESS] already used", map[string]any{})
 		return
 	}
 

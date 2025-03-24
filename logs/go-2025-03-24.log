@@ -4,3 +4,12 @@
 [INFO]: 2025-03-24 12:00:11 - Get List Info Apply Job success
 [INFO]: 2025-03-24 12:01:54 - Get List Info Apply Job success
 [INFO]: 2025-03-24 12:05:05 - Get List Info Apply Job success
+[INFO]: 2025-03-24 12:06:13 - Get List Info Apply Job success
+[ERROR]: 2025-03-24 17:44:43 - In Server: sql: Scan error on column index 2, name "user_id": converting driver.Value type []uint8 ("269517b0-5b7b-4521-acdc-de3c9ba9aca0") to a int: invalid syntax
+[ERROR]: 2025-03-24 17:45:11 - In Server: status [INTERVIEW] already used
+[ERROR]: 2025-03-24 17:45:19 - In Server: status [INTERVIEW] already used
+[ERROR]: 2025-03-24 17:45:20 - In Server: status [INTERVIEW] already used
+[ERROR]: 2025-03-24 17:45:21 - In Server: status [INTERVIEW] already used
+[ERROR]: 2025-03-24 17:46:35 - In Server: status [?] already used
+[INFO]: 2025-03-24 17:46:39 - Update Apply Job success
+[ERROR]: 2025-03-24 17:46:41 - In Server: status [?] already used
