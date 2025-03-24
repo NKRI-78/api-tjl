@@ -52,6 +52,17 @@ type ResultInfoJob struct {
 	Schedule    string      `json:"schedule"`
 	Link        string      `json:"link"`
 	Job         JobApply    `json:"job"`
+	UserApply   UserApply   `json:"user_apply"`
+	UserConfirm UserConfirm `json:"user_confirm"`
+}
+
+type ResultInfoJobDetail struct {
+	Id          string      `json:"id"`
+	Status      string      `json:"status"`
+	CreatedAt   string      `json:"created_at"`
+	Schedule    string      `json:"schedule"`
+	Link        string      `json:"link"`
+	Job         JobApply    `json:"job"`
 	Doc         []DocApply  `json:"doc"`
 	UserApply   UserApply   `json:"user_apply"`
 	UserConfirm UserConfirm `json:"user_confirm"`
