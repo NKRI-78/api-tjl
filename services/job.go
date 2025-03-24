@@ -18,11 +18,12 @@ func ListInfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 
 	query := `SELECT paa.user_id AS apply_user_id, paa.fullname AS apply_user_name, 
 		pac.user_id AS confirm_user_id, pac.fullname AS confirm_user_name,
-		js.name AS status, aj.created_at, aj.uid AS apply_job_id, aj.link, aj.schedule,
+		js.name AS status, aj.uid AS apply_job_id
 		j.title AS job_title,
 		jc.name AS job_category,
-		p.fullname AS job_author
-		FROM apply_job_histories aj 
+		p.fullname AS job_author,
+		aj.created_at
+		FROM apply_jobs aj 
 		INNER JOIN jobs j ON j.uid = aj.job_id
 		INNER JOIN job_categories jc ON jc.id = j.cat_id
 		INNER JOIN profiles p ON p.user_id = j.user_id
