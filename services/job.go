@@ -239,26 +239,40 @@ func AssignDocumentApplyJob(adaj *models.AssignDocumentApplyJob) (map[string]any
 func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 	var dataQuery entities.ApplyJobQuery
 
-	queryInfo := `SELECT uid, job_id, user_id, status, user_confirm_id 
-	FROM apply_jobs 
-	WHERE uid = ?`
+	// Fetch existing job application details
+	queryInfo := `SELECT uid, job_id, user_id, status FROM apply_jobs WHERE uid = ?`
 	row := db.Debug().Raw(queryInfo, uaj.ApplyJobId).Row()
-
-	errJobRow := row.Scan(
-		&dataQuery.Uid, &dataQuery.JobId, &dataQuery.UserId, &dataQuery.Status,
-		&dataQuery.UserConfirmId,
-	)
+	errJobRow := row.Scan(&dataQuery.Uid, &dataQuery.JobId, &dataQuery.UserId, &dataQuery.Status)
 
 	if errJobRow != nil {
 		helper.Logger("error", "In Server: "+errJobRow.Error())
 		return nil, errors.New(errJobRow.Error())
 	}
 
-	if uaj.Status == dataQuery.Status {
-		helper.Logger("error", "In Server: status [?] already used")
-		return nil, errors.New("status [?] already used")
+	// Validate status transition rules
+	switch dataQuery.Status {
+	case 1: // IN_PROGRESS -> can only move to INTERVIEW (2)
+		if uaj.Status != 2 {
+			helper.Logger("error", "status IN_PROGRESS can only move to INTERVIEW")
+			return nil, errors.New("status IN_PROGRESS can only move to INTERVIEW")
+		}
+	case 2: // INTERVIEW -> can move to ACCEPTED (3) or DECLINED (4)
+		if uaj.Status != 3 && uaj.Status != 4 {
+			helper.Logger("error", "status INTERVIEW can only move to ACCEPTED or DECLINED")
+			return nil, errors.New("status INTERVIEW can only move to ACCEPTED or DECLINED")
+		}
+	case 3: // ACCEPTED - no further updates
+		helper.Logger("error", "status [ACCEPTED] already passed")
+		return nil, errors.New("status [ACCEPTED] already passed")
+	case 4: // DECLINED - no further updates
+		helper.Logger("error", "status [DECLINED] already passed")
+		return nil, errors.New("status [DECLINED] already passed")
+	default:
+		helper.Logger("error", "unknown status")
+		return nil, errors.New("unknown status")
 	}
 
+	// Perform the update
 	query := `UPDATE apply_jobs SET user_confirm_id = ?, status = ? WHERE uid = ?`
 	err := db.Debug().Exec(query, uaj.UserConfirmId, uaj.Status, uaj.ApplyJobId).Error
 	if err != nil {
@@ -266,13 +280,13 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 		return nil, errors.New(err.Error())
 	}
 
+	// Insert into history
 	queryHistory := `INSERT INTO apply_job_histories 
-		(uid, job_id, user_id, user_confirm_id, status, link, schedule) 
-		VALUES (?, ?, ?, ?, ?, ?, ?)`
-
+	(uid, job_id, user_id, user_confirm_id, status, link, schedule) 
+	VALUES (?, ?, ?, ?, ?, ?, ?)`
 	errHistory := db.Debug().Exec(queryHistory,
 		dataQuery.Uid, dataQuery.JobId, dataQuery.UserId,
-		dataQuery.UserConfirmId, uaj.Status, uaj.Link, uaj.Schedule,
+		uaj.UserConfirmId, uaj.Status, uaj.Link, uaj.Schedule,
 	).Error
 
 	if errHistory != nil {
