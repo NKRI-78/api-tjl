@@ -23,6 +23,7 @@ type InfoApplyJobQuery struct {
 	ConfirmUserName string    `json:"confirm_user_name"`
 	Status          string    `json:"status"`
 	Link            string    `json:"link"`
+	JobAvatar       string    `json:"job_avatar"`
 	JobTitle        string    `json:"job_title"`
 	JobCategory     string    `json:"job_category"`
 	JobAuthor       string    `json:"job_author"`
@@ -48,7 +49,7 @@ type DocApplyQuery struct {
 type ResultInfoJob struct {
 	Id          string      `json:"id"`
 	Status      string      `json:"status"`
-	CreatedAt   string      `json:"created_at"`
+	CreatedAt   time.Time   `json:"created_at"`
 	Schedule    string      `json:"schedule"`
 	Link        string      `json:"link"`
 	Job         JobApply    `json:"job"`
@@ -59,7 +60,7 @@ type ResultInfoJob struct {
 type ResultInfoJobDetail struct {
 	Id          string      `json:"id"`
 	Status      string      `json:"status"`
-	CreatedAt   string      `json:"created_at"`
+	CreatedAt   time.Time   `json:"created_at"`
 	Schedule    string      `json:"schedule"`
 	Link        string      `json:"link"`
 	Job         JobApply    `json:"job"`
@@ -77,6 +78,7 @@ type DocApply struct {
 type JobApply struct {
 	JobTitle    string `json:"title"`
 	JobCategory string `json:"category"`
+	JobAvatar   string `json:"logo"`
 	JobAuthor   string `json:"author"`
 }
 

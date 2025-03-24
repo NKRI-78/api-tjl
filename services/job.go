@@ -21,6 +21,7 @@ func ListInfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 		js.name AS status, aj.uid AS apply_job_id,
 		j.title AS job_title,
 		jc.name AS job_category,
+		p.avatar AS job_avatar,
 		p.fullname AS job_author,
 		aj.created_at
 		FROM apply_jobs aj 
@@ -51,12 +52,11 @@ func ListInfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 		data = append(data, entities.ResultInfoJob{
 			Id:        dataQuery.ApplyJobId,
 			Status:    dataQuery.Status,
-			CreatedAt: helper.FormatDate(dataQuery.CreatedAt),
-			Link:      helper.DefaultIfEmpty(dataQuery.Link, "-"),
-			Schedule:  helper.DefaultIfEmpty(dataQuery.Schedule, "-"),
+			CreatedAt: dataQuery.CreatedAt,
 			Job: entities.JobApply{
 				JobTitle:    dataQuery.JobTitle,
 				JobCategory: dataQuery.JobCategory,
+				JobAvatar:   dataQuery.JobAvatar,
 				JobAuthor:   dataQuery.JobAuthor,
 			},
 			UserApply: entities.UserApply{
@@ -91,6 +91,7 @@ func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 		js.name AS status, aj.created_at, aj.uid AS apply_job_id, aj.link, aj.schedule,
 		j.title AS job_title,
 		jc.name AS job_category,
+		p.avatar AS job_avatar,
 		p.fullname AS job_author
 		FROM apply_job_histories aj 
 		INNER JOIN jobs j ON j.uid = aj.job_id
@@ -155,12 +156,13 @@ func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 			Id:        dataQuery.ApplyJobId,
 			Status:    dataQuery.Status,
 			Doc:       dataDoc,
-			CreatedAt: helper.FormatDate(dataQuery.CreatedAt),
+			CreatedAt: dataQuery.CreatedAt,
 			Link:      helper.DefaultIfEmpty(dataQuery.Link, "-"),
 			Schedule:  helper.DefaultIfEmpty(dataQuery.Schedule, "-"),
 			Job: entities.JobApply{
 				JobTitle:    dataQuery.JobTitle,
 				JobCategory: dataQuery.JobCategory,
+				JobAvatar:   dataQuery.JobAvatar,
 				JobAuthor:   dataQuery.JobAuthor,
 			},
 			UserApply: entities.UserApply{
