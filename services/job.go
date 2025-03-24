@@ -239,24 +239,31 @@ func AssignDocumentApplyJob(adaj *models.AssignDocumentApplyJob) (map[string]any
 func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 	var dataQuery entities.ApplyJobQuery
 
-	query := `UPDATE apply_jobs SET user_confirm_id = ?, status = ? WHERE uid = ?`
-	err := db.Debug().Exec(query, uaj.UserConfirmId, uaj.Status, uaj.ApplyJobId).Error
-	if err != nil {
-		helper.Logger("error", "In Server: "+err.Error())
-		return nil, errors.New(err.Error())
-	}
-
-	queryInfo := `SELECT uid, job_id, user_id, user_confirm_id FROM apply_jobs WHERE uid = ?`
+	queryInfo := `SELECT uid, job_id, user_id, status, user_confirm_id 
+	FROM apply_jobs 
+	WHERE uid = ?`
 	row := db.Debug().Raw(queryInfo, uaj.ApplyJobId).Row()
 
 	errJobRow := row.Scan(
-		&dataQuery.Uid, &dataQuery.JobId, &dataQuery.UserId,
+		&dataQuery.Uid, &dataQuery.JobId, &dataQuery.UserId, &dataQuery.Status,
 		&dataQuery.UserConfirmId,
 	)
 
 	if errJobRow != nil {
 		helper.Logger("error", "In Server: "+errJobRow.Error())
 		return nil, errors.New(errJobRow.Error())
+	}
+
+	if uaj.Status == dataQuery.Status {
+		helper.Logger("error", "In Server: status [?] already used")
+		return nil, errors.New("status [?] already used")
+	}
+
+	query := `UPDATE apply_jobs SET user_confirm_id = ?, status = ? WHERE uid = ?`
+	err := db.Debug().Exec(query, uaj.UserConfirmId, uaj.Status, uaj.ApplyJobId).Error
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
 	}
 
 	queryHistory := `INSERT INTO apply_job_histories 
