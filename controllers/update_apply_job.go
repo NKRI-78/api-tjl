@@ -34,11 +34,9 @@ func UpdateApplyJob(w http.ResponseWriter, r *http.Request) {
 	Link := data.Link
 	Schedule := data.Schedule
 
-	UserId := userId
-
 	if data.Status == 1 {
-		helper.Logger("error", "In Server: status [IN_PROGRESS] already used")
-		helper.Response(w, 400, true, "status [IN_PROGRESS] already used", map[string]any{})
+		helper.Logger("error", "In Server: status [IN_PROGRESS] already passed")
+		helper.Response(w, 400, true, "status [IN_PROGRESS] already passed", map[string]any{})
 		return
 	}
 
@@ -60,7 +58,7 @@ func UpdateApplyJob(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data.UserConfirmId = UserId
+	data.UserConfirmId = userId
 
 	result, err := services.UpdateApplyJob(data)
 
