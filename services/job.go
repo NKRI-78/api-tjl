@@ -223,14 +223,16 @@ func ApplyJob(aj *models.ApplyJob) (map[string]any, error) {
 }
 
 func AssignDocumentApplyJob(adaj *models.AssignDocumentApplyJob) (map[string]any, error) {
+	query := `
+		INSERT INTO apply_job_documents (apply_job_id, doc_id, path) 
+		VALUES (?, ?, ?) 
+		ON DUPLICATE KEY UPDATE path = VALUES(path)
+	`
 
-	queryInsert := `INSERT INTO apply_job_documents (apply_job_id, doc_id, path) VALUES (?, ?, ?)`
-
-	errInsert := db.Debug().Exec(queryInsert, adaj.ApplyJobId, adaj.DocId, adaj.Path).Error
-
-	if errInsert != nil {
-		helper.Logger("error", "In Server: "+errInsert.Error())
-		return nil, errors.New(errInsert.Error())
+	err := db.Debug().Exec(query, adaj.ApplyJobId, adaj.DocId, adaj.Path).Error
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
 	}
 
 	return map[string]any{}, nil
