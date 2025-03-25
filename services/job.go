@@ -398,7 +398,7 @@ func AdminJobList() (map[string]any, error) {
 	}, nil
 }
 
-func JobList(salary, country, position string) (map[string]any, error) {
+func JobList(userId, salary, country, position string) (map[string]any, error) {
 	var jobs entities.JobListQuery
 	var jobFavourite []entities.JobFavourite
 	var dataJob = make([]entities.JobList, 0)
@@ -449,7 +449,7 @@ func JobList(salary, country, position string) (map[string]any, error) {
 		}
 
 		bookmarkQuery := `SELECT job_id, user_id FROM job_favourites WHERE user_id = ? AND job_id = ?`
-		errBookmark := db.Debug().Raw(bookmarkQuery, jobs.UserId, jobs.Id).Scan(&jobFavourite).Error
+		errBookmark := db.Debug().Raw(bookmarkQuery, userId, jobs.Id).Scan(&jobFavourite).Error
 
 		if errBookmark != nil {
 			helper.Logger("error", "In Server: "+errBookmark.Error())

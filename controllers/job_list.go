@@ -4,6 +4,8 @@ import (
 	"net/http"
 	helper "superapps/helpers"
 	"superapps/services"
+
+	"github.com/dgrijalva/jwt-go"
 )
 
 func JobList(w http.ResponseWriter, r *http.Request) {
@@ -12,7 +14,15 @@ func JobList(w http.ResponseWriter, r *http.Request) {
 	country := r.URL.Query().Get("country")
 	position := r.URL.Query().Get("position")
 
-	result, err := services.JobList(salary, country, position)
+	tokenHeader := r.Header.Get("Authorization")
+
+	token := helper.DecodeJwt(tokenHeader)
+
+	claims, _ := token.Claims.(jwt.MapClaims)
+
+	userId, _ := claims["id"].(string)
+
+	result, err := services.JobList(userId, salary, country, position)
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]any{})
