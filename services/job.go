@@ -740,7 +740,7 @@ func JobCategoryCount() (map[string]any, error) {
 
 	query := `SELECT jc.name, COUNT(*) AS total
 	FROM jobs j
-	INNER JOIN job_categories jc ON jc.uid = j.cat_id
+	LEFT JOIN job_categories jc ON jc.uid = j.cat_id
 	GROUP BY jc.name
 	ORDER BY total DESC`
 

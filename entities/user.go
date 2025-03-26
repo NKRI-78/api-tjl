@@ -43,6 +43,7 @@ type Profile struct {
 	Fullname           string `json:"fullname"`
 	Enabled            int    `json:"enabled"`
 	Email              string `json:"email"`
+	Role               string `json:"role"`
 	JobId              string `json:"job_id"`
 	JobName            string `json:"job_name"`
 	BioId              int    `json:"bio_id"`
@@ -80,6 +81,7 @@ type ProfileResponse struct {
 	Phone     string             `json:"phone"`
 	Fullname  string             `json:"fullname"`
 	IsEnabled bool               `json:"enabled"`
+	Role      string             `json:"role"`
 	Email     string             `json:"email"`
 	Job       ProfileJobResponse `json:"job"`
 	Biodata   Biodata            `json:"biodata"`
