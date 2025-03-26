@@ -218,8 +218,9 @@ type JobCategory struct {
 }
 
 type Job struct {
-	Id   string `json:"id"`
-	Name string `json:"name"`
+	Id     string `json:"id"`
+	Name   string `json:"name"`
+	UserId string `json:"user_id"`
 }
 
 type JobPlace struct {

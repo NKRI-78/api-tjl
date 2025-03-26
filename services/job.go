@@ -495,6 +495,7 @@ func JobList(userId, salary, country, position string) (map[string]any, error) {
 
 func JobDetail(f *models.Job) (map[string]any, error) {
 	var jobs entities.JobListQuery
+	var jobFavourite []entities.JobFavourite
 	var dataJob = make([]entities.JobList, 0)
 
 	query := `SELECT j.uid AS id, j.title, j.caption, j.salary, 
@@ -533,12 +534,24 @@ func JobDetail(f *models.Job) (map[string]any, error) {
 			return nil, errors.New(errJobRows.Error())
 		}
 
+		bookmarkQuery := `SELECT job_id, user_id FROM job_favourites WHERE user_id = ? AND job_id = ?`
+		errBookmark := db.Debug().Raw(bookmarkQuery, f.UserId, jobs.Id).Scan(&jobFavourite).Error
+
+		if errBookmark != nil {
+			helper.Logger("error", "In Server: "+errBookmark.Error())
+			return nil, errors.New(errBookmark.Error())
+		}
+
+		isJobFavouriteExist := len(jobFavourite)
+		bookmark := isJobFavouriteExist == 1
+
 		salaryIdr := helper.FormatIDR(jobs.Salary * jobs.PlaceKurs)
 
 		dataJob = append(dataJob, entities.JobList{
 			Id:        jobs.Id,
 			Title:     jobs.Title,
 			Caption:   jobs.Caption,
+			Bookmark:  bookmark,
 			Salary:    int(jobs.Salary),
 			SalaryIDR: salaryIdr,
 			JobCategory: entities.JobCategory{
