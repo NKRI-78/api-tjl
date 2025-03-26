@@ -17,6 +17,7 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 	query := `SELECT p.user_id AS id, p.fullname, p.avatar, u.phone, u.email, u.enabled, 
 	jc.uid AS job_id,
 	jc.name AS job_name,
+	ur.name AS role,
 	fb.id AS bio_id,
 	fb.birthdate AS bio_birthdate,
 	fb.gender AS bio_gender,
@@ -37,6 +38,7 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 	vil.name AS bio_subdistrict 
 	FROM profiles p 
 	INNER JOIN users u ON u.uid = p.user_id
+	INNER JOIN user_roles ur ON ur.id = u.role
 	INNER JOIN user_pick_jobs upj ON upj.user_id = u.uid
 	INNER JOIN job_categories jc ON jc.uid = upj.job_id
 	LEFT JOIN form_biodatas fb ON fb.user_id = p.user_id
@@ -203,6 +205,7 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 	profile.Phone = profiles[0].Phone
 	profile.Email = profiles[0].Email
 	profile.Fullname = profiles[0].Fullname
+	profile.Role = profiles[0].Role
 	profile.IsEnabled = enabled
 	profile.Job = entities.ProfileJobResponse{
 		Id:   profiles[0].JobId,
