@@ -398,7 +398,7 @@ func AdminJobList() (map[string]any, error) {
 	}, nil
 }
 
-func JobList(userId, salary, country, position string) (map[string]any, error) {
+func JobList(userId, search, salary, country, position string) (map[string]any, error) {
 	var jobs entities.JobListQuery
 	var jobFavourite []entities.JobFavourite
 	var dataJob = make([]entities.JobList, 0)
@@ -423,6 +423,7 @@ func JobList(userId, salary, country, position string) (map[string]any, error) {
 	INNER JOIN profiles up ON up.user_id = j.user_id
 	WHERE p.name LIKE '%` + country + `%'
 	AND jc.name LIKE '%` + position + `%'
+	AND (j.title LIKE '%` + search + `%' OR j.caption LIKE '%` + search + `%' OR jc.name LIKE '%` + search + `%')  
 	`
 
 	if salary != "" {

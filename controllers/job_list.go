@@ -11,9 +11,10 @@ func JobList(w http.ResponseWriter, r *http.Request) {
 	salary := r.URL.Query().Get("salary")
 	country := r.URL.Query().Get("country")
 	position := r.URL.Query().Get("position")
+	search := r.URL.Query().Get("search")
 	userId := r.URL.Query().Get("user_id")
 
-	result, err := services.JobList(userId, salary, country, position)
+	result, err := services.JobList(userId, search, salary, country, position)
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]any{})
