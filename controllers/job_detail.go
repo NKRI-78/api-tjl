@@ -13,9 +13,12 @@ func JobDetail(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 
+	userId := r.URL.Query().Get("user_id")
+
 	data := &models.Job{}
 
 	data.Id = id
+	data.UserId = userId
 
 	result, err := services.JobDetail(data)
 
