@@ -738,9 +738,9 @@ func JobFavourite(j *models.JobFavourite) (map[string]any, error) {
 func JobCategoryCount() (map[string]any, error) {
 	categoryCounts := []entities.JobCategoryCount{}
 
-	query := `SELECT jc.name, COUNT(*) AS total
-	FROM jobs j
-	LEFT JOIN job_categories jc ON jc.uid = j.cat_id
+	query := `SELECT jc.name, COUNT(j.cat_id) AS total
+	FROM job_categories jc
+	LEFT JOIN jobs j ON jc.uid = j.cat_id
 	GROUP BY jc.name
 	ORDER BY total DESC`
 
