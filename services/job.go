@@ -26,7 +26,7 @@ func ListInfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 		aj.created_at
 		FROM apply_jobs aj 
 		INNER JOIN jobs j ON j.uid = aj.job_id
-		INNER JOIN job_categories jc ON jc.id = j.cat_id
+		INNER JOIN job_categories jc ON jc.uid = j.cat_id
 		INNER JOIN profiles p ON p.user_id = j.user_id
 		INNER JOIN job_statuses js ON js.id = aj.status
 		INNER JOIN profiles paa ON paa.user_id = aj.user_id
@@ -95,7 +95,7 @@ func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 		p.fullname AS job_author
 		FROM apply_job_histories aj 
 		INNER JOIN jobs j ON j.uid = aj.job_id
-		INNER JOIN job_categories jc ON jc.id = j.cat_id
+		INNER JOIN job_categories jc ON jc.uid = j.cat_id
 		INNER JOIN profiles p ON p.user_id = j.user_id
 		INNER JOIN job_statuses js ON js.id = aj.status
 		INNER JOIN profiles paa ON paa.user_id = aj.user_id
