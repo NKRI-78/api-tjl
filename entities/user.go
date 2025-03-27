@@ -198,3 +198,8 @@ type UserOtp struct {
 	Enabled   int       `json:"enabled"`
 	CreatedAt time.Time `json:"created_at"`
 }
+
+type UpdateEmail struct {
+	OldEmail string `json:"old_email"`
+	NewEmail string `json:"new_email"`
+}
