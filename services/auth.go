@@ -32,7 +32,7 @@ func UpdateEmail(ue *models.UpdateEmail) (map[string]any, error) {
 
 	errUpdate := db.Debug().Exec(`
 		UPDATE users SET email = ?, otp = ?
-		WHERE email = ? AND enabled = 0`, otp, ue.NewEmail, ue.OldEmail).Error
+		WHERE email = ? AND enabled = 0`, ue.NewEmail, otp, ue.OldEmail).Error
 
 	if errUpdate != nil {
 		helper.Logger("error", "In Server: "+errUpdate.Error())
