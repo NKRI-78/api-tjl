@@ -71,6 +71,7 @@ func main() {
 	// Auth
 	router.Handle("/api/v1/login", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.Login))).Methods("POST")
 	router.Handle("/api/v1/register", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.Register))).Methods("POST")
+	router.Handle("/api/v1/update-email", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.UpdateEmail))).Methods("PUT")
 
 	// Branch
 	router.HandleFunc("/api/v1/branch", controllers.Branch).Methods("GET")
