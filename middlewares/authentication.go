@@ -26,6 +26,7 @@ func JwtAuthentication(next http.Handler) http.Handler {
 
 		// Define public paths that do not require authentication
 		publicPaths := []string{
+			"/api/v1/login-admin",
 			"/api/v1/login",
 			"/api/v1/register",
 			"/api/v1/verify-otp",

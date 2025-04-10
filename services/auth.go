@@ -139,7 +139,7 @@ func ResendOtp(u *models.User) (map[string]any, error) {
 		}
 	}
 
-	return map[string]interface{}{
+	return map[string]any{
 		"otp": otp,
 	}, nil
 }
@@ -205,6 +205,47 @@ func Login(u *models.User) (map[string]any, error) {
 	access := token["token"]
 
 	return map[string]any{"token": access}, nil
+}
+
+func LoginAdmin(u *models.UserAdmin) (entities.AdminResponse, error) {
+
+	users := []entities.UserAdmin{}
+
+	query := `SELECT u.uid AS user_id, u.enabled, u.password, p.fullname, p.avatar, ur.name AS role
+	FROM users u
+	INNER JOIN profiles p 
+	INNER JOIN user_roles ur ON ur.id = u.role
+	WHERE u.email = '` + u.Val + `' OR u.phone = '` + u.Val + `' 
+	LIMIT 1`
+
+	err := db.Debug().Raw(query).Scan(&users).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return entities.AdminResponse{}, errors.New(err.Error())
+	}
+
+	isUserExist := len(users)
+
+	if isUserExist == 0 {
+		return entities.AdminResponse{}, errors.New("USER_NOT_FOUND")
+	}
+
+	passHashed := users[0].Password
+
+	err = helper.VerifyPassword(passHashed, u.Password)
+
+	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
+		helper.Logger("error", "In Server: "+err.Error())
+		return entities.AdminResponse{}, errors.New("CREDENTIALS_IS_INCORRECT")
+	}
+
+	return entities.AdminResponse{
+		ID:       users[0].UserId,
+		Avatar:   users[0].Avatar,
+		Fullname: users[0].Fullname,
+		Role:     users[0].Role,
+	}, nil
 }
 
 func Register(u *models.User) (map[string]any, error) {

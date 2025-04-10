@@ -36,6 +36,23 @@ type User struct {
 	Password string `json:"password"`
 }
 
+type UserAdmin struct {
+	UserId   string `json:"user_id"`
+	Fullname string `json:"fullname"`
+	Avatar   string `json:"avatar"`
+	Enabled  int    `json:"enabled"`
+	Val      string `json:"val"`
+	Role     string `json:"role"`
+	Password string `json:"password"`
+}
+
+type AdminResponse struct {
+	ID       string `json:"id"`
+	Avatar   string `json:"avatar"`
+	Fullname string `json:"fullname"`
+	Role     string `json:"role"`
+}
+
 type Profile struct {
 	Id                 string `json:"id"`
 	Avatar             string `json:"avatar"`
@@ -191,6 +208,7 @@ type UserLogin struct {
 	Uid      string `json:"uid"`
 	Enabled  int    `json:"enabled"`
 	Password string `json:"password"`
+	Fullname string `json:"fullname"`
 }
 
 type UserOtp struct {

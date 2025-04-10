@@ -73,12 +73,17 @@ func main() {
 	router.Handle("/api/v1/register", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.Register))).Methods("POST")
 	router.Handle("/api/v1/update-email", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.UpdateEmail))).Methods("PUT")
 
+	// Auth Admin
+	router.Handle("/api/v1/login-admin", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.LoginAdmin))).Methods("POST")
+
 	// Branch
 	router.HandleFunc("/api/v1/branch", controllers.Branch).Methods("GET")
 
 	// Banner
 	router.HandleFunc("/api/v1/banner", controllers.BannerList).Methods("GET")
 	router.HandleFunc("/api/v1/banner-store", controllers.BannerStore).Methods("POST")
+	router.HandleFunc("/api/v1/banner-update", controllers.BannerUpdate).Methods("PUT")
+	router.HandleFunc("/api/v1/banner-delete", controllers.BannerDelete).Methods("DELETE")
 
 	// Document
 	router.HandleFunc("/api/v1/document", controllers.DocumentList).Methods("GET")
