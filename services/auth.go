@@ -12,7 +12,42 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func VerifyOtp(u *models.User) (map[string]interface{}, error) {
+func UpdateEmail(ue *models.UpdateEmail) (map[string]any, error) {
+	users := []entities.CheckAccount{}
+
+	err := db.Debug().Raw(`SELECT email FROM users WHERE email = ? AND enabled = 1`, ue.OldEmail).Scan(&users).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	isUserExist := len(users)
+
+	if isUserExist == 1 {
+		return nil, errors.New("EMAIL_ALREADY_EXIST_AND_ACTIVE")
+	}
+
+	otp := helper.CodeOtpSecure()
+
+	errUpdate := db.Debug().Exec(`
+		UPDATE users SET email = ?, otp = ?
+		WHERE email = ? AND enabled = 0`, ue.NewEmail, otp, ue.OldEmail).Error
+
+	if errUpdate != nil {
+		helper.Logger("error", "In Server: "+errUpdate.Error())
+		return nil, errUpdate
+	}
+
+	errEmail := helper.SendEmail(ue.NewEmail, "TJL", otp)
+	if errEmail != nil {
+		helper.Logger("error", "Failed to send email: "+errEmail.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
+func VerifyOtp(u *models.User) (map[string]any, error) {
 	var user entities.UserOtp
 
 	// Gunakan parameterized query untuk mencegah SQL Injection
@@ -23,7 +58,7 @@ func VerifyOtp(u *models.User) (map[string]interface{}, error) {
 		First(&user).Error
 
 	if err != nil {
-		helper.Logger("error", "In Server: "+err.Error())
+		helper.Logger("error", "In Server: USER_OR_OTP_IS_INVALID")
 		return nil, errors.New("USER_OR_OTP_IS_INVALID")
 	}
 
@@ -58,7 +93,7 @@ func VerifyOtp(u *models.User) (map[string]interface{}, error) {
 	return map[string]any{"token": token["token"]}, nil
 }
 
-func ResendOtp(u *models.User) (map[string]interface{}, error) {
+func ResendOtp(u *models.User) (map[string]any, error) {
 
 	users := []entities.UserOtp{}
 	query := `SELECT enabled, otp_date FROM users
@@ -109,7 +144,7 @@ func ResendOtp(u *models.User) (map[string]interface{}, error) {
 	}, nil
 }
 
-func Login(u *models.User) (map[string]interface{}, error) {
+func Login(u *models.User) (map[string]any, error) {
 
 	user := entities.User{}
 
@@ -268,6 +303,3 @@ func Register(u *models.User) (map[string]any, error) {
 
 	return map[string]any{"token": access}, nil
 }
-
-
-

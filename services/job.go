@@ -185,7 +185,10 @@ func ApplyJob(aj *models.ApplyJob) (map[string]any, error) {
 
 	var allJob []models.CheckApplyJobQuery
 
-	queryCheck := `SELECT uid FROM apply_jobs WHERE user_id = ? AND job_id = ?`
+	queryCheck := `SELECT uid FROM apply_jobs 
+	WHERE user_id = ? 
+	AND job_id = ? 
+	AND status = 3`
 
 	errAllJob := db.Debug().Raw(queryCheck, aj.UserId, aj.JobId).Scan(&allJob).Error
 
