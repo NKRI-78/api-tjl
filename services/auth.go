@@ -240,11 +240,20 @@ func LoginAdmin(u *models.UserAdmin) (entities.AdminResponse, error) {
 		return entities.AdminResponse{}, errors.New("CREDENTIALS_IS_INCORRECT")
 	}
 
+	token, err := middleware.CreateToken(users[0].UserId)
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return entities.AdminResponse{}, err
+	}
+
+	access := token["token"]
+
 	return entities.AdminResponse{
 		ID:       users[0].UserId,
 		Avatar:   users[0].Avatar,
 		Fullname: users[0].Fullname,
 		Role:     users[0].Role,
+		Token:    access,
 	}, nil
 }
 

@@ -51,6 +51,7 @@ type AdminResponse struct {
 	Avatar   string `json:"avatar"`
 	Fullname string `json:"fullname"`
 	Role     string `json:"role"`
+	Token    string `json:"token"`
 }
 
 type Profile struct {
