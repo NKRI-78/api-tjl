@@ -10,6 +10,10 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
+type contextKey string
+
+const userKey contextKey = "user"
+
 func JwtAuthentication(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var url string = r.URL.Path
@@ -79,7 +83,7 @@ func JwtAuthentication(next http.Handler) http.Handler {
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), "user", claims)
+		ctx := context.WithValue(r.Context(), userKey, claims)
 		r = r.WithContext(ctx)
 		next.ServeHTTP(w, r)
 	})
