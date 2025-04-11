@@ -32,6 +32,7 @@ func JwtAuthentication(next http.Handler) http.Handler {
 			"/api/v1/verify-otp",
 			"/api/v1/resend-otp",
 			"/api/v1/branch",
+			"/api/v1/news",
 			"/api/v1/job-categories",
 			"/api/v1/update-email",
 			"/api/v1/banner",
@@ -43,6 +44,12 @@ func JwtAuthentication(next http.Handler) http.Handler {
 
 		// Allow access to job-detail/:id
 		if strings.HasPrefix(r.URL.Path, "/api/v1/job-detail/") {
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		// Allow access to news/detail/:id
+		if strings.HasPrefix(r.URL.Path, "/api/v1/news/detail/") {
 			next.ServeHTTP(w, r)
 			return
 		}
