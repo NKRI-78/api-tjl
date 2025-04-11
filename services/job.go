@@ -621,7 +621,7 @@ func JobStore(j *models.JobStore) (map[string]any, error) {
 	isUserExist := len(users)
 
 	if isUserExist == 0 {
-		return nil, errors.New("user not found")
+		return nil, errors.New("USER_NOT_FOUND")
 	}
 
 	checkQueryCat := `SELECT uid AS id FROM job_categories WHERE uid = '` + j.CatId + `'`
@@ -636,7 +636,7 @@ func JobStore(j *models.JobStore) (map[string]any, error) {
 	isJobCategoryExist := len(categories)
 
 	if isJobCategoryExist == 0 {
-		return nil, errors.New("job not found")
+		return nil, errors.New("JOB_NOT_FOUND")
 	}
 
 	checkQueryPlace := `SELECT id, name FROM places WHERE id = '` + strconv.Itoa(j.PlaceId) + `'`
@@ -651,7 +651,7 @@ func JobStore(j *models.JobStore) (map[string]any, error) {
 	isPlaceExist := len(places)
 
 	if isPlaceExist == 0 {
-		return nil, errors.New("place not found")
+		return nil, errors.New("PLACE_NOT_FOUND")
 	}
 
 	j.Id = uuid.NewV4().String()

@@ -45,7 +45,7 @@ func NewsList(page, limit string) (map[string]any, error) {
 	nextPage = pageinteger + 1
 
 	rows, errNews := db.Debug().Raw(`
-	SELECT n.id, n.title, n.desc,
+	SELECT n.id, n.title, n.caption,
 		   p.fullname AS user_name,
 	       n.user_id, n.created_at
 	FROM news n
@@ -98,7 +98,7 @@ func NewsList(page, limit string) (map[string]any, error) {
 		appendNewsAssign = append(appendNewsAssign, entities.NewsResponse{
 			Id:        news.Id,
 			Title:     news.Title,
-			Desc:      news.Desc,
+			Caption:   news.Caption,
 			Media:     dataNewsMedia,
 			CreatedAt: news.CreatedAt,
 			User: entities.NewsUser{
@@ -130,7 +130,7 @@ func NewsDetail(id string) (map[string]any, error) {
 	var news entities.News
 
 	rows, errNews := db.Debug().Raw(`
-	SELECT n.id, n.title, n.desc,
+	SELECT n.id, n.title, n.caption,
 		   p.fullname AS user_name,
 	       n.user_id, n.created_at
 	FROM news n
@@ -183,7 +183,7 @@ func NewsDetail(id string) (map[string]any, error) {
 		appendNewsAssign = append(appendNewsAssign, entities.NewsResponse{
 			Id:        news.Id,
 			Title:     news.Title,
-			Desc:      news.Desc,
+			Caption:   news.Caption,
 			Media:     dataNewsMedia,
 			CreatedAt: news.CreatedAt,
 			User: entities.NewsUser{
@@ -196,4 +196,31 @@ func NewsDetail(id string) (map[string]any, error) {
 	return map[string]any{
 		"data": &appendNewsAssign[0],
 	}, nil
+}
+
+func NewsStore(n *entities.NewsStore) (map[string]any, error) {
+	query := `INSERT INTO news (title, caption, user_id) 
+	VALUES (?, ?, ?)`
+
+	err := db.Debug().Exec(query, n.Title, n.Caption, n.UserId).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
+func NewsDelete(n *entities.News) (map[string]any, error) {
+	query := `DELETE FROM news WHERE id = ?`
+
+	err := db.Debug().Exec(query, n.Id).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
 }

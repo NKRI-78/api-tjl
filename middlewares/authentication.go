@@ -49,7 +49,7 @@ func JwtAuthentication(next http.Handler) http.Handler {
 		}
 
 		// Allow access to news/detail/:id
-		if strings.HasPrefix(r.URL.Path, "/api/v1/news/detail/") {
+		if strings.HasPrefix(r.URL.Path, "/api/v1/news-detail/") {
 			next.ServeHTTP(w, r)
 			return
 		}
