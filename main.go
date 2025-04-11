@@ -85,6 +85,10 @@ func main() {
 	router.HandleFunc("/api/v1/banner-update", controllers.BannerUpdate).Methods("PUT")
 	router.HandleFunc("/api/v1/banner-delete", controllers.BannerDelete).Methods("DELETE")
 
+	// News
+	router.HandleFunc("/api/v1/news", controllers.NewsList).Methods("GET")
+	router.HandleFunc("/api/v1/news/detail/{id}", controllers.NewsDetail).Methods("GET")
+
 	// Document
 	router.HandleFunc("/api/v1/document", controllers.DocumentList).Methods("GET")
 	router.HandleFunc("/api/v1/document-store", controllers.DocumentStore).Methods("POST")
