@@ -7,3 +7,4 @@ import (
 type AllNews entities.AllNews
 type NewsResponse entities.NewsResponse
 type News entities.News
+type NewsStore entities.NewsStore

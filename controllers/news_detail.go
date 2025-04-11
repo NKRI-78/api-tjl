@@ -19,7 +19,7 @@ func NewsDetail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	helper.Logger("info", "News List success")
+	helper.Logger("info", "News Detail success")
 	helper.Response(w, http.StatusOK, false, "Successfully",
 		result["data"],
 	)

@@ -52,3 +52,40 @@
 [INFO]: 2025-04-11 14:00:38 - News List success
 [INFO]: 2025-04-11 14:01:02 - News List success
 [INFO]: 2025-04-11 14:01:35 - News List success
+[ERROR]: 2025-04-11 14:32:37 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'desc) 
+	VALUES (?, ?)' at line 1
+[ERROR]: 2025-04-11 14:32:55 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'desc) 
+	VALUES (?, ?)' at line 1
+[ERROR]: 2025-04-11 14:36:46 - In Server: Error 1054: Unknown column 'n.desc' in 'field list'
+[INFO]: 2025-04-11 14:37:24 - News List success
+[ERROR]: 2025-04-11 14:37:33 - In Server: desc is required
+[INFO]: 2025-04-11 14:38:00 - News Store success
+[INFO]: 2025-04-11 14:38:04 - News List success
+[INFO]: 2025-04-11 14:54:36 - News Store success
+[INFO]: 2025-04-11 14:54:39 - News List success
+[INFO]: 2025-04-11 15:18:54 - News List success
+[INFO]: 2025-04-11 15:19:06 - News List success
+[INFO]: 2025-04-11 15:20:17 - News List success
+[INFO]: 2025-04-11 15:21:28 - News List success
+[INFO]: 2025-04-11 15:21:42 - News Detail success
+[INFO]: 2025-04-11 15:21:55 - News Detail success
+[INFO]: 2025-04-11 15:22:14 - News List success
+[INFO]: 2025-04-11 15:22:16 - News List success
+[INFO]: 2025-04-11 15:22:30 - News List success
+[INFO]: 2025-04-11 15:22:31 - News List success
+[INFO]: 2025-04-11 15:23:19 - News List success
+[INFO]: 2025-04-11 15:23:46 - News List success
+[INFO]: 2025-04-11 15:23:47 - News List success
+[INFO]: 2025-04-11 15:24:05 - News List success
+[INFO]: 2025-04-11 15:24:19 - News List success
+[INFO]: 2025-04-11 15:24:20 - News List success
+[INFO]: 2025-04-11 15:28:34 - News List success
+[INFO]: 2025-04-11 15:28:56 - News List success
+[INFO]: 2025-04-11 15:29:07 - News List success
+[INFO]: 2025-04-11 15:29:10 - News List success
+[INFO]: 2025-04-11 15:29:23 - News List success
+[INFO]: 2025-04-11 15:29:33 - News List success
+[INFO]: 2025-04-11 15:30:25 - News Detail success
+[ERROR]: 2025-04-11 15:41:19 - In Server: Missing auth token
+[INFO]: 2025-04-11 15:41:24 - News Delete success
+[INFO]: 2025-04-11 15:41:28 - News List success
