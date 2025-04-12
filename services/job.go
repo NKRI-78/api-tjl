@@ -669,6 +669,54 @@ func JobStore(j *models.JobStore) (map[string]any, error) {
 	return map[string]any{}, nil
 }
 
+func JobUpdate(j *models.JobUpdate) (map[string]any, error) {
+
+	categories := []entities.JobCategory{}
+	places := []entities.JobPlace{}
+
+	checkQueryCat := `SELECT uid AS id FROM job_categories WHERE uid = '` + j.CatId + `'`
+
+	errCheckCat := db.Debug().Raw(checkQueryCat).Scan(&categories).Error
+
+	if errCheckCat != nil {
+		helper.Logger("error", "In Server: "+errCheckCat.Error())
+		return nil, errors.New(errCheckCat.Error())
+	}
+
+	isJobCategoryExist := len(categories)
+
+	if isJobCategoryExist == 0 {
+		return nil, errors.New("JOB_NOT_FOUND")
+	}
+
+	checkQueryPlace := `SELECT id, name FROM places WHERE id = '` + strconv.Itoa(j.PlaceId) + `'`
+
+	errCheckPlace := db.Debug().Raw(checkQueryPlace).Scan(&places).Error
+
+	if errCheckPlace != nil {
+		helper.Logger("error", "In Server: "+errCheckPlace.Error())
+		return nil, errors.New(errCheckPlace.Error())
+	}
+
+	isPlaceExist := len(places)
+
+	if isPlaceExist == 0 {
+		return nil, errors.New("PLACE_NOT_FOUND")
+	}
+
+	query := `UPDATE jobs SET title = ?, caption = ?, salary = ?, cat_id = ?, place_id = ?, is_draft = ?
+	WHERE uid = ?`
+
+	err := db.Debug().Exec(query, j.Title, j.Caption, j.Salary, j.CatId, j.PlaceId, j.IsDraft, j.Id).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
 func JobFavourite(j *models.JobFavourite) (map[string]any, error) {
 	jobFavourite := []entities.JobFavourite{}
 	jobs := []entities.Job{}
@@ -780,4 +828,16 @@ func JobCategory() (map[string]any, error) {
 	return map[string]any{
 		"data": categories,
 	}, nil
+}
+
+func JobDelete(j *models.Job) (map[string]any, error) {
+	errDeleteJob := db.Debug().Exec(`
+	DELETE FROM jobs WHERE uid = ?`, j.Id).Error
+
+	if errDeleteJob != nil {
+		helper.Logger("error", "In Server: "+errDeleteJob.Error())
+		return nil, errors.New(errDeleteJob.Error())
+	}
+
+	return map[string]any{}, nil
 }
