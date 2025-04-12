@@ -196,6 +196,16 @@ type JobStore struct {
 	IsDraft int    `json:"is_draft"`
 }
 
+type JobUpdate struct {
+	Id      string `json:"id"`
+	Title   string `json:"title"`
+	Caption string `json:"caption"`
+	Salary  string `json:"salary"`
+	CatId   string `json:"cat_id"`
+	PlaceId int    `json:"place_id"`
+	IsDraft int    `json:"is_draft"`
+}
+
 type JobFavourite struct {
 	UserId string `json:"user_id"`
 	JobId  string `json:"job_id"`
