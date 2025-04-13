@@ -17,6 +17,9 @@ type Job entities.Job
 type JobFavourite entities.JobFavourite
 type JobList entities.JobList
 type JobCategory entities.JobCategory
+type JobCategoryStore entities.JobCategoryStore
+type JobCategoryUpdate entities.JobCategoryUpdate
+type JobCategoryDelete entities.JobCategoryDelete
 type JobStore entities.JobStore
 type JobUpdate entities.JobUpdate
 type JobPlace entities.JobPlace

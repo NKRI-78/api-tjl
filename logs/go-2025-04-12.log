@@ -15,3 +15,5 @@
 [ERROR]: 2025-04-12 12:29:57 - In Server: Missing auth token
 [ERROR]: 2025-04-12 12:30:00 - In Server: id is required
 [INFO]: 2025-04-12 12:30:09 - Update Job success
+[ERROR]: 2025-04-12 19:40:50 - In Server: json: cannot unmarshal string into Go struct field CountryUpdate.id of type int
+[INFO]: 2025-04-12 19:41:18 - Update Country success

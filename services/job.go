@@ -807,6 +807,50 @@ func JobCategoryCount() (map[string]any, error) {
 	}, nil
 }
 
+func JobCategoryStore(j *models.JobCategoryStore) (map[string]any, error) {
+
+	j.Id = uuid.NewV4().String()
+
+	query := `INSERT INTO job_categories (uid, name) VALUES (?, ?)`
+
+	err := db.Debug().Exec(query, j.Id, j.Name).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
+func JobCategoryUpdate(j *models.JobCategoryUpdate) (map[string]any, error) {
+
+	query := `UPDATE job_categories SET name = ? WHERE uid = ?`
+
+	err := db.Debug().Exec(query, j.Name, j.Id).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
+func JobCategoryDelete(j *models.JobCategoryDelete) (map[string]any, error) {
+
+	query := `DELETE FROM job_categories WHERE uid = ?`
+
+	err := db.Debug().Exec(query, j.Id).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
 func JobCategory() (map[string]any, error) {
 	categories := []entities.JobCategory{}
 
