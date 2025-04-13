@@ -227,6 +227,20 @@ type JobCategory struct {
 	Name string `json:"name"`
 }
 
+type JobCategoryStore struct {
+	Id   string `json:"id"`
+	Name string `json:"name"`
+}
+
+type JobCategoryDelete struct {
+	Id string `json:"id"`
+}
+
+type JobCategoryUpdate struct {
+	Id   string `json:"id"`
+	Name string `json:"name"`
+}
+
 type Job struct {
 	Id     string `json:"id"`
 	Name   string `json:"name"`
