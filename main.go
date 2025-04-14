@@ -128,6 +128,9 @@ func main() {
 	// Info Apply Job
 	router.HandleFunc("/api/v1/info/apply/job/{id}", controllers.InfoApplyJob).Methods("GET")
 
+	// Fcm
+	router.HandleFunc("/api/v1/firebase/init-fcm", controllers.InitFcm).Methods("POST")
+
 	// Jobs
 	router.HandleFunc("/api/v1/job", controllers.JobList).Methods("GET")
 	router.HandleFunc("/api/v1/job-detail/{id}", controllers.JobDetail).Methods("GET")
