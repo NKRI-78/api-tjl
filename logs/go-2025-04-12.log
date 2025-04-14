@@ -1,0 +1,19 @@
+[ERROR]: 2025-04-12 12:19:14 - In Server: Missing auth token
+[ERROR]: 2025-04-12 12:19:19 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ') 
+	WHERE uid = ?' at line 1
+[ERROR]: 2025-04-12 12:19:35 - In Server: sql: expected 7 arguments, got 8
+[ERROR]: 2025-04-12 12:20:30 - In Server: Error 1292: Truncated incorrect DOUBLE value: 'ef2cf426-a2ec-4ddc-95a7-d49f3eea6325'
+[ERROR]: 2025-04-12 12:20:54 - In Server: sql: expected 7 arguments, got 8
+[INFO]: 2025-04-12 12:21:03 - Store Bannner success
+[INFO]: 2025-04-12 12:21:17 - Store Bannner success
+[INFO]: 2025-04-12 12:21:34 - Store Bannner success
+[INFO]: 2025-04-12 12:21:58 - Store Bannner success
+[INFO]: 2025-04-12 12:23:06 - Update Job success
+[INFO]: 2025-04-12 12:23:27 - Update Job success
+[INFO]: 2025-04-12 12:23:36 - Update Job success
+[INFO]: 2025-04-12 12:24:20 - Update Job success
+[ERROR]: 2025-04-12 12:29:57 - In Server: Missing auth token
+[ERROR]: 2025-04-12 12:30:00 - In Server: id is required
+[INFO]: 2025-04-12 12:30:09 - Update Job success
+[ERROR]: 2025-04-12 19:40:50 - In Server: json: cannot unmarshal string into Go struct field CountryUpdate.id of type int
+[INFO]: 2025-04-12 19:41:18 - Update Country success

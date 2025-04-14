@@ -25,6 +25,47 @@ func Country() (map[string]any, error) {
 	}, nil
 }
 
+func CountryDelete(c *models.Country) (map[string]any, error) {
+
+	query := `DELETE FROM places WHERE id = ?`
+
+	err := db.Debug().Exec(query, c.Id).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
+func CountryStore(c *models.CountryStore) (map[string]any, error) {
+	query := `INSERT INTO places SET name = ?, currency = ?, kurs = ?, info = ?`
+
+	err := db.Debug().Exec(query, c.Name, c.Currency, c.Kurs, c.Info).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
+func CountryUpdate(c *models.CountryUpdate) (map[string]any, error) {
+
+	query := `UPDATE places SET name = ?, currency = ?, kurs = ?, info = ? WHERE id = ?`
+
+	err := db.Debug().Exec(query, c.Name, c.Currency, c.Kurs, c.Info, c.Id).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
 func Province() (map[string]any, error) {
 	provinces := []entities.Province{}
 

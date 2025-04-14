@@ -212,8 +212,60 @@ func NewsStore(n *entities.NewsStore) (map[string]any, error) {
 	return map[string]any{}, nil
 }
 
+func NewsUpdate(n *entities.NewsUpdate) (map[string]any, error) {
+	query := `UPDATE news SET title = ?, caption = ? WHERE id = ?`
+
+	err := db.Debug().Exec(query, n.Title, n.Caption, n.Id).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
+func NewsStoreImage(n *entities.NewsStoreImage) (map[string]any, error) {
+	query := `INSERT INTO news_medias (news_id, path) VALUES (?, ?)`
+
+	err := db.Debug().Exec(query, n.NewsId, n.Path).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
+func NewsUpdateImage(n *entities.NewsUpdateImage) (map[string]any, error) {
+	query := `UPDATE news_medias SET path = ? WHERE id = ?`
+
+	err := db.Debug().Exec(query, n.Path, n.Id).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
 func NewsDelete(n *entities.News) (map[string]any, error) {
 	query := `DELETE FROM news WHERE id = ?`
+
+	err := db.Debug().Exec(query, n.Id).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
+func NewsDeleteImage(n *entities.News) (map[string]any, error) {
+	query := `DELETE FROM news_medias WHERE id = ?`
 
 	err := db.Debug().Exec(query, n.Id).Error
 

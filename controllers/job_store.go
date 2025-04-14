@@ -71,6 +71,6 @@ func JobStore(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	helper.Logger("info", "Store Bannner success")
+	helper.Logger("info", "Store Job success")
 	helper.Response(w, http.StatusOK, false, "Successfully", result)
 }
