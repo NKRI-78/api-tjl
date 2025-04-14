@@ -253,7 +253,6 @@ func ApplyJob(aj *models.ApplyJob) (map[string]any, error) {
 	}
 
 	message := fmt.Sprintf("Silahkan menunggu untuk tahap selanjutnya [%s]", dataUserFcm.Fullname)
-
 	helper.SendFcm("Selamat Anda telah berhasil melamar", message, dataUserFcm.Token)
 
 	return map[string]any{}, nil
@@ -319,10 +318,10 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 		}
 
 		helper.Logger("error", "In Server: "+errUserFcmRow.Error())
-
-		title := fmt.Sprintf("Selamat lamaran Anda sudah dalam tahap [%s]", status)
-		helper.SendFcm(title, dataUserFcm.Fullname, dataUserFcm.Token)
 	}
+
+	title := fmt.Sprintf("Selamat lamaran Anda sudah dalam tahap [%s]", status)
+	helper.SendFcm(title, dataUserFcm.Fullname, dataUserFcm.Token)
 
 	// Perform the update
 	query := `UPDATE apply_jobs SET user_confirm_id = ?, status = ? WHERE uid = ?`
