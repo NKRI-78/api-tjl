@@ -354,7 +354,7 @@ func AdminJobList() (map[string]any, error) {
 
 	var dataJob = make([]entities.JobListAdmin, 0)
 
-	query := `SELECT j.uid AS id, j.title, j.caption, j.salary, 
+	query := `SELECT aj.uid AS id, j.title, j.caption, j.salary, 
 	jc.uid as cat_id,
 	jc.name AS cat_name, 
 	p.id AS place_id,
