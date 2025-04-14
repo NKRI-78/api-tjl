@@ -104,8 +104,34 @@ func SendEmail(to, app, otp string) error {
 	return nil
 }
 
-func DecodeJwt(tokenP string) *jwt.Token {
-	splitted := strings.Split(tokenP, " ")
+func SendFcm(title, message, token string) error {
+
+	FcmData := &entities.SendFcmRequest{
+		Title: title,
+		Body:  message,
+		Token: token,
+	}
+
+	jsonData, err := json.Marshal(FcmData)
+	if err != nil {
+		return err
+	}
+
+	resp, err := http.Post("https://api-fcm-office.inovatiftujuh8.com/api/v1/firebase/fcm", "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return errors.New("failed to send fcm, status code: " + resp.Status)
+	}
+
+	return nil
+}
+
+func DecodeJwt(val string) *jwt.Token {
+	splitted := strings.Split(val, " ")
 
 	tokenPart := splitted[1]
 

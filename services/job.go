@@ -3,6 +3,7 @@ package services
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"strconv"
 	entities "superapps/entities"
 	helper "superapps/helpers"
@@ -181,8 +182,24 @@ func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 	}, nil
 }
 
-func ApplyJob(aj *models.ApplyJob) (map[string]any, error) {
+func AssignDocumentApplyJob(adaj *models.AssignDocumentApplyJob) (map[string]any, error) {
+	query := `
+		INSERT INTO apply_job_documents (apply_job_id, doc_id, path) 
+		VALUES (?, ?, ?) 
+		ON DUPLICATE KEY UPDATE path = VALUES(path)
+	`
 
+	err := db.Debug().Exec(query, adaj.ApplyJobId, adaj.DocId, adaj.Path).Error
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
+func ApplyJob(aj *models.ApplyJob) (map[string]any, error) {
+	var dataUserFcm entities.InitFcm
 	var allJob []models.CheckApplyJobQuery
 
 	queryCheck := `SELECT uid FROM apply_jobs 
@@ -222,26 +239,28 @@ func ApplyJob(aj *models.ApplyJob) (map[string]any, error) {
 		return nil, errors.New(errHistory.Error())
 	}
 
-	return map[string]any{}, nil
-}
+	queryUserFcm := `SELECT f.token, p.fullname FROM fcms f 
+	INNER JOIN profiles p ON p.user_id = f.user_id 
+	WHERE f.user_id = ?`
 
-func AssignDocumentApplyJob(adaj *models.AssignDocumentApplyJob) (map[string]any, error) {
-	query := `
-		INSERT INTO apply_job_documents (apply_job_id, doc_id, path) 
-		VALUES (?, ?, ?) 
-		ON DUPLICATE KEY UPDATE path = VALUES(path)
-	`
+	rowUserFcm := db.Debug().Raw(queryUserFcm, aj.UserId).Row()
 
-	err := db.Debug().Exec(query, adaj.ApplyJobId, adaj.DocId, adaj.Path).Error
-	if err != nil {
-		helper.Logger("error", "In Server: "+err.Error())
-		return nil, errors.New(err.Error())
+	errUserFcmRow := rowUserFcm.Scan(&dataUserFcm.Token, &dataUserFcm.Fullname)
+
+	if errUserFcmRow != nil {
+		helper.Logger("error", "In Server: "+errUserFcmRow.Error())
+		return nil, errors.New(errUserFcmRow.Error())
 	}
+
+	message := fmt.Sprintf("Silahkan menunggu untuk tahap selanjutnya [%s]", dataUserFcm.Fullname)
+
+	helper.SendFcm("Selamat Anda telah berhasil melamar", message, dataUserFcm.Token)
 
 	return map[string]any{}, nil
 }
 
 func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
+	var dataUserFcm entities.InitFcm
 	var dataQuery entities.ApplyJobQuery
 
 	// Fetch existing job application details
@@ -254,6 +273,8 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 		return nil, errors.New(errJobRow.Error())
 	}
 
+	var status string
+
 	// Validate status transition rules
 	switch dataQuery.Status {
 	case 1: // IN_PROGRESS -> can only move to INTERVIEW (2)
@@ -261,10 +282,16 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 			helper.Logger("error", "status IN_PROGRESS can only move to INTERVIEW")
 			return nil, errors.New("status IN_PROGRESS can only move to INTERVIEW")
 		}
+		status = "INTERVIEW"
 	case 2: // INTERVIEW -> can move to ACCEPTED (3) or DECLINED (4)
 		if uaj.Status != 3 && uaj.Status != 4 {
 			helper.Logger("error", "status INTERVIEW can only move to ACCEPTED or DECLINED")
 			return nil, errors.New("status INTERVIEW can only move to ACCEPTED or DECLINED")
+		}
+		if uaj.Status == 3 {
+			status = "ACCEPTED"
+		} else {
+			status = "DECLINED"
 		}
 	case 3: // ACCEPTED - no further updates
 		helper.Logger("error", "status [ACCEPTED] already passed")
@@ -276,6 +303,23 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 		helper.Logger("error", "unknown status")
 		return nil, errors.New("unknown status")
 	}
+
+	queryUserFcm := `SELECT f.token, p.fullname FROM fcms f 
+	INNER JOIN profiles p ON p.user_id = f.user_id 
+	WHERE f.user_id = ?`
+
+	rowUserFcm := db.Debug().Raw(queryUserFcm, uaj.UserId).Row()
+
+	errUserFcmRow := rowUserFcm.Scan(&dataUserFcm.Token, &dataUserFcm.Fullname)
+
+	if errUserFcmRow != nil {
+		helper.Logger("error", "In Server: "+errUserFcmRow.Error())
+		return nil, errors.New(errUserFcmRow.Error())
+	}
+
+	title := fmt.Sprintf("Selamat lamaran Anda sudah dalam tahap [%s]", status)
+
+	helper.SendFcm(title, dataUserFcm.Fullname, dataUserFcm.Token)
 
 	// Perform the update
 	query := `UPDATE apply_jobs SET user_confirm_id = ?, status = ? WHERE uid = ?`
