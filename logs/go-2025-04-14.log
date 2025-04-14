@@ -1,3 +1,12 @@
 [INFO]: 2025-04-14 09:53:19 - Init Fcm
 [INFO]: 2025-04-14 09:54:54 - Init Fcm
 [INFO]: 2025-04-14 09:56:06 - Init Fcm
+[ERROR]: 2025-04-14 13:53:32 - status [ACCEPTED] already passed
+[ERROR]: 2025-04-14 13:54:32 - In Server: sql: no rows in result set
+[ERROR]: 2025-04-14 13:56:31 - In Server: sql: no rows in result set
+[ERROR]: 2025-04-14 13:56:32 - In Server: sql: no rows in result set
+[ERROR]: 2025-04-14 13:58:18 - In Server: sql: no rows in result set
+[ERROR]: 2025-04-14 13:58:19 - In Server: sql: no rows in result set
+[ERROR]: 2025-04-14 13:58:23 - In Server: sql: no rows in result set
+[ERROR]: 2025-04-14 13:58:34 - In Server: sql: no rows in result set
+[ERROR]: 2025-04-14 13:58:35 - In Server: sql: no rows in result set
