@@ -203,7 +203,6 @@ type JobUpdate struct {
 	Salary  string `json:"salary"`
 	CatId   string `json:"cat_id"`
 	PlaceId int    `json:"place_id"`
-	UserId  string `json:"user_id"`
 	IsDraft int    `json:"is_draft"`
 }
 
@@ -224,6 +223,20 @@ type JobCategoryCount struct {
 }
 
 type JobCategory struct {
+	Id   string `json:"id"`
+	Name string `json:"name"`
+}
+
+type JobCategoryStore struct {
+	Id   string `json:"id"`
+	Name string `json:"name"`
+}
+
+type JobCategoryDelete struct {
+	Id string `json:"id"`
+}
+
+type JobCategoryUpdate struct {
 	Id   string `json:"id"`
 	Name string `json:"name"`
 }

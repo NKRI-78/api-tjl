@@ -67,6 +67,9 @@ func main() {
 	router.HandleFunc("/api/v1/district/{city_id}", controllers.District).Methods("GET")
 	router.HandleFunc("/api/v1/subdistrict/{district_id}", controllers.Subdistrict).Methods("GET")
 	router.HandleFunc("/api/v1/country", controllers.Country).Methods("GET")
+	router.HandleFunc("/api/v1/country-store", controllers.CountryStore).Methods("POST")
+	router.HandleFunc("/api/v1/country-delete", controllers.CountryDelete).Methods("DELETE")
+	router.HandleFunc("/api/v1/country-update", controllers.CountryUpdate).Methods("PUT")
 
 	// Auth
 	router.Handle("/api/v1/login", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.Login))).Methods("POST")
@@ -89,6 +92,10 @@ func main() {
 	router.HandleFunc("/api/v1/news", controllers.NewsList).Methods("GET")
 	router.HandleFunc("/api/v1/news-detail/{id}", controllers.NewsDetail).Methods("GET")
 	router.HandleFunc("/api/v1/news-store", controllers.NewsStore).Methods("POST")
+	router.HandleFunc("/api/v1/news-update", controllers.NewsUpdate).Methods("PUT")
+	router.HandleFunc("/api/v1/news-store-image", controllers.NewsStoreImage).Methods("POST")
+	router.HandleFunc("/api/v1/news-update-image", controllers.NewsUpdateImage).Methods("PUT")
+	router.HandleFunc("/api/v1/news-delete-image", controllers.NewsDeleteImage).Methods("DELETE")
 	router.HandleFunc("/api/v1/news-delete", controllers.NewsDelete).Methods("DELETE")
 
 	// Document
@@ -126,9 +133,15 @@ func main() {
 	router.HandleFunc("/api/v1/job-detail/{id}", controllers.JobDetail).Methods("GET")
 	router.HandleFunc("/api/v1/job-store", controllers.JobStore).Methods("POST")
 	router.HandleFunc("/api/v1/job-update", controllers.JobUpdate).Methods("PUT")
+	router.HandleFunc("/api/v1/job-delete", controllers.JobDelete).Methods("DELETE")
 	router.HandleFunc("/api/v1/job-favourite", controllers.JobFavourite).Methods("POST")
 	router.HandleFunc("/api/v1/job-categories", controllers.JobCategory).Methods("GET")
 	router.HandleFunc("/api/v1/job-places", controllers.JobPlace).Methods("GET")
+
+	// Jobs Category
+	router.HandleFunc("/api/v1/job-category-store", controllers.JobCategoryStore).Methods("POST")
+	router.HandleFunc("/api/v1/job-category-update", controllers.JobCategoryUpdate).Methods("PUT")
+	router.HandleFunc("/api/v1/job-category-delete", controllers.JobCategoryDelete).Methods("DELETE")
 	router.HandleFunc("/api/v1/job-category-count", controllers.JobCategoryCount).Methods("GET")
 
 	// Language

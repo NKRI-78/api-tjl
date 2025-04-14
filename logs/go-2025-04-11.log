@@ -94,3 +94,20 @@
 [INFO]: 2025-04-11 16:36:18 - Fetch Job Place success
 [INFO]: 2025-04-11 16:36:49 - Fetch Job Place success
 [INFO]: 2025-04-11 16:36:54 - Fetch Job Place success
+[ERROR]: 2025-04-11 21:54:58 - In Server: Missing auth token
+[ERROR]: 2025-04-11 21:55:03 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+[INFO]: 2025-04-11 21:55:23 - News Store success
+[ERROR]: 2025-04-11 22:00:06 - In Server: Missing auth token
+[INFO]: 2025-04-11 22:00:11 - News Delete success
+[ERROR]: 2025-04-11 22:04:16 - In Server: Error 1452: Cannot add or update a child row: a foreign key constraint fails (`tjl`.`news_medias`, CONSTRAINT `news_medias_ibfk_1` FOREIGN KEY (`news_id`) REFERENCES `news` (`id`) ON DELETE CASCADE ON UPDATE CASCADE)
+[INFO]: 2025-04-11 22:04:36 - News Store success
+[INFO]: 2025-04-11 22:04:46 - News Delete success
+[INFO]: 2025-04-11 22:04:55 - News Delete success
+[INFO]: 2025-04-11 22:17:15 - News Store success
+[ERROR]: 2025-04-11 22:17:48 - In Server: Missing auth token
+[INFO]: 2025-04-11 22:17:54 - Store Bannner success
+[INFO]: 2025-04-11 22:18:04 - Store Bannner success
+[ERROR]: 2025-04-11 22:23:09 - In Server: Missing auth token
+[ERROR]: 2025-04-11 22:23:14 - In Server: id is required
+[ERROR]: 2025-04-11 22:23:33 - In Server: caption is required
+[INFO]: 2025-04-11 22:23:43 - Store Bannner success

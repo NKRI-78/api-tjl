@@ -30,13 +30,13 @@ func BannerStore(f *models.Banner) (map[string]any, error) {
 	banner.Path = f.Path
 	banner.Link = f.Link
 
-	errInsertBanner := db.Debug().Exec(`
+	err := db.Debug().Exec(`
 	INSERT INTO banners (path, link) 
 	VALUES (?, ?)`, banner.Path, banner.Link).Error
 
-	if errInsertBanner != nil {
-		helper.Logger("error", "In Server: "+errInsertBanner.Error())
-		return nil, errors.New(errInsertBanner.Error())
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
 	}
 
 	return map[string]any{}, nil
@@ -49,14 +49,14 @@ func BannerUpdate(f *models.Banner) (map[string]any, error) {
 	banner.Path = f.Path
 	banner.Link = f.Link
 
-	errUpdateBanner := db.Debug().Exec(`
+	err := db.Debug().Exec(`
 		UPDATE banners SET path = ?, link = ?
 		WHERE id = ?
 	`, banner.Path, banner.Link, banner.Id).Error
 
-	if errUpdateBanner != nil {
-		helper.Logger("error", "In Server: "+errUpdateBanner.Error())
-		return nil, errors.New(errUpdateBanner.Error())
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
 	}
 
 	return map[string]any{}, nil
@@ -67,13 +67,13 @@ func BannerDelete(f *models.Banner) (map[string]any, error) {
 
 	banner.Id = f.Id
 
-	errDeleteBanner := db.Debug().Exec(`
+	err := db.Debug().Exec(`
 		DELETE FROM banners WHERE id = ?
 	`, banner.Id).Error
 
-	if errDeleteBanner != nil {
-		helper.Logger("error", "In Server: "+errDeleteBanner.Error())
-		return nil, errors.New(errDeleteBanner.Error())
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
 	}
 
 	return map[string]any{}, nil

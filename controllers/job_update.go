@@ -5,6 +5,7 @@ import (
 	"net/http"
 	helper "superapps/helpers"
 	"superapps/models"
+	service "superapps/services"
 )
 
 func JobUpdate(w http.ResponseWriter, r *http.Request) {
@@ -19,19 +20,17 @@ func JobUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	Id := data.Id
 	Title := data.Title
 	Caption := data.Caption
 	Salary := data.Salary
 	CatId := data.CatId
-	UserId := data.UserId
 
-	// var IsDraft bool
-
-	// if data.IsDraft == 1 {
-	// 	IsDraft = true
-	// } else {
-	// 	IsDraft = false
-	// }
+	if Id == "" {
+		helper.Logger("error", "In Server: id is required")
+		helper.Response(w, 400, true, "id is required", map[string]any{})
+		return
+	}
 
 	if Title == "" {
 		helper.Logger("error", "In Server: title is required")
@@ -57,19 +56,13 @@ func JobUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if UserId == "" {
-		helper.Logger("error", "In Server: user_id is required")
-		helper.Response(w, 400, true, "user_id is required", map[string]any{})
-		return
-	}
-
-	// result, err := service.JobStore(data)
+	result, err := service.JobUpdate(data)
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]any{})
 		return
 	}
 
-	helper.Logger("info", "Store Bannner success")
-	helper.Response(w, http.StatusOK, false, "Successfully", "")
+	helper.Logger("info", "Update Job success")
+	helper.Response(w, http.StatusOK, false, "Successfully", result)
 }
