@@ -249,7 +249,6 @@ func ApplyJob(aj *models.ApplyJob) (map[string]any, error) {
 
 	if errUserFcmRow != nil {
 		helper.Logger("error", "In Server: "+errUserFcmRow.Error())
-		return nil, errors.New(errUserFcmRow.Error())
 	}
 
 	message := fmt.Sprintf("Silahkan menunggu untuk tahap selanjutnya [%s]", dataUserFcm.Fullname)
@@ -314,14 +313,15 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 	if errUserFcmRow != nil {
 		if errors.Is(errUserFcmRow, sql.ErrNoRows) {
 			helper.Logger("info", "No FCM data found for user")
-			return nil, nil // or handle however you want
 		}
 
 		helper.Logger("error", "In Server: "+errUserFcmRow.Error())
 	}
 
-	title := fmt.Sprintf("Selamat lamaran Anda sudah dalam tahap [%s]", status)
-	helper.SendFcm(title, dataUserFcm.Fullname, dataUserFcm.Token)
+	if dataUserFcm.Token != "" {
+		title := fmt.Sprintf("Selamat lamaran Anda sudah dalam tahap [%s]", status)
+		helper.SendFcm(title, dataUserFcm.Fullname, dataUserFcm.Token)
+	}
 
 	// Perform the update
 	query := `UPDATE apply_jobs SET user_confirm_id = ?, status = ? WHERE uid = ?`
