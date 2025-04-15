@@ -348,13 +348,21 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 	return map[string]any{}, nil
 }
 
-func AdminJobList() (map[string]any, error) {
-	var jobs entities.JobListAdminQuery
+func AdminListApplyJob() (map[string]any, error) {
+	var job entities.AdminListApplyJobQuery
+	var candidateExercise entities.CandidateExerciseQuery
+	var candidateBiodata entities.CandidateBiodataQuery
+	var candidateLanguage entities.CandidateLanguageQuery
+	var candidateWork entities.CandidateWorkQuery
+	var candidatePlace entities.CandidatePlaceQuery
+
 	var jobFavourite []entities.JobFavourite
 
-	var dataJob = make([]entities.JobListAdmin, 0)
+	var dataJob = make([]entities.AdminListApplyJob, 0)
 
-	query := `SELECT aj.uid AS id, j.title, j.caption, j.salary, 
+	query := `SELECT aj.uid AS id, j.title, j.caption, j.salary,
+	aj.user_id AS user_id_candidate,
+	pc.fullname AS user_name_candidate,
 	jc.uid as cat_id,
 	jc.name AS cat_name, 
 	p.id AS place_id,
@@ -374,6 +382,7 @@ func AdminJobList() (map[string]any, error) {
 	INNER JOIN job_statuses js ON js.id = aj.status
 	INNER JOIN places p ON p.id = j.place_id
 	INNER JOIN profiles up ON up.user_id = j.user_id
+	INNER JOIN profiles pc ON pc.user_id = aj.user_id
 	`
 	rows, err := db.Debug().Raw(query).Rows()
 
@@ -383,14 +392,16 @@ func AdminJobList() (map[string]any, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		errJobRows := db.ScanRows(rows, &jobs)
+		errJobRows := db.ScanRows(rows, &job)
 
 		if errJobRows != nil {
 			helper.Logger("error", "In Server: "+errJobRows.Error())
 			return nil, errors.New(errJobRows.Error())
 		}
 
-		bookmarkQuery := `SELECT job_id, user_id FROM job_favourites WHERE user_id = '` + jobs.UserId + `' AND job_id = '` + jobs.Id + `'`
+		jobFavourite = nil
+
+		bookmarkQuery := `SELECT job_id, user_id FROM job_favourites WHERE user_id = '` + job.UserId + `' AND job_id = '` + job.Id + `'`
 
 		errBookmark := db.Debug().Raw(bookmarkQuery).Scan(&jobFavourite).Error
 
@@ -409,36 +420,224 @@ func AdminJobList() (map[string]any, error) {
 			bookmark = false
 		}
 
-		salaryIdr := helper.FormatIDR(jobs.Salary * jobs.PlaceKurs)
+		salaryIdr := helper.FormatIDR(job.Salary * job.PlaceKurs)
 
-		dataJob = append(dataJob, entities.JobListAdmin{
-			Id:        jobs.Id,
-			Title:     jobs.Title,
-			Caption:   jobs.Caption,
-			Salary:    int(jobs.Salary),
+		// Candidate Exercise
+
+		dataCandidateExercise := make([]entities.CandidateExercise, 0)
+
+		queryCandidateExercise := `SELECT name, institution, start_month, start_year, end_month, end_year 
+		FROM form_exercises WHERE user_id = ?`
+
+		rowsCandidateExercise, errCandidateExercise := db.Debug().Raw(queryCandidateExercise, job.UserIdCandidate).Rows()
+
+		if errCandidateExercise != nil {
+			helper.Logger("error", "In Server: "+errCandidateExercise.Error())
+		}
+		defer rowsCandidateExercise.Close()
+
+		for rowsCandidateExercise.Next() {
+			errCandidateExerciseRows := db.ScanRows(rowsCandidateExercise, &candidateExercise)
+
+			if errCandidateExerciseRows != nil {
+				helper.Logger("error", "In Server: "+errCandidateExerciseRows.Error())
+				return nil, errors.New(errCandidateExerciseRows.Error())
+			}
+
+			dataCandidateExercise = append(dataCandidateExercise, entities.CandidateExercise{
+				Name:        candidateExercise.Name,
+				Institution: candidateExercise.Institution,
+				StartMonth:  candidateExercise.StartMonth,
+				StartYear:   candidateExercise.StartYear,
+				EndMonth:    candidateExercise.EndMonth,
+				EndYear:     candidateExercise.EndYear,
+			})
+		}
+
+		// End Candidate Exercise
+
+		// Candidate Biodata
+
+		dataCandidateBiodata := make([]entities.CandidateBiodata, 0)
+
+		queryCandidateBiodata := `SELECT birthdate, gender, weight, height, status, religion, place 
+		FROM form_biodatas WHERE user_id = ?`
+
+		rowsCandidateBiodata, errCandidateBiodata := db.Debug().Raw(queryCandidateBiodata, job.UserIdCandidate).Rows()
+
+		if errCandidateBiodata != nil {
+			helper.Logger("error", "In Server: "+errCandidateBiodata.Error())
+		}
+		defer rowsCandidateBiodata.Close()
+
+		for rowsCandidateBiodata.Next() {
+			errCandidateBiodataRows := db.ScanRows(rowsCandidateBiodata, &candidateBiodata)
+
+			if errCandidateBiodataRows != nil {
+				helper.Logger("error", "In Server: "+errCandidateBiodataRows.Error())
+				return nil, errors.New(errCandidateBiodataRows.Error())
+			}
+
+			dataCandidateBiodata = append(dataCandidateBiodata, entities.CandidateBiodata{
+				Birthdate: candidateBiodata.Birthdate,
+				Gender:    candidateBiodata.Gender,
+				Weight:    candidateBiodata.Weight,
+				Height:    candidateBiodata.Height,
+				Status:    candidateBiodata.Status,
+				Religion:  candidateBiodata.Religion,
+				Place:     candidateBiodata.Place,
+			})
+		}
+
+		// End Candidate Biodata
+
+		// Candidate Language
+
+		dataCandidateLanguage := make([]entities.CandidateLanguage, 0)
+
+		queryCandidateLanguage := `SELECT level, language 
+		FROM form_languages WHERE user_id = ?`
+
+		rowsCandidateLanguage, errCandidateLanguage := db.Debug().Raw(queryCandidateLanguage, job.UserIdCandidate).Rows()
+
+		if errCandidateLanguage != nil {
+			helper.Logger("error", "In Server: "+errCandidateLanguage.Error())
+		}
+		defer rowsCandidateLanguage.Close()
+
+		for rowsCandidateLanguage.Next() {
+			errCandidateLanguageRows := db.ScanRows(rowsCandidateLanguage, &candidateLanguage)
+
+			if errCandidateLanguageRows != nil {
+				helper.Logger("error", "In Server: "+errCandidateLanguageRows.Error())
+				return nil, errors.New(errCandidateLanguageRows.Error())
+			}
+
+			dataCandidateLanguage = append(dataCandidateLanguage, entities.CandidateLanguage{
+				Level:    candidateLanguage.Level,
+				Language: candidateLanguage.Language,
+			})
+		}
+
+		// End Candidate Language
+
+		// Candidate Work
+
+		dataCandidateWork := make([]entities.CandidateWork, 0)
+
+		queryCandidateWork := `SELECT position, institution, work, country, city, start_month, 
+		start_year, end_month, end_year, is_work 
+		FROM form_works WHERE user_id = ?`
+
+		rowsCandidateWork, errCandidateWork := db.Debug().Raw(queryCandidateWork, job.UserIdCandidate).Rows()
+
+		if errCandidateWork != nil {
+			helper.Logger("error", "In Server: "+errCandidateWork.Error())
+		}
+		defer rowsCandidateWork.Close()
+
+		for rowsCandidateWork.Next() {
+			errCandidateWorkRows := db.ScanRows(rowsCandidateWork, &candidateWork)
+
+			if errCandidateWorkRows != nil {
+				helper.Logger("error", "In Server: "+errCandidateWorkRows.Error())
+				return nil, errors.New(errCandidateWorkRows.Error())
+			}
+
+			dataCandidateWork = append(dataCandidateWork, entities.CandidateWork{
+				Position:    candidateWork.Position,
+				Institution: candidateWork.Institution,
+				Work:        candidateWork.Work,
+				Country:     candidateWork.Country,
+				City:        candidateWork.City,
+				StartMonth:  candidateWork.StartMonth,
+				StartYear:   candidateWork.StartYear,
+				EndMonth:    candidateWork.EndMonth,
+				EndYear:     candidateWork.EndYear,
+				IsWork:      candidateWork.IsWork,
+			})
+		}
+
+		// End Candidate Work
+
+		// Candidate Place
+
+		dataCandidatePlace := make([]entities.CandidatePlace, 0)
+
+		queryCandidatePlace := `SELECT 
+		p.name AS province_name, 
+		r.name AS city_name, 
+		d.name AS district_name, 
+		s.name AS subdistrict_name
+		FROM form_places fp 
+		INNER JOIN provinces p ON p.id = fp.province_id
+		INNER JOIN regencies r ON r.id = fp.city_id
+		INNER JOIN districts d ON d.id = fp.district_id
+		INNER JOIN villages s ON s.id = fp.subdistrict_id
+		WHERE user_id = ?`
+
+		rowsCandidatePlace, errCandidatePlace := db.Debug().Raw(queryCandidatePlace, job.UserIdCandidate).Rows()
+
+		if errCandidateWork != nil {
+			helper.Logger("error", "In Server: "+errCandidatePlace.Error())
+		}
+		defer rowsCandidatePlace.Close()
+
+		for rowsCandidatePlace.Next() {
+			errCandidatePlaceRows := db.ScanRows(rowsCandidatePlace, &candidatePlace)
+
+			if errCandidatePlaceRows != nil {
+				helper.Logger("error", "In Server: "+errCandidatePlaceRows.Error())
+				return nil, errors.New(errCandidatePlaceRows.Error())
+			}
+
+			dataCandidatePlace = append(dataCandidatePlace, entities.CandidatePlace{
+				ProvinceName:    candidatePlace.ProvinceName,
+				CityName:        candidatePlace.CityName,
+				DistrictName:    candidatePlace.DistrictName,
+				SubdistrictName: candidatePlace.SubdistrictName,
+			})
+		}
+
+		// End Candidate Place
+
+		dataJob = append(dataJob, entities.AdminListApplyJob{
+			Id:        job.Id,
+			Title:     job.Title,
+			Caption:   job.Caption,
+			Salary:    int(job.Salary),
 			SalaryIDR: salaryIdr,
 			Bookmark:  bookmark,
+			Candidate: entities.Candidate{
+				Id:                job.UserIdCandidate,
+				Name:              job.UserNameCandidate,
+				CandidateExercise: dataCandidateExercise,
+				CandidateBiodata:  dataCandidateBiodata,
+				CandidateLanguage: dataCandidateLanguage,
+				CandidateWork:     dataCandidateWork,
+				CandidatePlace:    dataCandidatePlace,
+			},
 			Status: entities.JobStatus{
-				Id:   jobs.JobStatusId,
-				Name: jobs.JobStatusName,
+				Id:   job.JobStatusId,
+				Name: job.JobStatusName,
 			},
 			JobCategory: entities.JobCategory{
-				Id:   jobs.CatId,
-				Name: jobs.CatName,
+				Id:   job.CatId,
+				Name: job.CatName,
 			},
 			JobPlace: entities.JobPlace{
-				Id:       jobs.PlaceId,
-				Name:     jobs.PlaceName,
-				Currency: jobs.PlaceCurrency,
-				Kurs:     int(jobs.PlaceKurs),
-				Info:     jobs.PlaceInfo,
+				Id:       job.PlaceId,
+				Name:     job.PlaceName,
+				Currency: job.PlaceCurrency,
+				Kurs:     int(job.PlaceKurs),
+				Info:     job.PlaceInfo,
 			},
-			JobUser: entities.JobUser{
-				Id:     jobs.UserId,
-				Avatar: jobs.UserAvatar,
-				Name:   jobs.UserName,
+			Author: entities.AuthorJobUser{
+				Id:     job.UserId,
+				Avatar: job.UserAvatar,
+				Name:   job.UserName,
 			},
-			Created: jobs.CreatedAt.Format("2006-01-02 15:04:05"),
+			Created: job.CreatedAt.Format("2006-01-02 15:04:05"),
 		})
 	}
 
@@ -529,7 +728,7 @@ func JobList(userId, search, salary, country, position string) (map[string]any, 
 				Kurs:     int(jobs.PlaceKurs),
 				Info:     jobs.PlaceInfo,
 			},
-			JobUser: entities.JobUser{
+			Author: entities.AuthorJobUser{
 				Id:     jobs.UserId,
 				Avatar: jobs.UserAvatar,
 				Name:   jobs.UserName,
@@ -615,7 +814,7 @@ func JobDetail(f *models.Job) (map[string]any, error) {
 				Kurs:     int(jobs.PlaceKurs),
 				Info:     jobs.PlaceInfo,
 			},
-			JobUser: entities.JobUser{
+			Author: entities.AuthorJobUser{
 				Id:     jobs.UserId,
 				Avatar: jobs.UserAvatar,
 				Name:   jobs.UserName,

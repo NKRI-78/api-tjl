@@ -111,7 +111,7 @@ func main() {
 	router.HandleFunc("/api/v1/verify-otp", controllers.VerifyOtp).Methods("POST")
 
 	// Admin
-	router.HandleFunc("/api/v1/admin/job", controllers.AdminJobList).Methods("GET")
+	router.HandleFunc("/api/v1/admin/list/apply/job", controllers.AdminListApplyJob).Methods("GET")
 
 	// Apply Job
 	router.HandleFunc("/api/v1/apply/job", controllers.ApplyJob).Methods("POST")
