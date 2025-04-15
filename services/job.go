@@ -355,6 +355,7 @@ func AdminListApplyJob() (map[string]any, error) {
 	var candidateLanguage entities.CandidateLanguageQuery
 	var candidateWork entities.CandidateWorkQuery
 	var candidatePlace entities.CandidatePlaceQuery
+	var candidateDoc entities.CandidateDocumentQuery
 
 	var jobFavourite []entities.JobFavourite
 
@@ -582,7 +583,7 @@ func AdminListApplyJob() (map[string]any, error) {
 
 		rowsCandidatePlace, errCandidatePlace := db.Debug().Raw(queryCandidatePlace, job.UserIdCandidate).Rows()
 
-		if errCandidateWork != nil {
+		if errCandidatePlace != nil {
 			helper.Logger("error", "In Server: "+errCandidatePlace.Error())
 		}
 		defer rowsCandidatePlace.Close()
@@ -605,6 +606,39 @@ func AdminListApplyJob() (map[string]any, error) {
 
 		// End Candidate Place
 
+		// Candidate Document
+
+		dataCandidateDocument := make([]entities.CandidateDocument, 0)
+
+		queryCandidateDocument := `SELECT d.name AS document, ajd.path
+		FROM documents d
+		INNER JOIN apply_job_documents ajd ON ajd.doc_id = d.id
+		WHERE ajd.apply_job_id = ?
+		`
+
+		rowsCandidateDocument, errCandidateDocument := db.Debug().Raw(queryCandidateDocument, job.Id).Rows()
+
+		if errCandidateDocument != nil {
+			helper.Logger("error", "In Server: "+errCandidateDocument.Error())
+		}
+		defer rowsCandidateDocument.Close()
+
+		for rowsCandidateDocument.Next() {
+			errCandidateDocumentRows := db.ScanRows(rowsCandidateDocument, &candidateDoc)
+
+			if errCandidateDocumentRows != nil {
+				helper.Logger("error", "In Server: "+errCandidateDocumentRows.Error())
+				return nil, errors.New(errCandidateDocumentRows.Error())
+			}
+
+			dataCandidateDocument = append(dataCandidateDocument, entities.CandidateDocument{
+				Document: candidateDoc.Document,
+				Path:     candidateDoc.Path,
+			})
+		}
+
+		// End Candidate Document
+
 		dataJob = append(dataJob, entities.AdminListApplyJob{
 			Id:        job.Id,
 			Title:     job.Title,
@@ -625,6 +659,7 @@ func AdminListApplyJob() (map[string]any, error) {
 				CandidateLanguage: dataCandidateLanguage,
 				CandidateWork:     dataCandidateWork,
 				CandidatePlace:    dataCandidatePlace,
+				CandidateDoc:      dataCandidateDocument,
 			},
 			Status: entities.JobStatus{
 				Id:   job.JobStatusId,
