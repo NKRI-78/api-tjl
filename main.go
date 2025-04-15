@@ -145,6 +145,12 @@ func main() {
 	router.HandleFunc("/api/v1/job-categories", controllers.JobCategory).Methods("GET")
 	router.HandleFunc("/api/v1/job-places", controllers.JobPlace).Methods("GET")
 
+	// Icons
+	router.HandleFunc("/api/v1/icons", controllers.IconList).Methods("GET")
+	router.HandleFunc("/api/v1/icons/store", controllers.IconStore).Methods("POST")
+	router.HandleFunc("/api/v1/icons/update", controllers.IconUpdate).Methods("PUT")
+	router.HandleFunc("/api/v1/icons/delete", controllers.IconDelete).Methods("DELETE")
+
 	// Jobs Category
 	router.HandleFunc("/api/v1/job-category-store", controllers.JobCategoryStore).Methods("POST")
 	router.HandleFunc("/api/v1/job-category-update", controllers.JobCategoryUpdate).Methods("PUT")

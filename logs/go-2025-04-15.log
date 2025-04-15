@@ -67,3 +67,22 @@
 [INFO]: 2025-04-15 13:02:44 - Store Job Category success
 [INFO]: 2025-04-15 13:03:32 - Store Job Category success
 [INFO]: 2025-04-15 13:03:53 - Update Job Category success
+[ERROR]: 2025-04-15 13:23:36 - In Server: Missing auth token
+[ERROR]: 2025-04-15 13:23:37 - In Server: Missing auth token
+[INFO]: 2025-04-15 13:23:43 - Get Icon List success
+[INFO]: 2025-04-15 13:31:26 - Get Icon List success
+[INFO]: 2025-04-15 13:32:42 - Get Icon List success
+[INFO]: 2025-04-15 13:32:43 - Get Icon List success
+[INFO]: 2025-04-15 13:32:53 - Get Icon List success
+[INFO]: 2025-04-15 13:33:10 - Get Icon List success
+[INFO]: 2025-04-15 13:33:11 - Get Icon List success
+[INFO]: 2025-04-15 13:33:21 - Get Icon List success
+[INFO]: 2025-04-15 13:33:53 - Store Icon success
+[INFO]: 2025-04-15 13:33:56 - Get Icon List success
+[ERROR]: 2025-04-15 13:34:37 - In Server: Missing auth token
+[INFO]: 2025-04-15 13:34:43 - Store Bannner success
+[INFO]: 2025-04-15 13:35:00 - Store Bannner success
+[ERROR]: 2025-04-15 13:35:13 - In Server: Missing auth token
+[ERROR]: 2025-04-15 13:35:18 - In Server: path is required
+[INFO]: 2025-04-15 13:35:31 - Delete Icon success
+[INFO]: 2025-04-15 13:37:58 - Fetch Company List success
