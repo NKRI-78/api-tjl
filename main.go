@@ -74,6 +74,7 @@ func main() {
 	// Auth
 	router.Handle("/api/v1/login", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.Login))).Methods("POST")
 	router.Handle("/api/v1/register", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.Register))).Methods("POST")
+	router.Handle("/api/v1/forgot-password", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.ForgotPassword))).Methods("PUT")
 	router.Handle("/api/v1/update-email", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.UpdateEmail))).Methods("PUT")
 
 	// Auth Admin

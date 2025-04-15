@@ -53,6 +53,6 @@ func CommentStore(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	helper.Logger("info", "Forum Store success")
+	helper.Logger("info", "Comment Store success")
 	helper.Response(w, http.StatusOK, false, "Successfully", result)
 }

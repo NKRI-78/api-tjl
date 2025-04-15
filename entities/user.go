@@ -4,6 +4,11 @@ import (
 	"time"
 )
 
+type ForgotPassword struct {
+	Email       string `json:"email"`
+	NewPassword string `json:"new_password"`
+}
+
 type AdminListUser struct {
 	Id        string    `json:"id"`
 	Avatar    string    `json:"avatar"`

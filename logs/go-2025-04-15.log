@@ -199,3 +199,7 @@
 [ERROR]: 2025-04-15 16:34:39 - In Server sini: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''' at line 21
 [INFO]: 2025-04-15 16:35:43 - Job Detail success
 [INFO]: 2025-04-15 16:36:10 - Job Detail success
+[ERROR]: 2025-04-15 17:01:48 - In Server: Missing auth token
+[ERROR]: 2025-04-15 17:02:07 - In Server: new_password is required
+[INFO]: 2025-04-15 17:02:20 - Forgot Password success
+[INFO]: 2025-04-15 17:02:46 - Forgot Password success
