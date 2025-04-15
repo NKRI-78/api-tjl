@@ -20,15 +20,8 @@ func BannerUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	Id := data.Id
 	Path := data.Path
 	Link := data.Link
-
-	if Id == "" {
-		helper.Logger("error", "In Server: id is required")
-		helper.Response(w, 400, true, "id is required", map[string]any{})
-		return
-	}
 
 	if Path == "" {
 		helper.Logger("error", "In Server: path is required")

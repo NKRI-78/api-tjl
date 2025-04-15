@@ -20,14 +20,6 @@ func BannerDelete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	Id := data.Id
-
-	if Id == "" {
-		helper.Logger("error", "In Server: id is required")
-		helper.Response(w, 400, true, "id is required", map[string]any{})
-		return
-	}
-
 	result, err := services.BannerDelete(data)
 
 	if err != nil {
