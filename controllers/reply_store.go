@@ -11,8 +11,8 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-func CommentStore(w http.ResponseWriter, r *http.Request) {
-	data := &entities.CommentStore{}
+func ReplyStore(w http.ResponseWriter, r *http.Request) {
+	data := &entities.ReplyStore{}
 
 	err := json.NewDecoder(r.Body).Decode(data)
 
@@ -31,31 +31,31 @@ func CommentStore(w http.ResponseWriter, r *http.Request) {
 	userId, _ := claims["id"].(string)
 
 	Id := uuid.NewV4().String()
-	ForumId := data.ForumId
-	Comment := data.Comment
+	CommentId := data.CommentId
+	Reply := data.Reply
 
 	data.Id = Id
 	data.UserId = userId
 
-	if ForumId == "" {
-		helper.Logger("error", "In Server: forum_id is required")
-		helper.Response(w, 400, true, "forum_id is required", map[string]any{})
+	if CommentId == "" {
+		helper.Logger("error", "In Server: comment_id is required")
+		helper.Response(w, 400, true, "comment_id is required", map[string]any{})
 		return
 	}
 
-	if Comment == "" {
-		helper.Logger("error", "In Server: comment is required")
-		helper.Response(w, 400, true, "comment is required", map[string]any{})
+	if Reply == "" {
+		helper.Logger("error", "In Server: reply is required")
+		helper.Response(w, 400, true, "reply is required", map[string]any{})
 		return
 	}
 
-	result, err := service.CommentStore(data)
+	result, err := service.ReplyStore(data)
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]any{})
 		return
 	}
 
-	helper.Logger("info", "Comment Store success")
+	helper.Logger("info", "Reply store success")
 	helper.Response(w, http.StatusOK, false, "Successfully", result)
 }

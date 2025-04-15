@@ -12,7 +12,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-func ForumList(search, page, limit string) (map[string]interface{}, error) {
+func ForumList(search, page, limit string) (map[string]any, error) {
 	url := os.Getenv("API_URL_DEV")
 
 	var allForum []models.Forum
@@ -273,7 +273,7 @@ func ForumList(search, page, limit string) (map[string]interface{}, error) {
 	}, nil
 }
 
-func ForumDetail(f *models.Forum) (map[string]interface{}, error) {
+func ForumDetail(f *models.Forum) (map[string]any, error) {
 	var appendForumAssign = make([]entities.ForumResponse, 0)
 	var forumComment entities.ForumCommentQuery
 	var forumCommentReply entities.ForumCommentReplyQuery
@@ -493,7 +493,7 @@ func ForumDetail(f *models.Forum) (map[string]interface{}, error) {
 	}, nil
 }
 
-func ForumCategory() (map[string]interface{}, error) {
+func ForumCategory() (map[string]any, error) {
 	forumCategory := []entities.ForumCategory{}
 
 	err := db.Debug().Raw(`SELECT id, name FROM forum_types`).Scan(&forumCategory).Error
@@ -514,7 +514,7 @@ func ForumCategory() (map[string]interface{}, error) {
 	}, nil
 }
 
-func ForumStore(f *entities.ForumStore) (map[string]interface{}, error) {
+func ForumStore(f *entities.ForumStore) (map[string]any, error) {
 	forum := entities.ForumStore{}
 	forumTypes := []entities.ForumCategory{}
 
@@ -551,10 +551,10 @@ func ForumStore(f *entities.ForumStore) (map[string]interface{}, error) {
 	return map[string]any{}, nil
 }
 
-func CommentStore(c *entities.CommentStore) (map[string]interface{}, error) {
+func CommentStore(c *entities.CommentStore) (map[string]any, error) {
 
-	errInsertComment := db.Debug().Exec(`INSERT INTO forum_comments (forum_id, user_id, comment) 
-	VALUES (?, ?, ?)`, c.ForumId, c.UserId, c.Comment).Error
+	errInsertComment := db.Debug().Exec(`INSERT INTO forum_comments (uid, forum_id, user_id, comment) 
+	VALUES (?, ?, ?, ?)`, c.Id, c.ForumId, c.UserId, c.Comment).Error
 
 	if errInsertComment != nil {
 		helper.Logger("error", "In Server: "+errInsertComment.Error())
@@ -563,7 +563,19 @@ func CommentStore(c *entities.CommentStore) (map[string]interface{}, error) {
 	return map[string]any{}, nil
 }
 
-func ForumDelete(f *models.Forum) (map[string]interface{}, error) {
+func ReplyStore(r *entities.ReplyStore) (map[string]any, error) {
+
+	errInsertReply := db.Debug().Exec(`INSERT INTO forum_comment_replies (uid, user_id, comment_id, reply) 
+	VALUES (?, ?, ?, ?)`, r.Id, r.UserId, r.CommentId, r.Reply).Error
+
+	if errInsertReply != nil {
+		helper.Logger("error", "In Server: "+errInsertReply.Error())
+		return nil, errors.New(errInsertReply.Error())
+	}
+	return map[string]any{}, nil
+}
+
+func ForumDelete(f *models.Forum) (map[string]any, error) {
 	forum := entities.Forum{}
 	forums := []entities.Forum{}
 
