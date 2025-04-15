@@ -3,14 +3,14 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
+	"superapps/entities"
 	helper "superapps/helpers"
-	"superapps/models"
 	"superapps/services"
 )
 
 func BannerUpdate(w http.ResponseWriter, r *http.Request) {
 
-	data := &models.Banner{}
+	data := &entities.Banner{}
 
 	err := json.NewDecoder(r.Body).Decode(data)
 

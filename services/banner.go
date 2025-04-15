@@ -4,7 +4,6 @@ import (
 	"errors"
 	entities "superapps/entities"
 	helper "superapps/helpers"
-	models "superapps/models"
 )
 
 func BannerList() (map[string]any, error) {
@@ -24,7 +23,7 @@ func BannerList() (map[string]any, error) {
 	}, nil
 }
 
-func BannerStore(f *models.Banner) (map[string]any, error) {
+func BannerStore(f *entities.Banner) (map[string]any, error) {
 	banner := entities.Banner{}
 
 	banner.Path = f.Path
@@ -42,7 +41,7 @@ func BannerStore(f *models.Banner) (map[string]any, error) {
 	return map[string]any{}, nil
 }
 
-func BannerUpdate(f *models.Banner) (map[string]any, error) {
+func BannerUpdate(f *entities.Banner) (map[string]any, error) {
 	banner := entities.Banner{}
 
 	banner.Id = f.Id
@@ -62,7 +61,7 @@ func BannerUpdate(f *models.Banner) (map[string]any, error) {
 	return map[string]any{}, nil
 }
 
-func BannerDelete(f *models.Banner) (map[string]any, error) {
+func BannerDelete(f *entities.Banner) (map[string]any, error) {
 	banner := entities.Banner{}
 
 	banner.Id = f.Id
