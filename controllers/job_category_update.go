@@ -21,7 +21,14 @@ func JobCategoryUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	Id := data.Id
+	Icon := data.Icon
 	Name := data.Name
+
+	if Icon == "" {
+		helper.Logger("error", "In Server: icon is required")
+		helper.Response(w, 400, true, "icon is required", map[string]any{})
+		return
+	}
 
 	if Name == "" {
 		helper.Logger("error", "In Server: name is required")

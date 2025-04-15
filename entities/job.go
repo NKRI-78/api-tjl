@@ -325,11 +325,13 @@ type JobCategoryCount struct {
 
 type JobCategory struct {
 	Id   string `json:"id"`
+	Icon string `json:"icon"`
 	Name string `json:"name"`
 }
 
 type JobCategoryStore struct {
 	Id   string `json:"id"`
+	Icon string `json:"icon"`
 	Name string `json:"name"`
 }
 
@@ -339,6 +341,7 @@ type JobCategoryDelete struct {
 
 type JobCategoryUpdate struct {
 	Id   string `json:"id"`
+	Icon string `json:"icon"`
 	Name string `json:"name"`
 }
 

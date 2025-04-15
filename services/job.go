@@ -1056,9 +1056,9 @@ func JobCategoryStore(j *models.JobCategoryStore) (map[string]any, error) {
 
 	j.Id = uuid.NewV4().String()
 
-	query := `INSERT INTO job_categories (uid, name) VALUES (?, ?)`
+	query := `INSERT INTO job_categories (uid, logo, name) VALUES (?, ?, ?)`
 
-	err := db.Debug().Exec(query, j.Id, j.Name).Error
+	err := db.Debug().Exec(query, j.Id, j.Icon, j.Name).Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
@@ -1070,9 +1070,9 @@ func JobCategoryStore(j *models.JobCategoryStore) (map[string]any, error) {
 
 func JobCategoryUpdate(j *models.JobCategoryUpdate) (map[string]any, error) {
 
-	query := `UPDATE job_categories SET name = ? WHERE uid = ?`
+	query := `UPDATE job_categories SET name = ?, logo = ? WHERE uid = ?`
 
-	err := db.Debug().Exec(query, j.Name, j.Id).Error
+	err := db.Debug().Exec(query, j.Name, j.Icon, j.Id).Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
@@ -1099,7 +1099,7 @@ func JobCategoryDelete(j *models.JobCategoryDelete) (map[string]any, error) {
 func JobCategory() (map[string]any, error) {
 	categories := []entities.JobCategory{}
 
-	query := `SELECT uid AS id, name FROM job_categories`
+	query := `SELECT uid AS id, logo AS icon, name FROM job_categories`
 
 	err := db.Debug().Raw(query).Scan(&categories).Error
 
