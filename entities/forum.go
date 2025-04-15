@@ -115,3 +115,9 @@ type ForumStore struct {
 	Type   int    `json:"type"`
 	UserId string `json:"user_id"`
 }
+
+type CommentStore struct {
+	ForumId string `json:"forum_id"`
+	Comment string `json:"comment"`
+	UserId  string `json:"user_id"`
+}

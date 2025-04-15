@@ -514,7 +514,7 @@ func ForumCategory() (map[string]interface{}, error) {
 	}, nil
 }
 
-func ForumStore(f *models.ForumStore) (map[string]interface{}, error) {
+func ForumStore(f *entities.ForumStore) (map[string]interface{}, error) {
 	forum := entities.ForumStore{}
 	forumTypes := []entities.ForumCategory{}
 
@@ -548,6 +548,18 @@ func ForumStore(f *models.ForumStore) (map[string]interface{}, error) {
 		return nil, errors.New(errInsertForum.Error())
 	}
 
+	return map[string]any{}, nil
+}
+
+func CommentStore(c *entities.CommentStore) (map[string]interface{}, error) {
+
+	errInsertComment := db.Debug().Exec(`INSERT INTO forum_comments (forum_id, user_id, comment) 
+	VALUES (?, ?, ?)`, c.ForumId, c.UserId, c.Comment).Error
+
+	if errInsertComment != nil {
+		helper.Logger("error", "In Server: "+errInsertComment.Error())
+		return nil, errors.New(errInsertComment.Error())
+	}
 	return map[string]any{}, nil
 }
 
