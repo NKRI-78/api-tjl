@@ -118,8 +118,12 @@ type JobListQuery struct {
 	Id            string    `json:"id"`
 	Title         string    `json:"title"`
 	Caption       string    `json:"caption"`
+	WorkerCount   int       `json:"worker_count"`
 	CatId         string    `json:"cat_id"`
 	CatName       string    `json:"cat_name"`
+	CompanyId     string    `json:"company_id"`
+	CompanyLogo   string    `json:"company_logo"`
+	CompanyName   string    `json:"company_name"`
 	PlaceId       int       `json:"place_id"`
 	PlaceName     string    `json:"place_name"`
 	PlaceCurrency string    `json:"place_currency"`
@@ -268,22 +272,36 @@ type CandidatePlace struct {
 	SubdistrictName string `json:"subdistrict"`
 }
 
+type JobSkillCategory struct {
+	Id   string `json:"id"`
+	Name string `json:"name"`
+}
+
 type JobStatus struct {
 	Id   int    `json:"id"`
 	Name string `json:"name"`
 }
 
 type JobList struct {
-	Id          string        `json:"id"`
-	Title       string        `json:"title"`
-	Caption     string        `json:"caption"`
-	Salary      int           `json:"salary"`
-	SalaryIDR   string        `json:"salary_idr"`
-	Bookmark    bool          `json:"bookmark"`
-	Created     string        `json:"created"`
-	JobCategory JobCategory   `json:"category"`
-	JobPlace    JobPlace      `json:"place"`
-	Author      AuthorJobUser `json:"author"`
+	Id          string             `json:"id"`
+	Title       string             `json:"title"`
+	Caption     string             `json:"caption"`
+	Company     JobCompany         `json:"company"`
+	WorkerCount int                `json:"worker_count"`
+	Skills      []JobSkillCategory `json:"skills"`
+	Salary      int                `json:"salary"`
+	SalaryIDR   string             `json:"salary_idr"`
+	Bookmark    bool               `json:"bookmark"`
+	Created     string             `json:"created"`
+	JobCategory JobCategory        `json:"category"`
+	JobPlace    JobPlace           `json:"place"`
+	Author      AuthorJobUser      `json:"author"`
+}
+
+type JobCompany struct {
+	Id   string `json:"id"`
+	Logo string `json:"logo"`
+	Name string `json:"name"`
 }
 
 type JobStore struct {
