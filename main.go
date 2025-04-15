@@ -195,20 +195,11 @@ func main() {
 
 	// Forum
 	router.HandleFunc("/api/v1/forum-store", controllers.ForumStore).Methods("POST")
+	router.HandleFunc("/api/v1/comment-store", controllers.CommentStore).Methods("POST")
 	router.HandleFunc("/api/v1/forum-delete", controllers.ForumDelete).Methods("DELETE")
 	router.HandleFunc("/api/v1/forum-list", controllers.ForumList).Methods("GET")
 	router.HandleFunc("/api/v1/forum-type", controllers.ForumCategory).Methods("GET")
 	router.HandleFunc("/api/v1/forum-detail/{id}", controllers.ForumDetail).Methods("GET")
-
-	// Content Comment
-	router.HandleFunc("/api/v1/content/comment", controllers.CreateContentComment).Methods("POST")
-	router.HandleFunc("/api/v1/content/comment/delete", controllers.DeleteContentComment).Methods("DELETE")
-
-	// Content Like
-	router.HandleFunc("/api/v1/content/like", controllers.CreateContentLike).Methods("POST")
-
-	// Content Unlike
-	router.HandleFunc("/api/v1/content/unlike", controllers.CreateContentUnlike).Methods("POST")
 
 	// Media
 	router.HandleFunc("/api/v1/media/upload", controllers.Upload).Methods("POST")

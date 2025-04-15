@@ -3,15 +3,15 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
+	"superapps/entities"
 	helper "superapps/helpers"
-	models "superapps/models"
 	service "superapps/services"
 
 	"github.com/dgrijalva/jwt-go"
 )
 
 func ForumStore(w http.ResponseWriter, r *http.Request) {
-	data := &models.ForumStore{}
+	data := &entities.ForumStore{}
 
 	err := json.NewDecoder(r.Body).Decode(data)
 

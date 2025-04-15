@@ -191,3 +191,11 @@
 [ERROR]: 2025-04-15 15:54:53 - In Server: Error 1452: Cannot add or update a child row: a foreign key constraint fails (`tjl`.`jobs`, CONSTRAINT `jobs_ibfk_4` FOREIGN KEY (`company_id`) REFERENCES `companies` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE)
 [ERROR]: 2025-04-15 15:55:10 - In Server: Error 1452: Cannot add or update a child row: a foreign key constraint fails (`tjl`.`jobs`, CONSTRAINT `jobs_ibfk_4` FOREIGN KEY (`company_id`) REFERENCES `companies` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE)
 [INFO]: 2025-04-15 15:55:32 - Update Job success
+[INFO]: 2025-04-15 16:32:15 - Forum Store success
+[ERROR]: 2025-04-15 16:32:45 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''' at line 21
+[ERROR]: 2025-04-15 16:34:01 - In Server sini: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''' at line 21
+[ERROR]: 2025-04-15 16:34:14 - In Server sini: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''' at line 21
+[ERROR]: 2025-04-15 16:34:38 - In Server sini: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''' at line 21
+[ERROR]: 2025-04-15 16:34:39 - In Server sini: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''' at line 21
+[INFO]: 2025-04-15 16:35:43 - Job Detail success
+[INFO]: 2025-04-15 16:36:10 - Job Detail success
