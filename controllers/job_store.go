@@ -25,6 +25,8 @@ func JobStore(w http.ResponseWriter, r *http.Request) {
 	Salary := data.Salary
 	CatId := data.CatId
 	UserId := data.UserId
+	WorkerCount := data.WorkerCount
+	CompanyId := data.CompanyId
 
 	// var IsDraft bool
 
@@ -61,6 +63,18 @@ func JobStore(w http.ResponseWriter, r *http.Request) {
 	if UserId == "" {
 		helper.Logger("error", "In Server: user_id is required")
 		helper.Response(w, 400, true, "user_id is required", map[string]any{})
+		return
+	}
+
+	if WorkerCount == 0 {
+		helper.Logger("error", "In Server: worker_count is required")
+		helper.Response(w, 400, true, "worker_count is required", map[string]any{})
+		return
+	}
+
+	if CompanyId == "" {
+		helper.Logger("error", "In Server: company_id is required")
+		helper.Response(w, 400, true, "company_id is required", map[string]any{})
 		return
 	}
 
