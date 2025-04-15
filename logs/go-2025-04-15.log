@@ -86,3 +86,61 @@
 [ERROR]: 2025-04-15 13:35:18 - In Server: path is required
 [INFO]: 2025-04-15 13:35:31 - Delete Icon success
 [INFO]: 2025-04-15 13:37:58 - Fetch Company List success
+[INFO]: 2025-04-15 13:51:10 - Fetch Company List success
+[ERROR]: 2025-04-15 13:51:33 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from 
+	FROM companies c
+	INNER JOIN places p ON p.id = c.place_id' at line 1
+[ERROR]: 2025-04-15 13:51:34 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from 
+	FROM companies c
+	INNER JOIN places p ON p.id = c.place_id' at line 1
+[ERROR]: 2025-04-15 13:51:43 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from
+	FROM companies c
+	INNER JOIN places p ON p.id = c.place_id' at line 1
+[INFO]: 2025-04-15 13:51:53 - Fetch Company List success
+[INFO]: 2025-04-15 13:52:30 - Fetch Company List success
+[INFO]: 2025-04-15 13:52:31 - Fetch Company List success
+[INFO]: 2025-04-15 13:53:34 - Fetch Company List success
+[INFO]: 2025-04-15 13:54:44 - Fetch Company List success
+[INFO]: 2025-04-15 13:54:45 - Fetch Company List success
+[INFO]: 2025-04-15 13:55:19 - Fetch Company List success
+[INFO]: 2025-04-15 13:55:19 - Fetch Company List success
+[INFO]: 2025-04-15 13:55:36 - Fetch Company List success
+[INFO]: 2025-04-15 13:55:37 - Fetch Company List success
+[INFO]: 2025-04-15 13:55:51 - Fetch Company List success
+[INFO]: 2025-04-15 13:55:52 - Fetch Company List success
+[INFO]: 2025-04-15 13:56:54 - Fetch Company List success
+[INFO]: 2025-04-15 13:57:09 - Fetch Company List success
+[INFO]: 2025-04-15 13:57:09 - Fetch Company List success
+[INFO]: 2025-04-15 13:57:17 - Fetch Company List success
+[INFO]: 2025-04-15 13:57:18 - Fetch Company List success
+[INFO]: 2025-04-15 13:58:15 - Fetch Company List success
+[INFO]: 2025-04-15 13:58:42 - Fetch Company List success
+[INFO]: 2025-04-15 13:58:44 - Fetch Company List success
+[INFO]: 2025-04-15 13:58:52 - Fetch Company List success
+[INFO]: 2025-04-15 13:58:53 - Fetch Company List success
+[INFO]: 2025-04-15 13:59:25 - Fetch Company List success
+[INFO]: 2025-04-15 14:03:49 - Fetch Company List success
+[INFO]: 2025-04-15 14:04:25 - Fetch Company List success
+[INFO]: 2025-04-15 14:04:26 - Fetch Company List success
+[INFO]: 2025-04-15 14:05:15 - Fetch Company List success
+[INFO]: 2025-04-15 14:05:53 - Fetch Company List success
+[INFO]: 2025-04-15 14:06:46 - Fetch Company List success
+[ERROR]: 2025-04-15 14:15:06 - In Server: Missing auth token
+[ERROR]: 2025-04-15 14:15:11 - In Server: Error 1292: Truncated incorrect INTEGER value: ''
+[INFO]: 2025-04-15 14:15:56 - Delete Company success
+[INFO]: 2025-04-15 14:16:00 - Fetch Company List success
+[INFO]: 2025-04-15 14:16:01 - Fetch Company List success
+[INFO]: 2025-04-15 14:16:33 - Delete Company success
+[INFO]: 2025-04-15 14:16:36 - Fetch Company List success
+[INFO]: 2025-04-15 14:17:09 - Delete Company success
+[INFO]: 2025-04-15 14:17:34 - Delete Company success
+[INFO]: 2025-04-15 14:18:19 - Delete Company success
+[INFO]: 2025-04-15 14:18:47 - Delete Company success
+[INFO]: 2025-04-15 14:18:49 - Fetch Company List success
+[ERROR]: 2025-04-15 14:21:12 - In Server: Missing auth token
+[ERROR]: 2025-04-15 14:21:16 - In Server: json: cannot unmarshal string into Go struct field CompanyUpdate.id of type int
+[ERROR]: 2025-04-15 14:21:31 - In Server: json: cannot unmarshal number into Go struct field CompanyUpdate.place_id of type string
+[ERROR]: 2025-04-15 14:21:31 - In Server: json: cannot unmarshal number into Go struct field CompanyUpdate.place_id of type string
+[ERROR]: 2025-04-15 14:22:41 - In Server: json: cannot unmarshal number into Go struct field CompanyUpdate.place_id of type string
+[INFO]: 2025-04-15 14:22:52 - Update Country success
+[INFO]: 2025-04-15 14:22:58 - Fetch Company List success

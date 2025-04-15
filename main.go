@@ -134,6 +134,8 @@ func main() {
 	// Company
 	router.HandleFunc("/api/v1/company/list", controllers.CompanyList).Methods("GET")
 	router.HandleFunc("/api/v1/company/store", controllers.CompanyStore).Methods("POST")
+	router.HandleFunc("/api/v1/company/update", controllers.CompanyUpdate).Methods("PUT")
+	router.HandleFunc("/api/v1/company/delete", controllers.CompanyDelete).Methods("DELETE")
 
 	// Jobs
 	router.HandleFunc("/api/v1/job", controllers.JobList).Methods("GET")
