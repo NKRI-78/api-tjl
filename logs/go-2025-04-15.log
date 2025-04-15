@@ -181,3 +181,13 @@
 [INFO]: 2025-04-15 15:40:13 - Fetch Job List success
 [INFO]: 2025-04-15 15:40:30 - Fetch Admin Job List success
 [INFO]: 2025-04-15 15:40:55 - Fetch Admin Job List success
+[ERROR]: 2025-04-15 15:48:11 - In Server: json: cannot unmarshal number into Go struct field JobStore.place_id of type string
+[ERROR]: 2025-04-15 15:48:49 - In Server: json: cannot unmarshal number into Go struct field JobStore.is_draft of type string
+[ERROR]: 2025-04-15 15:48:50 - In Server: json: cannot unmarshal number into Go struct field JobStore.is_draft of type string
+[ERROR]: 2025-04-15 15:48:51 - In Server: json: cannot unmarshal number into Go struct field JobStore.is_draft of type string
+[ERROR]: 2025-04-15 15:49:03 - In Server: Error 1136: Column count doesn't match value count at row 1
+[INFO]: 2025-04-15 15:49:17 - Store Job success
+[INFO]: 2025-04-15 15:53:26 - Store Job success
+[ERROR]: 2025-04-15 15:54:53 - In Server: Error 1452: Cannot add or update a child row: a foreign key constraint fails (`tjl`.`jobs`, CONSTRAINT `jobs_ibfk_4` FOREIGN KEY (`company_id`) REFERENCES `companies` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE)
+[ERROR]: 2025-04-15 15:55:10 - In Server: Error 1452: Cannot add or update a child row: a foreign key constraint fails (`tjl`.`jobs`, CONSTRAINT `jobs_ibfk_4` FOREIGN KEY (`company_id`) REFERENCES `companies` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE)
+[INFO]: 2025-04-15 15:55:32 - Update Job success

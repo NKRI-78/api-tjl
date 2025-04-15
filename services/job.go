@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"strconv"
 	entities "superapps/entities"
 	helper "superapps/helpers"
 	models "superapps/models"
@@ -951,9 +950,9 @@ func JobStore(j *models.JobStore) (map[string]any, error) {
 		return nil, errors.New("JOB_NOT_FOUND")
 	}
 
-	checkQueryPlace := `SELECT id, name FROM places WHERE id = '` + strconv.Itoa(j.PlaceId) + `'`
+	checkQueryPlace := `SELECT id, name FROM places WHERE id = ?`
 
-	errCheckPlace := db.Debug().Raw(checkQueryPlace).Scan(&places).Error
+	errCheckPlace := db.Debug().Raw(checkQueryPlace, j.PlaceId).Scan(&places).Error
 
 	if errCheckPlace != nil {
 		helper.Logger("error", "In Server: "+errCheckPlace.Error())
@@ -968,10 +967,10 @@ func JobStore(j *models.JobStore) (map[string]any, error) {
 
 	j.Id = uuid.NewV4().String()
 
-	query := `INSERT INTO jobs (uid, title, caption, salary, cat_id, place_id, user_id, is_draft) 
-	VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+	query := `INSERT INTO jobs (uid, title, caption, salary, worker_count, cat_id, company_id, place_id, user_id, is_draft) 
+	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 
-	err := db.Debug().Exec(query, j.Id, j.Title, j.Caption, j.Salary, j.CatId, j.PlaceId, j.UserId, j.IsDraft).Error
+	err := db.Debug().Exec(query, j.Id, j.Title, j.Caption, j.Salary, j.WorkerCount, j.CatId, j.CompanyId, j.PlaceId, j.UserId, j.IsDraft).Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
@@ -1001,9 +1000,9 @@ func JobUpdate(j *models.JobUpdate) (map[string]any, error) {
 		return nil, errors.New("JOB_NOT_FOUND")
 	}
 
-	checkQueryPlace := `SELECT id, name FROM places WHERE id = '` + strconv.Itoa(j.PlaceId) + `'`
+	checkQueryPlace := `SELECT id, name FROM places WHERE id = ?`
 
-	errCheckPlace := db.Debug().Raw(checkQueryPlace).Scan(&places).Error
+	errCheckPlace := db.Debug().Raw(checkQueryPlace, j.PlaceId).Scan(&places).Error
 
 	if errCheckPlace != nil {
 		helper.Logger("error", "In Server: "+errCheckPlace.Error())
@@ -1016,10 +1015,10 @@ func JobUpdate(j *models.JobUpdate) (map[string]any, error) {
 		return nil, errors.New("PLACE_NOT_FOUND")
 	}
 
-	query := `UPDATE jobs SET title = ?, caption = ?, salary = ?, cat_id = ?, place_id = ?, is_draft = ?
+	query := `UPDATE jobs SET title = ?, caption = ?, salary = ?, worker_count = ?, company_id = ?, place_id = ?, cat_id = ?, place_id = ?, is_draft = ?
 	WHERE uid = ?`
 
-	err := db.Debug().Exec(query, j.Title, j.Caption, j.Salary, j.CatId, j.PlaceId, j.IsDraft, j.Id).Error
+	err := db.Debug().Exec(query, j.Title, j.Caption, j.Salary, j.WorkerCount, j.CompanyId, j.PlaceId, j.CatId, j.PlaceId, j.IsDraft, j.Id).Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())

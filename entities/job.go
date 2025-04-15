@@ -320,24 +320,28 @@ type JobCompany struct {
 }
 
 type JobStore struct {
-	Id      string `json:"id"`
-	Title   string `json:"title"`
-	Caption string `json:"caption"`
-	Salary  string `json:"salary"`
-	CatId   string `json:"cat_id"`
-	PlaceId int    `json:"place_id"`
-	UserId  string `json:"user_id"`
-	IsDraft int    `json:"is_draft"`
+	Id          string `json:"id"`
+	Title       string `json:"title"`
+	Caption     string `json:"caption"`
+	Salary      string `json:"salary"`
+	WorkerCount int    `json:"worker_count"`
+	CompanyId   string `json:"company_id"`
+	CatId       string `json:"cat_id"`
+	PlaceId     string `json:"place_id"`
+	UserId      string `json:"user_id"`
+	IsDraft     string `json:"is_draft"`
 }
 
 type JobUpdate struct {
-	Id      string `json:"id"`
-	Title   string `json:"title"`
-	Caption string `json:"caption"`
-	Salary  string `json:"salary"`
-	CatId   string `json:"cat_id"`
-	PlaceId int    `json:"place_id"`
-	IsDraft int    `json:"is_draft"`
+	Id          string `json:"id"`
+	Title       string `json:"title"`
+	Caption     string `json:"caption"`
+	Salary      string `json:"salary"`
+	WorkerCount int    `json:"worker_count"`
+	CompanyId   string `json:"company_id"`
+	CatId       string `json:"cat_id"`
+	PlaceId     string `json:"place_id"`
+	IsDraft     string `json:"is_draft"`
 }
 
 type JobFavourite struct {
