@@ -286,13 +286,13 @@ type JobList struct {
 	Id          string             `json:"id"`
 	Title       string             `json:"title"`
 	Caption     string             `json:"caption"`
-	Company     JobCompany         `json:"company"`
 	WorkerCount int                `json:"worker_count"`
-	Skills      []JobSkillCategory `json:"skills"`
 	Salary      int                `json:"salary"`
 	SalaryIDR   string             `json:"salary_idr"`
 	Bookmark    bool               `json:"bookmark"`
 	Created     string             `json:"created"`
+	Skills      []JobSkillCategory `json:"skills"`
+	Company     JobCompany         `json:"company"`
 	JobCategory JobCategory        `json:"category"`
 	JobPlace    JobPlace           `json:"place"`
 	Author      AuthorJobUser      `json:"author"`
