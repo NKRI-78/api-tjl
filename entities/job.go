@@ -144,6 +144,9 @@ type AdminListApplyJobQuery struct {
 	Salary            float64   `json:"salary"`
 	CatId             string    `json:"cat_id"`
 	CatName           string    `json:"cat_name"`
+	CompanyId         string    `json:"company_id"`
+	CompanyLogo       string    `json:"company_logo"`
+	CompanyName       string    `json:"company_name"`
 	JobStatusId       int       `json:"job_status_id"`
 	JobStatusName     string    `json:"job_status_name"`
 	PlaceId           int       `json:"place_id"`
@@ -211,6 +214,7 @@ type AdminListApplyJob struct {
 	SalaryIDR   string        `json:"salary_idr"`
 	Bookmark    bool          `json:"bookmark"`
 	Created     string        `json:"created"`
+	Company     JobCompany    `json:"company"`
 	Candidate   Candidate     `json:"candidate"`
 	Status      JobStatus     `json:"status"`
 	JobCategory JobCategory   `json:"category"`

@@ -161,3 +161,20 @@
 [INFO]: 2025-04-15 15:01:34 - News Detail success
 [INFO]: 2025-04-15 15:01:56 - News Detail success
 [INFO]: 2025-04-15 15:07:09 - Fetch Job List success
+[ERROR]: 2025-04-15 15:16:15 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROM users u 
+	INNER JOIN profiles p ON p.user_id = u.uid' at line 2
+[ERROR]: 2025-04-15 15:16:16 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROM users u 
+	INNER JOIN profiles p ON p.user_id = u.uid' at line 2
+[INFO]: 2025-04-15 15:16:30 - Get Admin List User success
+[INFO]: 2025-04-15 15:17:30 - Get Admin List User success
+[INFO]: 2025-04-15 15:19:54 - Get Admin List User success
+[INFO]: 2025-04-15 15:22:18 - Get Admin List User success
+[ERROR]: 2025-04-15 15:22:29 - In Server: Error 1054: Unknown column 'c.uid' in 'field list'
+[ERROR]: 2025-04-15 15:22:30 - In Server: Error 1054: Unknown column 'c.uid' in 'field list'
+[ERROR]: 2025-04-15 15:22:31 - In Server: Error 1054: Unknown column 'c.uid' in 'field list'
+[ERROR]: 2025-04-15 15:22:32 - In Server: Error 1054: Unknown column 'c.uid' in 'field list'
+[ERROR]: 2025-04-15 15:22:33 - In Server: Error 1054: Unknown column 'c.uid' in 'field list'
+[ERROR]: 2025-04-15 15:22:49 - In Server: Error 1054: Unknown column 'c.uid' in 'field list'
+[ERROR]: 2025-04-15 15:22:49 - In Server: Error 1054: Unknown column 'c.uid' in 'field list'
+[ERROR]: 2025-04-15 15:22:50 - In Server: Error 1054: Unknown column 'c.uid' in 'field list'
+[INFO]: 2025-04-15 15:23:18 - Fetch Admin Job List success

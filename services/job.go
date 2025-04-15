@@ -370,6 +370,9 @@ func AdminListApplyJob() (map[string]any, error) {
 	p.currency AS place_currency,
 	p.kurs AS place_kurs,
 	p.info AS place_info,
+	c.uid AS company_id,
+	c.logo AS company_logo,
+	c.name AS company_name,
 	up.user_id,
 	up.avatar AS user_avatar,
 	up.fullname AS user_name,
@@ -378,6 +381,7 @@ func AdminListApplyJob() (map[string]any, error) {
 	js.name AS job_status_name
 	FROM jobs j
 	INNER JOIN job_categories jc ON jc.uid = j.cat_id
+	INNER JOIN companies c ON c.uid = j.company_id 
 	INNER JOIN apply_jobs aj ON aj.job_id = j.uid
 	INNER JOIN job_statuses js ON js.id = aj.status
 	INNER JOIN places p ON p.id = j.place_id
@@ -608,6 +612,11 @@ func AdminListApplyJob() (map[string]any, error) {
 			Salary:    int(job.Salary),
 			SalaryIDR: salaryIdr,
 			Bookmark:  bookmark,
+			Company: entities.JobCompany{
+				Id:   job.CompanyId,
+				Logo: job.CompanyLogo,
+				Name: job.CompanyName,
+			},
 			Candidate: entities.Candidate{
 				Id:                job.UserIdCandidate,
 				Name:              job.UserNameCandidate,
