@@ -7,7 +7,7 @@ type AllNews struct {
 }
 
 type News struct {
-	Id        string    `json:"id"`
+	Id        int       `json:"id"`
 	Title     string    `json:"title"`
 	Caption   string    `json:"caption"`
 	UserId    string    `json:"user_id"`
@@ -16,7 +16,7 @@ type News struct {
 }
 
 type NewsResponse struct {
-	Id        string      `json:"id"`
+	Id        int         `json:"id"`
 	Title     string      `json:"title"`
 	Caption   string      `json:"caption"`
 	Media     []NewsMedia `json:"media"`
@@ -52,6 +52,6 @@ type NewsUser struct {
 }
 
 type NewsMedia struct {
-	Id   string `json:"id"`
+	Id   int    `json:"id"`
 	Path string `json:"path"`
 }

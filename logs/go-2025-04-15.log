@@ -144,3 +144,19 @@
 [ERROR]: 2025-04-15 14:22:41 - In Server: json: cannot unmarshal number into Go struct field CompanyUpdate.place_id of type string
 [INFO]: 2025-04-15 14:22:52 - Update Country success
 [INFO]: 2025-04-15 14:22:58 - Fetch Company List success
+[INFO]: 2025-04-15 14:30:35 - Fetch Job List success
+[INFO]: 2025-04-15 14:40:02 - Fetch Job List success
+[ERROR]: 2025-04-15 14:49:19 - In Server: Error 1066: Not unique table/alias: 'j'
+[INFO]: 2025-04-15 14:49:40 - Fetch Job List success
+[INFO]: 2025-04-15 14:53:51 - Fetch Job List success
+[INFO]: 2025-04-15 14:54:11 - Fetch Job List success
+[INFO]: 2025-04-15 14:56:14 - News Detail success
+[INFO]: 2025-04-15 14:57:29 - News Detail success
+[INFO]: 2025-04-15 14:57:51 - News List success
+[INFO]: 2025-04-15 14:57:52 - News List success
+[INFO]: 2025-04-15 14:57:53 - News List success
+[INFO]: 2025-04-15 14:59:09 - News List success
+[INFO]: 2025-04-15 14:59:28 - News List success
+[INFO]: 2025-04-15 14:59:38 - News Detail success
+[INFO]: 2025-04-15 15:01:34 - News Detail success
+[INFO]: 2025-04-15 15:01:56 - News Detail success

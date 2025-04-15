@@ -1,6 +1,7 @@
 package services
 
 import (
+	"database/sql"
 	"errors"
 	"math"
 	"os"
@@ -72,7 +73,7 @@ func NewsList(page, limit string) (map[string]any, error) {
 
 		rowsNewsMedia, errNewsMediaQuery := db.Debug().Raw(`SELECT id, path 
 			FROM news_medias 
-			WHERE news_id = '` + news.Id + `'`).Rows()
+			WHERE news_id = ?`, news.Id).Rows()
 
 		if errNewsMediaQuery != nil {
 			helper.Logger("error", "In Server: "+errNewsMediaQuery.Error())
@@ -124,77 +125,69 @@ func NewsList(page, limit string) (map[string]any, error) {
 }
 
 func NewsDetail(id string) (map[string]any, error) {
-	var appendNewsAssign = make([]entities.NewsResponse, 0)
+	var news entities.News
 	var newsMedia entities.NewsMedia
 	var newsMediaAssign entities.NewsMedia
-	var news entities.News
+	var newsMediaList = make([]entities.NewsMedia, 0)
 
-	rows, errNews := db.Debug().Raw(`
-	SELECT n.id, n.title, n.caption,
-		   p.fullname AS user_name,
-	       n.user_id, n.created_at
-	FROM news n
-	INNER JOIN profiles p ON n.user_id = p.user_id
-	INNER JOIN users u ON u.uid = p.user_id
-	WHERE n.id = ?`, id).Rows()
+	// Fetch the news
+	row := db.Debug().Raw(`
+		SELECT n.id, n.title, n.caption,
+		       p.fullname AS user_name,
+		       n.user_id, n.created_at
+		FROM news n
+		INNER JOIN profiles p ON n.user_id = p.user_id
+		INNER JOIN users u ON u.uid = p.user_id
+		WHERE n.id = ?`, id).Row()
 
-	if errNews != nil {
-		helper.Logger("error", "In Server: "+errNews.Error())
-		return nil, errors.New(errNews.Error())
+	err := row.Scan(&news.Id, &news.Title, &news.Caption, &news.UserName, &news.UserId, &news.CreatedAt)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return map[string]any{
+				"data": nil,
+			}, nil
+		}
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, err
 	}
 
-	for rows.Next() {
-		errNewsRows := db.ScanRows(rows, &news)
+	// Fetch media
+	rowsNewsMedia, errNewsMediaQuery := db.Debug().Raw(`
+		SELECT id, path FROM news_medias WHERE news_id = ?`, news.Id).Rows()
 
-		if errNewsRows != nil {
-			helper.Logger("error", "In Server: "+errNewsRows.Error())
-			return nil, errors.New(errNewsRows.Error())
+	if errNewsMediaQuery != nil {
+		helper.Logger("error", "In Server: "+errNewsMediaQuery.Error())
+		return nil, errNewsMediaQuery
+	}
+	defer rowsNewsMedia.Close()
+
+	for rowsNewsMedia.Next() {
+		errScanRows := db.ScanRows(rowsNewsMedia, &newsMedia)
+		if errScanRows != nil {
+			helper.Logger("error", "In Server: "+errScanRows.Error())
+			return nil, errScanRows
 		}
 
-		// # ----- news media ----- # //
+		newsMediaAssign.Id = newsMedia.Id
+		newsMediaAssign.Path = newsMedia.Path
+		newsMediaList = append(newsMediaList, newsMediaAssign)
+	}
 
-		var dataNewsMedia = make([]entities.NewsMedia, 0)
-
-		rowsNewsMedia, errNewsMediaQuery := db.Debug().Raw(`SELECT id, path 
-			FROM news_medias 
-			WHERE news_id = '` + news.Id + `'`).Rows()
-
-		if errNewsMediaQuery != nil {
-			helper.Logger("error", "In Server: "+errNewsMediaQuery.Error())
-			return nil, errors.New(errNewsMediaQuery.Error())
-		}
-
-		for rowsNewsMedia.Next() {
-			errScanRows := db.ScanRows(rowsNewsMedia, &newsMedia)
-
-			if errScanRows != nil {
-				helper.Logger("error", "In Server: "+errScanRows.Error())
-				return nil, errors.New(errScanRows.Error())
-			}
-
-			newsMediaAssign.Id = newsMedia.Id
-			newsMediaAssign.Path = newsMedia.Path
-
-			dataNewsMedia = append(dataNewsMedia, newsMediaAssign)
-		}
-
-		// # CLOSE ----- news media ----- # //
-
-		appendNewsAssign = append(appendNewsAssign, entities.NewsResponse{
-			Id:        news.Id,
-			Title:     news.Title,
-			Caption:   news.Caption,
-			Media:     dataNewsMedia,
-			CreatedAt: news.CreatedAt,
-			User: entities.NewsUser{
-				Id:   news.UserId,
-				Name: news.UserName,
-			},
-		})
+	// Prepare response
+	response := entities.NewsResponse{
+		Id:        news.Id,
+		Title:     news.Title,
+		Caption:   news.Caption,
+		Media:     newsMediaList,
+		CreatedAt: news.CreatedAt,
+		User: entities.NewsUser{
+			Id:   news.UserId,
+			Name: news.UserName,
+		},
 	}
 
 	return map[string]any{
-		"data": &appendNewsAssign[0],
+		"data": response,
 	}, nil
 }
 

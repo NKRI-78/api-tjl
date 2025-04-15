@@ -647,11 +647,12 @@ func AdminListApplyJob() (map[string]any, error) {
 }
 
 func JobList(userId, search, salary, country, position string) (map[string]any, error) {
-	var jobs entities.JobListQuery
+	var job entities.JobListQuery
 	var jobFavourite []entities.JobFavourite
+	var jobSkillCategory []entities.JobSkillCategory
 	var dataJob = make([]entities.JobList, 0)
 
-	query := `SELECT j.uid AS id, j.title, j.caption, j.salary, 
+	query := `SELECT j.uid AS id, j.title, j.caption, j.salary, j.worker_count,
 	jc.uid as cat_id,
 	jc.name AS cat_name, 
 	p.id AS place_id,
@@ -659,6 +660,9 @@ func JobList(userId, search, salary, country, position string) (map[string]any, 
 	p.currency AS place_currency,
 	p.kurs AS place_kurs,
 	p.info AS place_info,
+	c.uid AS company_id,
+	c.logo AS company_logo,
+	c.name AS company_name,
 	up.user_id,
 	up.avatar AS user_avatar,
 	up.fullname AS user_name,
@@ -667,6 +671,7 @@ func JobList(userId, search, salary, country, position string) (map[string]any, 
 	(j.salary * p.kurs) AS salary_idr
 	FROM jobs j
 	INNER JOIN job_categories jc ON jc.uid = j.cat_id
+	INNER JOIN companies c ON c.uid = j.company_id 
 	INNER JOIN places p ON p.id = j.place_id
 	INNER JOIN profiles up ON up.user_id = j.user_id
 	WHERE p.name LIKE '%` + country + `%'
@@ -690,7 +695,7 @@ func JobList(userId, search, salary, country, position string) (map[string]any, 
 	defer rows.Close()
 
 	for rows.Next() {
-		errJobRows := db.ScanRows(rows, &jobs)
+		errJobRows := db.ScanRows(rows, &job)
 
 		if errJobRows != nil {
 			helper.Logger("error", "In Server: "+errJobRows.Error())
@@ -698,7 +703,7 @@ func JobList(userId, search, salary, country, position string) (map[string]any, 
 		}
 
 		bookmarkQuery := `SELECT job_id, user_id FROM job_favourites WHERE user_id = ? AND job_id = ?`
-		errBookmark := db.Debug().Raw(bookmarkQuery, userId, jobs.Id).Scan(&jobFavourite).Error
+		errBookmark := db.Debug().Raw(bookmarkQuery, userId, job.Id).Scan(&jobFavourite).Error
 
 		if errBookmark != nil {
 			helper.Logger("error", "In Server: "+errBookmark.Error())
@@ -708,32 +713,50 @@ func JobList(userId, search, salary, country, position string) (map[string]any, 
 		isJobFavouriteExist := len(jobFavourite)
 		bookmark := isJobFavouriteExist == 1
 
-		salaryIdr := helper.FormatIDR(jobs.Salary * jobs.PlaceKurs)
+		salaryIdr := helper.FormatIDR(job.Salary * job.PlaceKurs)
+
+		jobSkillsQuery := `SELECT jsc.uid AS id, jsc.name
+		FROM job_skills js 
+		INNER JOIN job_skill_categories jsc ON jsc.uid = js.cat_id
+		WHERE js.job_id = ?`
+		errJobSkill := db.Debug().Raw(jobSkillsQuery, job.Id).Scan(&jobSkillCategory).Error
+
+		if errJobSkill != nil {
+			helper.Logger("error", "In Server: "+errJobSkill.Error())
+			return nil, errors.New(errJobSkill.Error())
+		}
 
 		dataJob = append(dataJob, entities.JobList{
-			Id:        jobs.Id,
-			Title:     jobs.Title,
-			Caption:   jobs.Caption,
-			Salary:    int(jobs.Salary),
-			SalaryIDR: salaryIdr,
-			Bookmark:  bookmark,
+			Id:      job.Id,
+			Title:   job.Title,
+			Caption: job.Caption,
+			Skills:  jobSkillCategory,
+			Company: entities.JobCompany{
+				Id:   job.CompanyId,
+				Logo: job.CompanyLogo,
+				Name: job.CompanyName,
+			},
+			WorkerCount: job.WorkerCount,
+			Salary:      int(job.Salary),
+			SalaryIDR:   salaryIdr,
+			Bookmark:    bookmark,
 			JobCategory: entities.JobCategory{
-				Id:   jobs.CatId,
-				Name: jobs.CatName,
+				Id:   job.CatId,
+				Name: job.CatName,
 			},
 			JobPlace: entities.JobPlace{
-				Id:       jobs.PlaceId,
-				Name:     jobs.PlaceName,
-				Currency: jobs.PlaceCurrency,
-				Kurs:     int(jobs.PlaceKurs),
-				Info:     jobs.PlaceInfo,
+				Id:       job.PlaceId,
+				Name:     job.PlaceName,
+				Currency: job.PlaceCurrency,
+				Kurs:     int(job.PlaceKurs),
+				Info:     job.PlaceInfo,
 			},
 			Author: entities.AuthorJobUser{
-				Id:     jobs.UserId,
-				Avatar: jobs.UserAvatar,
-				Name:   jobs.UserName,
+				Id:     job.UserId,
+				Avatar: job.UserAvatar,
+				Name:   job.UserName,
 			},
-			Created: jobs.CreatedAt.Format("2006-01-02 15:04:05"),
+			Created: job.CreatedAt.Format("2006-01-02 15:04:05"),
 		})
 	}
 
