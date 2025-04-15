@@ -206,6 +206,11 @@ type CandidatePlaceQuery struct {
 	SubdistrictName string `json:"subdistrict_name"`
 }
 
+type CandidateDocumentQuery struct {
+	Document string `json:"document"`
+	Path     string `json:"path"`
+}
+
 type AdminListApplyJob struct {
 	Id          string        `json:"id"`
 	Title       string        `json:"title"`
@@ -230,6 +235,7 @@ type Candidate struct {
 	CandidateLanguage []CandidateLanguage `json:"languages"`
 	CandidateWork     []CandidateWork     `json:"works"`
 	CandidatePlace    []CandidatePlace    `json:"places"`
+	CandidateDoc      []CandidateDocument `json:"documents"`
 }
 
 type CandidateExercise struct {
@@ -274,6 +280,11 @@ type CandidatePlace struct {
 	CityName        string `json:"city"`
 	DistrictName    string `json:"district"`
 	SubdistrictName string `json:"subdistrict"`
+}
+
+type CandidateDocument struct {
+	Document string `json:"document"`
+	Path     string `json:"path"`
 }
 
 type JobSkillCategory struct {
