@@ -35,6 +35,7 @@ func JwtAuthentication(next http.Handler) http.Handler {
 			"/api/v1/news",
 			"/api/v1/job-categories",
 			"/api/v1/update-email",
+			"/api/v1/forgot-password",
 			"/api/v1/banner",
 			"/api/v1/job",
 			"/api/v1/job-places",

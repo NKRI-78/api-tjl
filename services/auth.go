@@ -12,6 +12,39 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+func ForgotPassword(fp *entities.ForgotPassword) (map[string]any, error) {
+	users := []entities.ForgotPassword{}
+
+	err := db.Debug().Raw(`SELECT email FROM users WHERE email = ?`, fp.Email).Scan(&users).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	isUserExist := len(users)
+
+	if isUserExist == 0 {
+		return nil, errors.New("USER_NOT_FOUND")
+	}
+
+	hashedPassword, errHashedPassword := helper.Hash(fp.NewPassword)
+
+	if errHashedPassword != nil {
+		helper.Logger("error", "In Server: "+errHashedPassword.Error())
+		return nil, errHashedPassword
+	}
+
+	errUpdate := db.Debug().Exec(`UPDATE users SET password = ? WHERE email = ?`, hashedPassword, fp.Email).Error
+
+	if errUpdate != nil {
+		helper.Logger("error", "In Server: "+errUpdate.Error())
+		return nil, errUpdate
+	}
+
+	return map[string]any{}, nil
+}
+
 func UpdateEmail(ue *models.UpdateEmail) (map[string]any, error) {
 	users := []entities.CheckAccount{}
 
@@ -50,7 +83,6 @@ func UpdateEmail(ue *models.UpdateEmail) (map[string]any, error) {
 func VerifyOtp(u *models.User) (map[string]any, error) {
 	var user entities.UserOtp
 
-	// Gunakan parameterized query untuk mencegah SQL Injection
 	err := db.Debug().Raw(`
 		SELECT uid, enabled, created_at 
 		FROM users 
@@ -73,7 +105,6 @@ func VerifyOtp(u *models.User) (map[string]any, error) {
 		return nil, errors.New("OTP_IS_EXPIRED")
 	}
 
-	// Update status akun dengan parameterized query
 	errUpdate := db.Debug().Exec(`
 		UPDATE users SET enabled = 1, email_active_date = NOW() 
 		WHERE uid = ?`, user.Uid).Error
@@ -83,7 +114,6 @@ func VerifyOtp(u *models.User) (map[string]any, error) {
 		return nil, errUpdate
 	}
 
-	// Buat token setelah akun diaktifkan
 	token, err := middleware.CreateToken(user.Uid)
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
