@@ -4,6 +4,16 @@ import (
 	"time"
 )
 
+type AdminListUser struct {
+	Id        string    `json:"id"`
+	Avatar    string    `json:"avatar"`
+	Fullname  string    `json:"fullname"`
+	Email     string    `json:"email"`
+	Phone     string    `json:"phone"`
+	Role      string    `json:"role"`
+	CreatedAt time.Time `json:"created_at"`
+}
+
 type Biodata struct {
 	Personal    ProfileFormBiodata     `json:"personal"`
 	Address     ProfileFormPlace       `json:"address"`

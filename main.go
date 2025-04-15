@@ -79,6 +79,9 @@ func main() {
 	// Auth Admin
 	router.Handle("/api/v1/login-admin", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.LoginAdmin))).Methods("POST")
 
+	// Admin User
+	router.Handle("/api/v1/admin/list/user", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.AdminListUser))).Methods("GET")
+
 	// Branch
 	router.HandleFunc("/api/v1/branch", controllers.Branch).Methods("GET")
 
