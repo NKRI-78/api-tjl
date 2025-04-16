@@ -148,11 +148,19 @@ func main() {
 	router.HandleFunc("/api/v1/job", controllers.JobList).Methods("GET")
 	router.HandleFunc("/api/v1/job-detail/{id}", controllers.JobDetail).Methods("GET")
 	router.HandleFunc("/api/v1/job-store", controllers.JobStore).Methods("POST")
+	router.HandleFunc("/api/v1/job-skills-category-list", controllers.JobSkillCategoryList).Methods("GET")
+	router.HandleFunc("/api/v1/job-skills-category-store", controllers.JobSkillCategoryStore).Methods("POST")
 	router.HandleFunc("/api/v1/job-update", controllers.JobUpdate).Methods("PUT")
 	router.HandleFunc("/api/v1/job-delete", controllers.JobDelete).Methods("DELETE")
 	router.HandleFunc("/api/v1/job-favourite", controllers.JobFavourite).Methods("POST")
 	router.HandleFunc("/api/v1/job-categories", controllers.JobCategory).Methods("GET")
 	router.HandleFunc("/api/v1/job-places", controllers.JobPlace).Methods("GET")
+
+	// Jobs Category
+	router.HandleFunc("/api/v1/job-category-store", controllers.JobCategoryStore).Methods("POST")
+	router.HandleFunc("/api/v1/job-category-update", controllers.JobCategoryUpdate).Methods("PUT")
+	router.HandleFunc("/api/v1/job-category-delete", controllers.JobCategoryDelete).Methods("DELETE")
+	router.HandleFunc("/api/v1/job-category-count", controllers.JobCategoryCount).Methods("GET")
 
 	// Role
 	router.HandleFunc("/api/v1/role/list", controllers.RoleList).Methods("GET")
@@ -162,12 +170,6 @@ func main() {
 	router.HandleFunc("/api/v1/icons/store", controllers.IconStore).Methods("POST")
 	router.HandleFunc("/api/v1/icons/update", controllers.IconUpdate).Methods("PUT")
 	router.HandleFunc("/api/v1/icons/delete", controllers.IconDelete).Methods("DELETE")
-
-	// Jobs Category
-	router.HandleFunc("/api/v1/job-category-store", controllers.JobCategoryStore).Methods("POST")
-	router.HandleFunc("/api/v1/job-category-update", controllers.JobCategoryUpdate).Methods("PUT")
-	router.HandleFunc("/api/v1/job-category-delete", controllers.JobCategoryDelete).Methods("DELETE")
-	router.HandleFunc("/api/v1/job-category-count", controllers.JobCategoryCount).Methods("GET")
 
 	// Language
 	router.HandleFunc("/api/v1/language", controllers.Language).Methods("GET")

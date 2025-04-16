@@ -1003,6 +1003,37 @@ func JobStore(j *models.JobStore) (map[string]any, error) {
 	return map[string]any{}, nil
 }
 
+func JobSkillCategoryList() (map[string]any, error) {
+	jobSkillCategoryList := []entities.JobSkillCategoryList{}
+
+	queryJobSkillCategory := `SELECT uid AS id, name FROM job_skill_categories`
+
+	errCheckCat := db.Debug().Raw(queryJobSkillCategory).Scan(&jobSkillCategoryList).Error
+
+	if errCheckCat != nil {
+		helper.Logger("error", "In Server: "+errCheckCat.Error())
+		return nil, errors.New(errCheckCat.Error())
+	}
+
+	return map[string]any{
+		"data": jobSkillCategoryList,
+	}, nil
+}
+
+func JobSkillCategoryStore(jscs *entities.JobSkillCategoryStore) (map[string]any, error) {
+	query := `INSERT INTO job_skills (job_id, cat_id) 
+	VALUES (?, ?)`
+
+	err := db.Debug().Exec(query, jscs.JobId, jscs.CatId).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
 func JobUpdate(j *models.JobUpdate) (map[string]any, error) {
 
 	categories := []entities.JobCategory{}

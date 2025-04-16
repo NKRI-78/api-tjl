@@ -114,7 +114,6 @@ type AssignDocumentApplyJob struct {
 	Path       string `json:"path"`
 }
 
-
 type JobListQuery struct {
 	Id            string    `json:"id"`
 	Title         string    `json:"title"`
@@ -354,6 +353,16 @@ type AuthorJobUser struct {
 	Id     string `json:"id"`
 	Avatar string `json:"avatar"`
 	Name   string `json:"fullname"`
+}
+
+type JobSkillCategoryList struct {
+	Id   string `json:"id"`
+	Name string `json:"name"`
+}
+
+type JobSkillCategoryStore struct {
+	JobId string `json:"job_id"`
+	CatId string `json:"cat_id"`
 }
 
 type JobCategoryCount struct {
