@@ -8,6 +8,7 @@ import (
 	service "superapps/services"
 
 	"github.com/dgrijalva/jwt-go"
+	uuid "github.com/satori/go.uuid"
 )
 
 func CommentStore(w http.ResponseWriter, r *http.Request) {
@@ -29,9 +30,11 @@ func CommentStore(w http.ResponseWriter, r *http.Request) {
 
 	userId, _ := claims["id"].(string)
 
+	Id := uuid.NewV4().String()
 	ForumId := data.ForumId
 	Comment := data.Comment
 
+	data.Id = Id
 	data.UserId = userId
 
 	if ForumId == "" {
