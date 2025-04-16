@@ -20,6 +20,7 @@ func JobStore(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	Id := data.Id
 	Title := data.Title
 	Caption := data.Caption
 	Salary := data.Salary
@@ -35,6 +36,12 @@ func JobStore(w http.ResponseWriter, r *http.Request) {
 	// } else {
 	// 	IsDraft = false
 	// }
+
+	if Id == "" {
+		helper.Logger("error", "In Server: id is required")
+		helper.Response(w, 400, true, "id is required", map[string]any{})
+		return
+	}
 
 	if Title == "" {
 		helper.Logger("error", "In Server: title is required")
