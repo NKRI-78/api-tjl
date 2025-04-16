@@ -1,5 +1,7 @@
 package entities
 
+import "time"
+
 type ForumResponse struct {
 	Id           string         `json:"id"`
 	Title        string         `json:"title"`
@@ -11,20 +13,22 @@ type ForumResponse struct {
 	LikeCount    int            `json:"like_count"`
 	ForumType    ForumType      `json:"type"`
 	User         ForumUser      `json:"user"`
+	CreatedAt    time.Time      `json:"created_at"`
 }
 
 type Forum struct {
-	Uid           string `json:"uid"`
-	Id            string `json:"id"`
-	Title         string `json:"title"`
-	Caption       string `json:"caption"`
-	Avatar        string `json:"avatar"`
-	Fullname      string `json:"fullname"`
-	Email         string `json:"email"`
-	Phone         string `json:"phone"`
-	ForumTypeId   int    `json:"forum_type_id"`
-	ForumTypeName string `json:"forum_type_name"`
-	UserId        string `json:"user_id"`
+	Uid           string    `json:"uid"`
+	Id            string    `json:"id"`
+	Title         string    `json:"title"`
+	Caption       string    `json:"caption"`
+	Avatar        string    `json:"avatar"`
+	Fullname      string    `json:"fullname"`
+	Email         string    `json:"email"`
+	Phone         string    `json:"phone"`
+	ForumTypeId   int       `json:"forum_type_id"`
+	ForumTypeName string    `json:"forum_type_name"`
+	UserId        string    `json:"user_id"`
+	CreatedAt     time.Time `json:"created_at"`
 }
 
 type ForumType struct {

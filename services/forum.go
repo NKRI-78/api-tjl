@@ -257,6 +257,7 @@ func ForumList(search, page, limit string) (map[string]any, error) {
 				Email:    forum.Email,
 				Phone:    forum.Phone,
 			},
+			CreatedAt: forum.CreatedAt,
 		})
 	}
 
