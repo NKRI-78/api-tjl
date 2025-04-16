@@ -19,6 +19,14 @@ type AdminListUser struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
+type RegisterUserBranch struct {
+	Fullname string `json:"fullname"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	BranchId string `json:"branch_id"`
+	RoleId   string `json:"role_id"`
+}
+
 type Biodata struct {
 	Personal    ProfileFormBiodata     `json:"personal"`
 	Address     ProfileFormPlace       `json:"address"`

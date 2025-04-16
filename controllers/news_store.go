@@ -12,6 +12,8 @@ import (
 
 func NewsStore(w http.ResponseWriter, r *http.Request) {
 
+	newsStore := &entities.NewsStoreResponse{}
+
 	data := &entities.NewsStore{}
 
 	err := json.NewDecoder(r.Body).Decode(data)
@@ -54,6 +56,12 @@ func NewsStore(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	Id := result["id"].(int64)
+
+	newsStore.Id = Id
+	newsStore.Title = Title
+	newsStore.Caption = Desc
+
 	helper.Logger("info", "News Store success")
-	helper.Response(w, http.StatusOK, false, "Successfully", result)
+	helper.Response(w, http.StatusOK, false, "Successfully", newsStore)
 }

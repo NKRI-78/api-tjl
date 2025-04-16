@@ -30,6 +30,12 @@ type NewsStore struct {
 	UserId  string `json:"user_id"`
 }
 
+type NewsStoreResponse struct {
+	Id      int64  `json:"id"`
+	Title   string `json:"title"`
+	Caption string `json:"caption"`
+}
+
 type NewsUpdate struct {
 	Id      string `json:"id"`
 	Title   string `json:"title"`
