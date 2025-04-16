@@ -12,14 +12,61 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+func RoleList() (map[string]any, error) {
+	var userRole []entities.UserRoles
+
+	query := `SELECT id, name FROM user_roles`
+
+	err := db.Debug().Raw(query).Scan(&userRole).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{
+		"data": userRole,
+	}, nil
+}
+
 func RegisterUserBranch(rub *entities.RegisterUserBranch) (map[string]any, error) {
+	Id := uuid.NewV4().String()
 
-	// err := db.Debug().Exec(``)
+	hashedPassword, err := helper.Hash(rub.Password)
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, err
+	}
 
-	// if err != nil {
-	// 	helper.Logger("error", "In Server: "+err.Error())
-	// 	return nil, errors.New(err.Error())
-	// }
+	// INSERT USER
+	queryInsertUser := `INSERT INTO users (uid, email, phone, password, role, enabled) VALUES (?, ?, ?, ?, ?, ?)`
+
+	errInsertUser := db.Debug().Exec(queryInsertUser, Id, rub.Email, rub.Phone, hashedPassword, rub.RoleId, 1).Error
+
+	if errInsertUser != nil {
+		helper.Logger("error", "In Server: "+errInsertUser.Error())
+		return nil, errors.New(errInsertUser.Error())
+	}
+
+	// INSERT PROFILE
+	queryInsertProfile := `INSERT INTO profiles (fullname, user_id) VALUES (?, ?)`
+
+	errInsertUserProfile := db.Debug().Exec(queryInsertProfile, rub.Fullname, Id).Error
+
+	if errInsertUserProfile != nil {
+		helper.Logger("error", "In Server: "+errInsertUserProfile.Error())
+		return nil, errors.New(errInsertUserProfile.Error())
+	}
+
+	// INSERT USER BRANCH
+	queryInsertUserBranch := `INSERT INTO user_branches (branch_id, user_id) VALUES (?, ?)`
+
+	errInsertUserBranch := db.Debug().Exec(queryInsertUserBranch, rub.BranchId, Id).Error
+
+	if errInsertUserBranch != nil {
+		helper.Logger("error", "In Server: "+errInsertUserBranch.Error())
+		return nil, errors.New(errInsertUserBranch.Error())
+	}
 
 	return map[string]any{}, nil
 }

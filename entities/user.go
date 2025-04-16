@@ -22,6 +22,7 @@ type AdminListUser struct {
 type RegisterUserBranch struct {
 	Fullname string `json:"fullname"`
 	Email    string `json:"email"`
+	Phone    string `json:"phone"`
 	Password string `json:"password"`
 	BranchId string `json:"branch_id"`
 	RoleId   string `json:"role_id"`
@@ -67,6 +68,11 @@ type UserAdmin struct {
 	Val      string `json:"val"`
 	Role     string `json:"role"`
 	Password string `json:"password"`
+}
+
+type UserRoles struct {
+	Id   int    `json:"id"`
+	Name string `json:"name"`
 }
 
 type AdminResponse struct {

@@ -114,6 +114,7 @@ type AssignDocumentApplyJob struct {
 	Path       string `json:"path"`
 }
 
+
 type JobListQuery struct {
 	Id            string    `json:"id"`
 	Title         string    `json:"title"`
