@@ -117,7 +117,15 @@ type ForumStore struct {
 }
 
 type CommentStore struct {
+	Id      string `json:"id"`
 	ForumId string `json:"forum_id"`
 	Comment string `json:"comment"`
 	UserId  string `json:"user_id"`
+}
+
+type ReplyStore struct {
+	Id        string `json:"id"`
+	CommentId string `json:"comment_id"`
+	Reply     string `json:"reply"`
+	UserId    string `json:"user_id"`
 }
