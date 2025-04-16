@@ -939,6 +939,8 @@ func JobPlace() (map[string]any, error) {
 
 func JobStore(j *models.JobStore) (map[string]any, error) {
 
+	j.Id = uuid.NewV4().String()
+
 	users := []entities.User{}
 	categories := []entities.JobCategory{}
 	places := []entities.JobPlace{}
@@ -988,7 +990,7 @@ func JobStore(j *models.JobStore) (map[string]any, error) {
 		return nil, errors.New("PLACE_NOT_FOUND")
 	}
 
-	query := `INSERT INTO jobs (uid, title, caption, salary, worker_count, cat_id, company_id, place_id, user_id, is_draft) 
+	query := `INSERT INTO jobs (uid, title, caption, salary, worker_count, cat_id, company_id, place_id, user_id, is_draft)
 	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 
 	err := db.Debug().Exec(query, j.Id, j.Title, j.Caption, j.Salary, j.WorkerCount, j.CatId, j.CompanyId, j.PlaceId, j.UserId, j.IsDraft).Error
@@ -996,6 +998,29 @@ func JobStore(j *models.JobStore) (map[string]any, error) {
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
 		return nil, errors.New(err.Error())
+	}
+
+	for _, skill := range j.Skills {
+		var JobCatId = uuid.NewV4().String()
+
+		queryInsertJobSkillCategory := `INSERT INTO job_skill_categories (uid, name) VALUES (?, ?)`
+
+		errInsertJobSkillCategory := db.Debug().Exec(queryInsertJobSkillCategory, JobCatId, skill).Error
+
+		if errInsertJobSkillCategory != nil {
+			helper.Logger("error", "In Server: "+errInsertJobSkillCategory.Error())
+			return nil, errors.New(errInsertJobSkillCategory.Error())
+		}
+
+		queryInsertJobSkills := `INSERT INTO job_skills (job_id, cat_id)
+		VALUES (?, ?)`
+
+		errInsertJobSkills := db.Debug().Exec(queryInsertJobSkills, j.Id, JobCatId).Error
+
+		if errInsertJobSkills != nil {
+			helper.Logger("error", "In Server: "+errInsertJobSkills.Error())
+			return nil, errors.New(errInsertJobSkills.Error())
+		}
 	}
 
 	return map[string]any{}, nil
