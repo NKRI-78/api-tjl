@@ -12,6 +12,11 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+func RegisterUserBranch(rub *entities.RegisterUserBranch) (map[string]any, error) {
+	println("hello")
+	return map[string]any{}, nil
+}
+
 func ForgotPassword(fp *entities.ForgotPassword) (map[string]any, error) {
 	users := []entities.ForgotPassword{}
 
