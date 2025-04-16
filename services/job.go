@@ -988,8 +988,6 @@ func JobStore(j *models.JobStore) (map[string]any, error) {
 		return nil, errors.New("PLACE_NOT_FOUND")
 	}
 
-	j.Id = uuid.NewV4().String()
-
 	query := `INSERT INTO jobs (uid, title, caption, salary, worker_count, cat_id, company_id, place_id, user_id, is_draft) 
 	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 
