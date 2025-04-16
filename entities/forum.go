@@ -18,6 +18,7 @@ type Forum struct {
 	Id            string `json:"id"`
 	Title         string `json:"title"`
 	Caption       string `json:"caption"`
+	Avatar        string `json:"avatar"`
 	Fullname      string `json:"fullname"`
 	Email         string `json:"email"`
 	Phone         string `json:"phone"`
@@ -98,6 +99,7 @@ type ForumLikeUser struct {
 
 type ForumUser struct {
 	Id       string `json:"id"`
+	Avatar   string `json:"avatar"`
 	Fullname string `json:"fullname"`
 	Email    string `json:"email"`
 	Phone    string `json:"phone"`

@@ -56,6 +56,7 @@ func ForumList(search, page, limit string) (map[string]any, error) {
 
 	rows, errForum := db.Debug().Raw(`SELECT f.uid AS id, f.title, f.caption,
 	p.fullname, 
+	p.avatar,
 	p.user_id,
 	u.email,
 	u.phone,
@@ -251,6 +252,7 @@ func ForumList(search, page, limit string) (map[string]any, error) {
 			},
 			User: entities.ForumUser{
 				Id:       forum.UserId,
+				Avatar:   forum.Avatar,
 				Fullname: forum.Fullname,
 				Email:    forum.Email,
 				Phone:    forum.Phone,
