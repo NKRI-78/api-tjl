@@ -13,7 +13,14 @@ import (
 )
 
 func RegisterUserBranch(rub *entities.RegisterUserBranch) (map[string]any, error) {
-	println("hello")
+
+	// err := db.Debug().Exec(``)
+
+	// if err != nil {
+	// 	helper.Logger("error", "In Server: "+err.Error())
+	// 	return nil, errors.New(err.Error())
+	// }
+
 	return map[string]any{}, nil
 }
 
