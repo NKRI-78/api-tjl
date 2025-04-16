@@ -154,6 +154,9 @@ func main() {
 	router.HandleFunc("/api/v1/job-categories", controllers.JobCategory).Methods("GET")
 	router.HandleFunc("/api/v1/job-places", controllers.JobPlace).Methods("GET")
 
+	// Role
+	router.HandleFunc("/api/v1/role/list", controllers.RoleList).Methods("GET")
+
 	// Icons
 	router.HandleFunc("/api/v1/icons", controllers.IconList).Methods("GET")
 	router.HandleFunc("/api/v1/icons/store", controllers.IconStore).Methods("POST")
