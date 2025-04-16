@@ -71,6 +71,9 @@ func main() {
 	router.HandleFunc("/api/v1/country-delete", controllers.CountryDelete).Methods("DELETE")
 	router.HandleFunc("/api/v1/country-update", controllers.CountryUpdate).Methods("PUT")
 
+	// Register User Branch
+	// router.Handle("/api/v1/admin/register-user-branch", controllers.RegisterUserBranch).Methods("POST")
+
 	// Auth
 	router.Handle("/api/v1/login", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.Login))).Methods("POST")
 	router.Handle("/api/v1/register", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.Register))).Methods("POST")

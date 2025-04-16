@@ -6,6 +6,7 @@ import (
 
 type Branch entities.Branch
 type User entities.User
+type RegisterUserBranch entities.RegisterUserBranch
 type UserAdmin entities.UserAdmin
 type UserLogin entities.UserLogin
 type UserOtp entities.UserOtp

@@ -192,17 +192,22 @@ func NewsDetail(id string) (map[string]any, error) {
 }
 
 func NewsStore(n *entities.NewsStore) (map[string]any, error) {
-	query := `INSERT INTO news (title, caption, user_id) 
-	VALUES (?, ?, ?)`
+	query := `INSERT INTO news (title, caption, user_id) VALUES (?, ?, ?)`
 
-	err := db.Debug().Exec(query, n.Title, n.Caption, n.UserId).Error
+	sqlDB := db.DB()
 
+	result, err := sqlDB.Exec(query, n.Title, n.Caption, n.UserId)
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
-		return nil, errors.New(err.Error())
+		return nil, err
 	}
 
-	return map[string]any{}, nil
+	lastID, err := result.LastInsertId()
+	if err != nil {
+		return nil, err
+	}
+
+	return map[string]any{"id": lastID}, nil
 }
 
 func NewsUpdate(n *entities.NewsUpdate) (map[string]any, error) {
