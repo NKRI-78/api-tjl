@@ -389,7 +389,7 @@ type JobSkillCategoryList struct {
 }
 
 type JobSkillCategoryDelete struct {
-	Id     string   `json:"id"`
+	JobId  string   `json:"job_id"`
 	Skills []string `json:"skills"`
 }
 
