@@ -355,6 +355,7 @@ func AdminListApplyJob() (map[string]any, error) {
 	var candidateWork entities.CandidateWorkQuery
 	var candidatePlace entities.CandidatePlaceQuery
 	var candidateDoc entities.CandidateDocumentQuery
+	var candidateEdu entities.CandidateEducationQuery
 
 	var jobFavourite []entities.JobFavourite
 
@@ -363,6 +364,8 @@ func AdminListApplyJob() (map[string]any, error) {
 	query := `SELECT aj.uid AS id, j.title, j.caption, j.salary,
 	aj.user_id AS user_id_candidate,
 	pc.fullname AS user_name_candidate,
+	pc.avatar AS user_avatar_candidate,
+	upc.email AS user_email_candidate,
 	jc.uid as cat_id,
 	jc.name AS cat_name, 
 	p.id AS place_id,
@@ -387,6 +390,7 @@ func AdminListApplyJob() (map[string]any, error) {
 	INNER JOIN places p ON p.id = j.place_id
 	INNER JOIN profiles up ON up.user_id = j.user_id
 	INNER JOIN profiles pc ON pc.user_id = aj.user_id
+	INNER JOIN users upc ON upc.uid = pc.user_id 
 	`
 	rows, err := db.Debug().Raw(query).Rows()
 
@@ -572,7 +576,8 @@ func AdminListApplyJob() (map[string]any, error) {
 		p.name AS province_name, 
 		r.name AS city_name, 
 		d.name AS district_name, 
-		s.name AS subdistrict_name
+		s.name AS subdistrict_name,
+		fp.detail_address
 		FROM form_places fp 
 		INNER JOIN provinces p ON p.id = fp.province_id
 		INNER JOIN regencies r ON r.id = fp.city_id
@@ -600,6 +605,7 @@ func AdminListApplyJob() (map[string]any, error) {
 				CityName:        candidatePlace.CityName,
 				DistrictName:    candidatePlace.DistrictName,
 				SubdistrictName: candidatePlace.SubdistrictName,
+				DetailAddress:   candidatePlace.DetailAddress,
 			})
 		}
 
@@ -638,6 +644,41 @@ func AdminListApplyJob() (map[string]any, error) {
 
 		// End Candidate Document
 
+		// Candidate Education
+
+		dataCandidateEducation := make([]entities.CandidateEducation, 0)
+
+		queryCandidateEducation := `SELECT education_level AS edu, major, school_or_college, start_month, start_year, end_month, end_year 
+		FROM form_educations WHERE user_id = ?`
+
+		rowsCandidateEducation, errCandidateEducation := db.Debug().Raw(queryCandidateEducation, job.UserIdCandidate).Rows()
+
+		if errCandidateEducation != nil {
+			helper.Logger("error", "In Server: "+errCandidateEducation.Error())
+		}
+		defer rowsCandidateEducation.Close()
+
+		for rowsCandidateEducation.Next() {
+			errCandidateEducationRows := db.ScanRows(rowsCandidateEducation, &candidateEdu)
+
+			if errCandidateEducationRows != nil {
+				helper.Logger("error", "In Server: "+errCandidateEducationRows.Error())
+				return nil, errors.New(errCandidateEducationRows.Error())
+			}
+
+			dataCandidateEducation = append(dataCandidateEducation, entities.CandidateEducation{
+				EducationalLevel: candidateEdu.Edu,
+				Major:            candidateEdu.Major,
+				SchoolOrCollege:  candidateEdu.SchoolOrCollege,
+				StartMonth:       candidateEdu.StartMonth,
+				EndMonth:         candidateEdu.EndMonth,
+				StartYear:        candidateEdu.StartYear,
+				EndYear:          candidateEdu.EndYear,
+			})
+		}
+
+		// End Candidate Education
+
 		dataJob = append(dataJob, entities.AdminListApplyJob{
 			Id:        job.Id,
 			Title:     job.Title,
@@ -652,6 +693,8 @@ func AdminListApplyJob() (map[string]any, error) {
 			},
 			Candidate: entities.Candidate{
 				Id:                job.UserIdCandidate,
+				Email:             job.UserEmailCandidate,
+				Avatar:            job.UserAvatar,
 				Name:              job.UserNameCandidate,
 				CandidateExercise: dataCandidateExercise,
 				CandidateBiodata:  dataCandidateBiodata,
@@ -659,6 +702,7 @@ func AdminListApplyJob() (map[string]any, error) {
 				CandidateWork:     dataCandidateWork,
 				CandidatePlace:    dataCandidatePlace,
 				CandidateDoc:      dataCandidateDocument,
+				CandidateEdu:      dataCandidateEducation,
 			},
 			Status: entities.JobStatus{
 				Id:   job.JobStatusId,
@@ -1026,37 +1070,6 @@ func JobStore(j *models.JobStore) (map[string]any, error) {
 	return map[string]any{}, nil
 }
 
-func JobSkillCategoryList() (map[string]any, error) {
-	jobSkillCategoryList := []entities.JobSkillCategoryList{}
-
-	queryJobSkillCategory := `SELECT uid AS id, name FROM job_skill_categories`
-
-	errCheckCat := db.Debug().Raw(queryJobSkillCategory).Scan(&jobSkillCategoryList).Error
-
-	if errCheckCat != nil {
-		helper.Logger("error", "In Server: "+errCheckCat.Error())
-		return nil, errors.New(errCheckCat.Error())
-	}
-
-	return map[string]any{
-		"data": jobSkillCategoryList,
-	}, nil
-}
-
-func JobSkillCategoryStore(jscs *entities.JobSkillCategoryStore) (map[string]any, error) {
-	query := `INSERT INTO job_skills (job_id, cat_id) 
-	VALUES (?, ?)`
-
-	err := db.Debug().Exec(query, jscs.JobId, jscs.CatId).Error
-
-	if err != nil {
-		helper.Logger("error", "In Server: "+err.Error())
-		return nil, errors.New(err.Error())
-	}
-
-	return map[string]any{}, nil
-}
-
 func JobUpdate(j *models.JobUpdate) (map[string]any, error) {
 
 	categories := []entities.JobCategory{}
@@ -1096,6 +1109,60 @@ func JobUpdate(j *models.JobUpdate) (map[string]any, error) {
 	WHERE uid = ?`
 
 	err := db.Debug().Exec(query, j.Title, j.Caption, j.Salary, j.WorkerCount, j.CompanyId, j.PlaceId, j.CatId, j.PlaceId, j.IsDraft, j.Id).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	for _, skill := range j.Skills {
+		var JobCatId = uuid.NewV4().String()
+
+		queryInsertJobSkillCategory := `INSERT INTO job_skill_categories (uid, name) VALUES (?, ?)`
+
+		errInsertJobSkillCategory := db.Debug().Exec(queryInsertJobSkillCategory, JobCatId, skill).Error
+
+		if errInsertJobSkillCategory != nil {
+			helper.Logger("error", "In Server: "+errInsertJobSkillCategory.Error())
+			return nil, errors.New(errInsertJobSkillCategory.Error())
+		}
+
+		queryInsertJobSkills := `INSERT INTO job_skills (job_id, cat_id)
+		VALUES (?, ?)`
+
+		errInsertJobSkills := db.Debug().Exec(queryInsertJobSkills, j.Id, JobCatId).Error
+
+		if errInsertJobSkills != nil {
+			helper.Logger("error", "In Server: "+errInsertJobSkills.Error())
+			return nil, errors.New(errInsertJobSkills.Error())
+		}
+	}
+
+	return map[string]any{}, nil
+}
+
+func JobSkillCategoryList() (map[string]any, error) {
+	jobSkillCategoryList := []entities.JobSkillCategoryList{}
+
+	queryJobSkillCategory := `SELECT uid AS id, name FROM job_skill_categories`
+
+	errCheckCat := db.Debug().Raw(queryJobSkillCategory).Scan(&jobSkillCategoryList).Error
+
+	if errCheckCat != nil {
+		helper.Logger("error", "In Server: "+errCheckCat.Error())
+		return nil, errors.New(errCheckCat.Error())
+	}
+
+	return map[string]any{
+		"data": jobSkillCategoryList,
+	}, nil
+}
+
+func JobSkillCategoryStore(jscs *entities.JobSkillCategoryStore) (map[string]any, error) {
+	query := `INSERT INTO job_skills (job_id, cat_id) 
+	VALUES (?, ?)`
+
+	err := db.Debug().Exec(query, jscs.JobId, jscs.CatId).Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())

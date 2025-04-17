@@ -138,28 +138,29 @@ type JobListQuery struct {
 }
 
 type AdminListApplyJobQuery struct {
-	Id                string    `json:"id"`
-	Title             string    `json:"title"`
-	Caption           string    `json:"caption"`
-	Salary            float64   `json:"salary"`
-	CatId             string    `json:"cat_id"`
-	CatName           string    `json:"cat_name"`
-	CompanyId         string    `json:"company_id"`
-	CompanyLogo       string    `json:"company_logo"`
-	CompanyName       string    `json:"company_name"`
-	JobStatusId       int       `json:"job_status_id"`
-	JobStatusName     string    `json:"job_status_name"`
-	PlaceId           int       `json:"place_id"`
-	PlaceName         string    `json:"place_name"`
-	PlaceCurrency     string    `json:"place_currency"`
-	PlaceKurs         float64   `json:"place_kurs"`
-	PlaceInfo         string    `json:"place_info"`
-	UserIdCandidate   string    `json:"user_id_candidate"`
-	UserNameCandidate string    `json:"user_name_candidate"`
-	UserId            string    `json:"user_id"`
-	UserAvatar        string    `json:"user_avatar"`
-	UserName          string    `json:"user_name"`
-	CreatedAt         time.Time `json:"created_at"`
+	Id                 string    `json:"id"`
+	Title              string    `json:"title"`
+	Caption            string    `json:"caption"`
+	Salary             float64   `json:"salary"`
+	CatId              string    `json:"cat_id"`
+	CatName            string    `json:"cat_name"`
+	CompanyId          string    `json:"company_id"`
+	CompanyLogo        string    `json:"company_logo"`
+	CompanyName        string    `json:"company_name"`
+	JobStatusId        int       `json:"job_status_id"`
+	JobStatusName      string    `json:"job_status_name"`
+	PlaceId            int       `json:"place_id"`
+	PlaceName          string    `json:"place_name"`
+	PlaceCurrency      string    `json:"place_currency"`
+	PlaceKurs          float64   `json:"place_kurs"`
+	PlaceInfo          string    `json:"place_info"`
+	UserIdCandidate    string    `json:"user_id_candidate"`
+	UserNameCandidate  string    `json:"user_name_candidate"`
+	UserId             string    `json:"user_id"`
+	UserAvatar         string    `json:"user_avatar_candidate"`
+	UserEmailCandidate string    `json:"user_email_candidate"`
+	UserName           string    `json:"user_name"`
+	CreatedAt          time.Time `json:"created_at"`
 }
 
 type CandidateExerciseQuery struct {
@@ -199,11 +200,22 @@ type CandidateWorkQuery struct {
 	IsWork      bool   `json:"is_work"`
 }
 
+type CandidateEducationQuery struct {
+	Edu             string `json:"edu"`
+	Major           string `json:"major"`
+	SchoolOrCollege string `json:"school_or_college"`
+	StartMonth      int    `json:"start_month"`
+	StartYear       int    `json:"start_year"`
+	EndMonth        int    `json:"end_month"`
+	EndYear         int    `json:"end_year"`
+}
+
 type CandidatePlaceQuery struct {
 	ProvinceName    string `json:"province_name"`
 	CityName        string `json:"city_name"`
 	DistrictName    string `json:"district_name"`
 	SubdistrictName string `json:"subdistrict_name"`
+	DetailAddress   string `json:"detail_address"`
 }
 
 type CandidateDocumentQuery struct {
@@ -228,14 +240,17 @@ type AdminListApplyJob struct {
 }
 
 type Candidate struct {
-	Id                string              `json:"id"`
-	Name              string              `json:"name"`
-	CandidateExercise []CandidateExercise `json:"exercises"`
-	CandidateBiodata  []CandidateBiodata  `json:"biodatas"`
-	CandidateLanguage []CandidateLanguage `json:"languages"`
-	CandidateWork     []CandidateWork     `json:"works"`
-	CandidatePlace    []CandidatePlace    `json:"places"`
-	CandidateDoc      []CandidateDocument `json:"documents"`
+	Id                string               `json:"id"`
+	Avatar            string               `json:"avatar"`
+	Email             string               `json:"email"`
+	Name              string               `json:"name"`
+	CandidateExercise []CandidateExercise  `json:"exercises"`
+	CandidateBiodata  []CandidateBiodata   `json:"biodatas"`
+	CandidateLanguage []CandidateLanguage  `json:"languages"`
+	CandidateWork     []CandidateWork      `json:"works"`
+	CandidatePlace    []CandidatePlace     `json:"places"`
+	CandidateEdu      []CandidateEducation `json:"educations"`
+	CandidateDoc      []CandidateDocument  `json:"documents"`
 }
 
 type CandidateExercise struct {
@@ -280,11 +295,22 @@ type CandidatePlace struct {
 	CityName        string `json:"city"`
 	DistrictName    string `json:"district"`
 	SubdistrictName string `json:"subdistrict"`
+	DetailAddress   string `json:"detail_address"`
 }
 
 type CandidateDocument struct {
 	Document string `json:"document"`
 	Path     string `json:"path"`
+}
+
+type CandidateEducation struct {
+	EducationalLevel string `json:"education_level"`
+	Major            string `json:"major"`
+	SchoolOrCollege  string `json:"school_or_college"`
+	StartMonth       int    `json:"start_month"`
+	StartYear        int    `json:"start_year"`
+	EndMonth         int    `json:"end_month"`
+	EndYear          int    `json:"end_year"`
 }
 
 type JobSkillCategory struct {
@@ -322,7 +348,7 @@ type JobCompany struct {
 type JobStore struct {
 	Id          string   `json:"id"`
 	Title       string   `json:"title"`
-	Skills       []string `json:"skills"`
+	Skills      []string `json:"skills"`
 	Caption     string   `json:"caption"`
 	Salary      string   `json:"salary"`
 	WorkerCount int      `json:"worker_count"`
@@ -334,15 +360,16 @@ type JobStore struct {
 }
 
 type JobUpdate struct {
-	Id          string `json:"id"`
-	Title       string `json:"title"`
-	Caption     string `json:"caption"`
-	Salary      string `json:"salary"`
-	WorkerCount int    `json:"worker_count"`
-	CompanyId   string `json:"company_id"`
-	CatId       string `json:"cat_id"`
-	PlaceId     string `json:"place_id"`
-	IsDraft     string `json:"is_draft"`
+	Id          string   `json:"id"`
+	Title       string   `json:"title"`
+	Skills      []string `json:"skills"`
+	Caption     string   `json:"caption"`
+	Salary      string   `json:"salary"`
+	WorkerCount int      `json:"worker_count"`
+	CompanyId   string   `json:"company_id"`
+	CatId       string   `json:"cat_id"`
+	PlaceId     string   `json:"place_id"`
+	IsDraft     string   `json:"is_draft"`
 }
 
 type JobFavourite struct {
