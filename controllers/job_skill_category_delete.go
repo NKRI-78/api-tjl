@@ -20,9 +20,9 @@ func JobSkillCategoryDelete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if data.Id == "" {
-		helper.Logger("error", "In Server: "+err.Error())
-		helper.Response(w, 400, true, "Internal server error ("+err.Error()+")", map[string]any{})
+	if data.JobId == "" {
+		helper.Logger("error", "In Server: job_id is required")
+		helper.Response(w, 400, true, "job_id is required", map[string]any{})
 		return
 	}
 
