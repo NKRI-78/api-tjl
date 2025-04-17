@@ -9,6 +9,7 @@ type ForumResponse struct {
 	Media        []ForumMedia   `json:"medias"`
 	Comment      []ForumComment `json:"comments"`
 	Like         []ForumLike    `json:"likes"`
+	IsLiked      bool           `json:"is_liked"`
 	CommentCount int            `json:"comment_count"`
 	LikeCount    int            `json:"like_count"`
 	ForumType    ForumType      `json:"type"`
@@ -48,25 +49,32 @@ type ForumLikeQuery struct {
 	Fullname string `json:"fullname"`
 }
 
+type CheckIsLike struct {
+	IsExist bool `json:"is_exist"`
+}
+
 type ForumLike struct {
 	Id   string        `json:"id"`
 	User ForumLikeUser `json:"user"`
 }
 
 type ForumCommentQuery struct {
-	Id       string `json:"id"`
-	Comment  string `json:"comment"`
-	Avatar   string `json:"avatar"`
-	UserId   string `json:"user_id"`
-	Fullname string `json:"fullname"`
+	Id        string    `json:"id"`
+	Comment   string    `json:"comment"`
+	Avatar    string    `json:"avatar"`
+	UserId    string    `json:"user_id"`
+	Fullname  string    `json:"fullname"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 type ForumComment struct {
 	Id         string              `json:"id"`
 	Comment    string              `json:"comment"`
 	User       ForumCommentUser    `json:"user"`
+	IsLiked    bool                `json:"is_liked"`
 	Reply      []ForumCommentReply `json:"replies"`
 	ReplyCount int                 `json:"reply_count"`
+	CreatedAt  time.Time           `json:"created_At"`
 }
 
 type ForumCommentUser struct {
@@ -76,17 +84,20 @@ type ForumCommentUser struct {
 }
 
 type ForumCommentReplyQuery struct {
-	Id       string `json:"id"`
-	Reply    string `json:"reply"`
-	Avatar   string `json:"avatar"`
-	UserId   string `json:"user_id"`
-	Fullname string `json:"fullname"`
+	Id        string    `json:"id"`
+	Reply     string    `json:"reply"`
+	Avatar    string    `json:"avatar"`
+	UserId    string    `json:"user_id"`
+	Fullname  string    `json:"fullname"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 type ForumCommentReply struct {
-	Id    string                `json:"id"`
-	Reply string                `json:"reply"`
-	User  ForumCommentReplyUser `json:"user"`
+	Id        string                `json:"id"`
+	Reply     string                `json:"reply"`
+	User      ForumCommentReplyUser `json:"user"`
+	IsLiked   bool                  `json:"is_liked"`
+	CreatedAt time.Time             `json:"created_at"`
 }
 
 type ForumCommentReplyUser struct {

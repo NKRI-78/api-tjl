@@ -12,7 +12,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-func ForumList(search, page, limit string) (map[string]any, error) {
+func ForumList(userId, search, page, limit string) (map[string]any, error) {
 	url := os.Getenv("API_URL_DEV")
 
 	var allForum []models.Forum
@@ -82,6 +82,21 @@ func ForumList(search, page, limit string) (map[string]any, error) {
 		if errForumRows != nil {
 			helper.Logger("error", "In Server: "+errForumRows.Error())
 			return nil, errors.New(errForumRows.Error())
+		}
+
+		// Check Forum is Like
+
+		checkForumIsLike := []entities.CheckIsLike{}
+
+		errCheckForumIsLike := db.Debug().Raw(`SELECT EXISTS (
+			SELECT 1
+			FROM forum_likes
+			WHERE user_id = ? AND forum_id = ?
+		) AS is_exist`, userId, forum.Id).Scan(&checkForumIsLike).Error
+
+		if errCheckForumIsLike != nil {
+			helper.Logger("error", "In Server: "+errCheckForumIsLike.Error())
+			return nil, errors.New(errCheckForumIsLike.Error())
 		}
 
 		rows, errUser := db.Debug().Raw(`SELECT email, phone, fullname FROM users u 
@@ -174,7 +189,7 @@ func ForumList(search, page, limit string) (map[string]any, error) {
 
 		var dataForumComment = make([]entities.ForumComment, 0)
 
-		rows, errForumComment := db.Debug().Raw(`SELECT fc.uid AS id, p.avatar, fc.comment, p.user_id, p.fullname 
+		rows, errForumComment := db.Debug().Raw(`SELECT fc.uid AS id, fc.created_at, p.avatar, fc.comment, p.user_id, p.fullname 
 		FROM forum_comments fc
 		INNER JOIN profiles p ON p.user_id = fc.user_id
 		WHERE fc.forum_id = '` + forum.Id + `'`).Rows()
@@ -192,9 +207,24 @@ func ForumList(search, page, limit string) (map[string]any, error) {
 				return nil, errors.New(errScanRows.Error())
 			}
 
+			// Check Forum Comment is Like
+
+			checkForumCommentIsLike := []entities.CheckIsLike{}
+
+			errCheckForumCommentIsLike := db.Debug().Raw(`SELECT EXISTS (
+			SELECT 1
+			FROM forum_comment_likes
+			WHERE user_id = ? AND comment_id = ?
+			) AS is_exist`, userId, forumComment.Id).Scan(&checkForumCommentIsLike).Error
+
+			if errCheckForumCommentIsLike != nil {
+				helper.Logger("error", "In Server: "+errCheckForumCommentIsLike.Error())
+				return nil, errors.New(errCheckForumCommentIsLike.Error())
+			}
+
 			var dataForumCommentReply = make([]entities.ForumCommentReply, 0)
 
-			rows, errForumCommentReply := db.Debug().Raw(`SELECT fcr.uid AS id, fcr.reply, p.avatar, p.user_id, p.fullname 
+			rows, errForumCommentReply := db.Debug().Raw(`SELECT fcr.uid AS id, fcr.created_at, fcr.reply, p.avatar, p.user_id, p.fullname 
 			FROM forum_comment_replies fcr
 			INNER JOIN profiles p ON p.user_id = fcr.user_id
 			WHERE fcr.comment_id = '` + forumComment.Id + `'`).Rows()
@@ -207,9 +237,26 @@ func ForumList(search, page, limit string) (map[string]any, error) {
 					return nil, errors.New(errScanRows.Error())
 				}
 
+				// Check Forum Comment Reply is Like
+
+				checkForumCommentReplyIsLike := []entities.CheckIsLike{}
+
+				errCheckForumReplyCommentIsLike := db.Debug().Raw(`SELECT EXISTS (
+						SELECT 1
+						FROM forum_comment_reply_likes
+						WHERE user_id = ? AND reply_id = ?
+					) AS is_exist`, userId, forumCommentReply.Id).Scan(&checkForumCommentReplyIsLike).Error
+
+				if errCheckForumReplyCommentIsLike != nil {
+					helper.Logger("error", "In Server: "+errCheckForumReplyCommentIsLike.Error())
+					return nil, errors.New(errCheckForumReplyCommentIsLike.Error())
+				}
+
 				dataForumCommentReply = append(dataForumCommentReply, entities.ForumCommentReply{
-					Id:    forumCommentReply.Id,
-					Reply: forumCommentReply.Reply,
+					Id:        forumCommentReply.Id,
+					Reply:     forumCommentReply.Reply,
+					IsLiked:   checkForumCommentReplyIsLike[0].IsExist,
+					CreatedAt: forumCommentReply.CreatedAt,
 					User: entities.ForumCommentReplyUser{
 						Id:       forumCommentReply.Id,
 						Avatar:   forumCommentReply.Avatar,
@@ -227,6 +274,8 @@ func ForumList(search, page, limit string) (map[string]any, error) {
 			forumCommentAssign.Comment = forumComment.Comment
 			forumCommentAssign.Reply = dataForumCommentReply
 			forumCommentAssign.ReplyCount = len(dataForumCommentReply)
+			forumCommentAssign.IsLiked = checkForumCommentIsLike[0].IsExist
+			forumCommentAssign.CreatedAt = forumComment.CreatedAt
 			forumCommentAssign.User = entities.ForumCommentUser{
 				Id:       forumComment.UserId,
 				Avatar:   forumComment.Avatar,
@@ -247,6 +296,7 @@ func ForumList(search, page, limit string) (map[string]any, error) {
 			CommentCount: len(dataForumComment),
 			Like:         dataForumLike,
 			LikeCount:    len(dataForumLike),
+			IsLiked:      checkForumIsLike[0].IsExist,
 			ForumType: entities.ForumType{
 				Id:   forum.ForumTypeId,
 				Name: forum.ForumTypeName,
@@ -288,6 +338,21 @@ func ForumDetail(f *models.Forum) (map[string]any, error) {
 	var forumCommentAssign entities.ForumComment
 	var user entities.ForumUser
 	var userAssign entities.ForumUser
+
+	// Check Forum is Like
+
+	checkForumIsLike := []entities.CheckIsLike{}
+
+	errCheckForumIsLike := db.Debug().Raw(`SELECT EXISTS (
+		SELECT 1
+		FROM forum_likes
+		WHERE user_id = ? AND forum_id = ?
+	) AS is_exist`, f.UserId, f.Id).Scan(&checkForumIsLike).Error
+
+	if errCheckForumIsLike != nil {
+		helper.Logger("error", "In Server: "+errCheckForumIsLike.Error())
+		return nil, errors.New(errCheckForumIsLike.Error())
+	}
 
 	forum := []entities.Forum{}
 
@@ -408,7 +473,7 @@ func ForumDetail(f *models.Forum) (map[string]any, error) {
 
 	var dataForumComment = make([]entities.ForumComment, 0)
 
-	rows, errForumComment := db.Debug().Raw(`SELECT fc.uid AS id, p.avatar, fc.comment, p.user_id, p.fullname 
+	rows, errForumComment := db.Debug().Raw(`SELECT fc.uid AS id, fc.created_at, p.avatar, fc.comment, p.user_id, p.fullname 
 	FROM forum_comments fc
 	INNER JOIN profiles p ON p.user_id = fc.user_id
 	WHERE fc.forum_id = '` + forum[0].Id + `'`).Rows()
@@ -426,9 +491,24 @@ func ForumDetail(f *models.Forum) (map[string]any, error) {
 			return nil, errors.New(errScanRows.Error())
 		}
 
+		// Check Forum Comment is Like
+
+		checkForumCommentIsLike := []entities.CheckIsLike{}
+
+		errCheckForumCommentIsLike := db.Debug().Raw(`SELECT EXISTS (
+		SELECT 1
+		FROM forum_comment_likes
+		WHERE user_id = ? AND comment_id = ?
+		) AS is_exist`, f.UserId, forumComment.Id).Scan(&checkForumCommentIsLike).Error
+
+		if errCheckForumCommentIsLike != nil {
+			helper.Logger("error", "In Server: "+errCheckForumCommentIsLike.Error())
+			return nil, errors.New(errCheckForumCommentIsLike.Error())
+		}
+
 		var dataForumCommentReply = make([]entities.ForumCommentReply, 0)
 
-		rows, errForumCommentReply := db.Debug().Raw(`SELECT fcr.uid AS id, fcr.reply, p.avatar, p.user_id, p.fullname 
+		rows, errForumCommentReply := db.Debug().Raw(`SELECT fcr.uid AS id, fcr.created_at, fcr.reply, p.avatar, p.user_id, p.fullname 
 		FROM forum_comment_replies fcr
 		INNER JOIN profiles p ON p.user_id = fcr.user_id
 		WHERE fcr.comment_id = '` + forumComment.Id + `'`).Rows()
@@ -441,9 +521,26 @@ func ForumDetail(f *models.Forum) (map[string]any, error) {
 				return nil, errors.New(errScanRows.Error())
 			}
 
+			// Check Forum Comment Reply is Like
+
+			checkForumCommentReplyIsLike := []entities.CheckIsLike{}
+
+			errCheckForumReplyCommentIsLike := db.Debug().Raw(`SELECT EXISTS (
+				SELECT 1
+				FROM forum_comment_reply_likes
+				WHERE user_id = ? AND reply_id = ?
+			) AS is_exist`, f.UserId, forumCommentReply.Id).Scan(&checkForumCommentReplyIsLike).Error
+
+			if errCheckForumReplyCommentIsLike != nil {
+				helper.Logger("error", "In Server: "+errCheckForumReplyCommentIsLike.Error())
+				return nil, errors.New(errCheckForumReplyCommentIsLike.Error())
+			}
+
 			dataForumCommentReply = append(dataForumCommentReply, entities.ForumCommentReply{
-				Id:    forumCommentReply.Id,
-				Reply: forumCommentReply.Reply,
+				Id:        forumCommentReply.Id,
+				Reply:     forumCommentReply.Reply,
+				IsLiked:   checkForumCommentReplyIsLike[0].IsExist,
+				CreatedAt: forumCommentReply.CreatedAt,
 				User: entities.ForumCommentReplyUser{
 					Id:       forumCommentReply.Id,
 					Avatar:   forumCommentReply.Avatar,
@@ -459,7 +556,9 @@ func ForumDetail(f *models.Forum) (map[string]any, error) {
 
 		forumCommentAssign.Id = forumComment.Id
 		forumCommentAssign.Comment = forumComment.Comment
+		forumCommentAssign.CreatedAt = forumComment.CreatedAt
 		forumCommentAssign.Reply = dataForumCommentReply
+		forumCommentAssign.IsLiked = checkForumCommentIsLike[0].IsExist
 		forumCommentAssign.ReplyCount = len(dataForumCommentReply)
 		forumCommentAssign.User = entities.ForumCommentUser{
 			Id:       forumComment.UserId,
@@ -480,6 +579,7 @@ func ForumDetail(f *models.Forum) (map[string]any, error) {
 		Comment:      dataForumComment,
 		CommentCount: len(dataForumComment),
 		Like:         dataForumLike,
+		IsLiked:      checkForumIsLike[0].IsExist,
 		LikeCount:    len(dataForumLike),
 		ForumType: entities.ForumType{
 			Id:   forum[0].ForumTypeId,

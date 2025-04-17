@@ -4,6 +4,8 @@ import (
 	"net/http"
 	helper "superapps/helpers"
 	"superapps/services"
+
+	"github.com/dgrijalva/jwt-go"
 )
 
 func ForumList(w http.ResponseWriter, r *http.Request) {
@@ -11,7 +13,15 @@ func ForumList(w http.ResponseWriter, r *http.Request) {
 	limit := r.URL.Query().Get("limit")
 	search := r.URL.Query().Get("search")
 
-	result, err := services.ForumList(search, page, limit)
+	tokenHeader := r.Header.Get("Authorization")
+
+	token := helper.DecodeJwt(tokenHeader)
+
+	claims, _ := token.Claims.(jwt.MapClaims)
+
+	userId, _ := claims["id"].(string)
+
+	result, err := services.ForumList(userId, search, page, limit)
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]any{})
