@@ -388,6 +388,11 @@ type JobSkillCategoryList struct {
 	Name string `json:"name"`
 }
 
+type JobSkillCategoryDelete struct {
+	Id     string   `json:"id"`
+	Skills []string `json:"skills"`
+}
+
 type JobSkillCategoryStore struct {
 	JobId string `json:"job_id"`
 	CatId string `json:"cat_id"`

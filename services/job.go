@@ -1158,6 +1158,32 @@ func JobSkillCategoryList() (map[string]any, error) {
 	}, nil
 }
 
+func JobSkillCategoryDelete(jscd *entities.JobSkillCategoryDelete) (map[string]any, error) {
+
+	for _, skill := range jscd.Skills {
+		queryDeleteJobSkillCategory := `DELETE FROM job_skill_categories WHERE id = ?`
+
+		errDeleteJobSkillCategory := db.Debug().Exec(queryDeleteJobSkillCategory, skill).Error
+
+		if errDeleteJobSkillCategory != nil {
+			helper.Logger("error", "In Server: "+errDeleteJobSkillCategory.Error())
+			return nil, errors.New(errDeleteJobSkillCategory.Error())
+		}
+
+		queryDeleteJobSkillCategory = `DELETE FROM job_skills (job_id, cat_id)
+		VALUES (?, ?)`
+
+		errDeleteJobSkills := db.Debug().Exec(queryDeleteJobSkillCategory, jscd.Id, skill).Error
+
+		if errDeleteJobSkills != nil {
+			helper.Logger("error", "In Server: "+errDeleteJobSkills.Error())
+			return nil, errors.New(errDeleteJobSkills.Error())
+		}
+	}
+
+	return map[string]any{}, nil
+}
+
 func JobSkillCategoryStore(jscs *entities.JobSkillCategoryStore) (map[string]any, error) {
 	query := `INSERT INTO job_skills (job_id, cat_id) 
 	VALUES (?, ?)`
