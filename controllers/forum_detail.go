@@ -6,6 +6,7 @@ import (
 	models "superapps/models"
 	"superapps/services"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 )
 
@@ -16,6 +17,16 @@ func ForumDetail(w http.ResponseWriter, r *http.Request) {
 	data := &models.Forum{}
 
 	data.Id = id
+
+	tokenHeader := r.Header.Get("Authorization")
+
+	token := helper.DecodeJwt(tokenHeader)
+
+	claims, _ := token.Claims.(jwt.MapClaims)
+
+	userId, _ := claims["id"].(string)
+
+	data.UserId = userId
 
 	result, err := services.ForumDetail(data)
 
