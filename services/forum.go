@@ -492,6 +492,7 @@ func ForumDetail(f *models.Forum) (map[string]any, error) {
 			Email:    forum[0].Email,
 			Phone:    forum[0].Phone,
 		},
+		CreatedAt: forum[0].CreatedAt,
 	})
 
 	return map[string]any{
