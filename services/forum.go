@@ -655,7 +655,9 @@ func ForumStore(f *entities.ForumStore) (map[string]any, error) {
 		return nil, errors.New(errInsertForum.Error())
 	}
 
-	return map[string]any{}, nil
+	return map[string]any{
+		"data": forum.Id,
+	}, nil
 }
 
 func CommentStore(c *entities.CommentStore) (map[string]any, error) {
