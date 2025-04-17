@@ -292,6 +292,7 @@ func ForumDetail(f *models.Forum) (map[string]any, error) {
 	forum := []entities.Forum{}
 
 	errForum := db.Debug().Raw(`SELECT f.uid AS id, f.title, f.caption,
+	p.avatar,
 	p.fullname, 
 	p.user_id,
 	u.email,
@@ -486,6 +487,7 @@ func ForumDetail(f *models.Forum) (map[string]any, error) {
 		},
 		User: entities.ForumUser{
 			Id:       forum[0].UserId,
+			Avatar:   forum[0].Avatar,
 			Fullname: forum[0].Fullname,
 			Email:    forum[0].Email,
 			Phone:    forum[0].Phone,
