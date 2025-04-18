@@ -1161,7 +1161,7 @@ func JobSkillCategoryList() (map[string]any, error) {
 func JobSkillCategoryDelete(jscd *entities.JobSkillCategoryDelete) (map[string]any, error) {
 
 	for _, skill := range jscd.Skills {
-		queryDeleteJobSkillCategory := `DELETE FROM job_skill_categories WHERE id = ?`
+		queryDeleteJobSkillCategory := `DELETE FROM job_skill_categories WHERE uid = ?`
 
 		errDeleteJobSkillCategory := db.Debug().Exec(queryDeleteJobSkillCategory, skill).Error
 
