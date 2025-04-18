@@ -1,0 +1,4 @@
+[ERROR]: 2025-04-18 13:08:46 - In Server: Missing auth token
+[ERROR]: 2025-04-18 13:08:51 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(job_id, cat_id)
+		VALUES (?, ?)' at line 1
+[INFO]: 2025-04-18 13:09:22 - Delete Job Skill Category success
