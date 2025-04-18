@@ -1170,8 +1170,7 @@ func JobSkillCategoryDelete(jscd *entities.JobSkillCategoryDelete) (map[string]a
 			return nil, errors.New(errDeleteJobSkillCategory.Error())
 		}
 
-		queryDeleteJobSkill := `DELETE FROM job_skills (job_id, cat_id)
-		VALUES (?, ?)`
+		queryDeleteJobSkill := `DELETE FROM job_skills WHERE job_id = ? AND cat_id = ?`
 
 		errDeleteJobSkills := db.Debug().Exec(queryDeleteJobSkill, jscd.JobId, skill).Error
 
