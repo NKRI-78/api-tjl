@@ -706,7 +706,9 @@ func CommentStore(c *entities.CommentStore) (map[string]any, error) {
 		helper.Logger("error", "In Server: "+errInsertComment.Error())
 		return nil, errors.New(errInsertComment.Error())
 	}
-	return map[string]any{}, nil
+	return map[string]any{
+		"data": c.Id,
+	}, nil
 }
 
 func ReplyStore(r *entities.ReplyStore) (map[string]any, error) {
@@ -718,7 +720,9 @@ func ReplyStore(r *entities.ReplyStore) (map[string]any, error) {
 		helper.Logger("error", "In Server: "+errInsertReply.Error())
 		return nil, errors.New(errInsertReply.Error())
 	}
-	return map[string]any{}, nil
+	return map[string]any{
+		"data": r.Id,
+	}, nil
 }
 
 func ForumDelete(f *models.Forum) (map[string]any, error) {

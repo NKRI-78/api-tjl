@@ -57,5 +57,7 @@ func CommentStore(w http.ResponseWriter, r *http.Request) {
 	}
 
 	helper.Logger("info", "Comment Store success")
-	helper.Response(w, http.StatusOK, false, "Successfully", result)
+	helper.Response(w, http.StatusOK, false, "Successfully", map[string]any{
+		"comment_id": result["data"],
+	})
 }
