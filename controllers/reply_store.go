@@ -57,5 +57,7 @@ func ReplyStore(w http.ResponseWriter, r *http.Request) {
 	}
 
 	helper.Logger("info", "Reply store success")
-	helper.Response(w, http.StatusOK, false, "Successfully", result)
+	helper.Response(w, http.StatusOK, false, "Successfully", map[string]any{
+		"reply_id": result["data"],
+	})
 }
