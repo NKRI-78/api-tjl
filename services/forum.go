@@ -660,6 +660,43 @@ func ForumStore(f *entities.ForumStore) (map[string]any, error) {
 	}, nil
 }
 
+func ForumStoreLike(f *entities.ForumStoreLike) (map[string]any, error) {
+	var count int64
+
+	f.Id = uuid.NewV4().String()
+
+	errCheck := db.Debug().Table("forum_likes").
+		Where("user_id = ? AND forum_id = ?", f.UserId, f.ForumId).
+		Count(&count).Error
+	if errCheck != nil {
+		helper.Logger("error", "In Server (Check): "+errCheck.Error())
+		return nil, errors.New(errCheck.Error())
+	}
+
+	if count > 0 {
+		errDelete := db.Debug().Exec(`
+			DELETE FROM forum_likes WHERE user_id = ? AND forum_id = ?
+		`, f.UserId, f.ForumId).Error
+		if errDelete != nil {
+			helper.Logger("error", "In Server (Delete): "+errDelete.Error())
+			return nil, errors.New(errDelete.Error())
+		}
+
+		return map[string]any{"message": "unliked"}, nil
+	}
+
+	// If it doesn't exist, insert the like
+	errInsert := db.Debug().Exec(`
+		INSERT INTO forum_likes (uid, user_id, forum_id) VALUES (?, ?, ?)
+	`, f.Id, f.UserId, f.ForumId).Error
+	if errInsert != nil {
+		helper.Logger("error", "In Server (Insert): "+errInsert.Error())
+		return nil, errors.New(errInsert.Error())
+	}
+
+	return map[string]any{"message": "liked"}, nil
+}
+
 func CommentStore(c *entities.CommentStore) (map[string]any, error) {
 
 	errInsertComment := db.Debug().Exec(`INSERT INTO forum_comments (uid, forum_id, user_id, comment) 

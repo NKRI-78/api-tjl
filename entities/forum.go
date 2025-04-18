@@ -133,6 +133,12 @@ type ForumStore struct {
 	UserId string `json:"user_id"`
 }
 
+type ForumStoreLike struct {
+	Id      string `json:"id"`
+	ForumId string `json:"forum_id"`
+	UserId  string `json:"user_id"`
+}
+
 type CommentStore struct {
 	Id      string `json:"id"`
 	ForumId string `json:"forum_id"`
