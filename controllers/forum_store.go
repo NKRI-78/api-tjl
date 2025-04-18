@@ -54,5 +54,5 @@ func ForumStore(w http.ResponseWriter, r *http.Request) {
 	}
 
 	helper.Logger("info", "Forum Store success")
-	helper.Response(w, http.StatusOK, false, "Successfully", result["id"])
+	helper.Response(w, http.StatusOK, false, "Successfully", result["data"])
 }
