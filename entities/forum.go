@@ -77,6 +77,15 @@ type ForumComment struct {
 	CreatedAt  time.Time           `json:"created_At"`
 }
 
+type ForumCommentDetail struct {
+	Id       string `json:"id"`
+	Comment  string `json:"comment"`
+	UserId   string `json:"user_id"`
+	Fullname string `json:"fullname"`
+	Avatar   string `json:"avatar"`
+	ForumId  string `json:"forum_id"`
+}
+
 type ForumCommentUser struct {
 	Id       string `json:"id"`
 	Avatar   string `json:"avatar"`

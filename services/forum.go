@@ -632,11 +632,11 @@ func ForumStore(f *entities.ForumStore) (map[string]any, error) {
 
 	forum.Id = uuid.NewV4().String()
 
-	errCheckForumCategory := db.Debug().Raw(`SELECT id, name FROM forum_types WHERE id = ?`, f.Type).Scan(&forumType).Error
+	errCheckForumType := db.Debug().Raw(`SELECT id, name FROM forum_types WHERE id = ?`, f.Type).Scan(&forumType).Error
 
-	if errCheckForumCategory != nil {
-		helper.Logger("error", "In Server: "+errCheckForumCategory.Error())
-		return nil, errors.New(errCheckForumCategory.Error())
+	if errCheckForumType != nil {
+		helper.Logger("error", "In Server: "+errCheckForumType.Error())
+		return nil, errors.New(errCheckForumType.Error())
 	}
 
 	isForumTypeExist := len(forumType)
@@ -719,6 +719,238 @@ func ForumStore(f *entities.ForumStore) (map[string]any, error) {
 	}, nil
 }
 
+func CommentStore(c *entities.CommentStore) (map[string]any, error) {
+	var appendForumAssign = make([]entities.ForumResponse, 0)
+
+	forum := []entities.Forum{}
+	commentUser := []entities.ForumUser{}
+
+	errForum := db.Debug().Raw(`SELECT f.uid AS id, f.title, f.caption,
+	p.avatar,
+	p.fullname, 
+	p.user_id,
+	u.email,
+	u.phone,
+	ft.id AS forum_type_id, 
+	ft.name AS forum_type_name, 
+	f.user_id, f.created_at
+	FROM forums f
+	INNER JOIN forum_types ft ON ft.id = f.type
+	INNER JOIN profiles p ON f.user_id = p.user_id
+	INNER JOIN users u ON u.uid = p.user_id
+	WHERE f.uid = ?`, c.ForumId).Scan(&forum).Error
+
+	if errForum != nil {
+		helper.Logger("error", "In Server: "+errForum.Error())
+		return nil, errors.New(errForum.Error())
+	}
+
+	forums := len(forum)
+
+	if forums == 0 {
+		helper.Logger("error", "In Server: Forum type not found")
+		return nil, errors.New("forum not found")
+	}
+
+	errInsertComment := db.Debug().Exec(`INSERT INTO forum_comments (uid, forum_id, user_id, comment) 
+	VALUES (?, ?, ?, ?)`, c.Id, c.ForumId, c.UserId, c.Comment).Error
+
+	if errInsertComment != nil {
+		helper.Logger("error", "In Server: "+errInsertComment.Error())
+		return nil, errors.New(errInsertComment.Error())
+	}
+
+	errCheckUser := db.Debug().Raw(`SELECT p.user_id AS id, u.email, u.phone, p.avatar, p.fullname 
+	FROM forums f 
+	INNER JOIN profiles p ON f.user_id = p.user_id 
+	INNER JOIN users u ON u.uid = p.user_id
+	WHERE f.user_id = ?`, c.UserId).Scan(&commentUser).Error
+
+	if errCheckUser != nil {
+		helper.Logger("error", "In Server: "+errCheckUser.Error())
+		return nil, errors.New(errCheckUser.Error())
+	}
+
+	isUserExist := len(commentUser)
+
+	if isUserExist == 0 {
+		helper.Logger("error", "In Server: User not found")
+		return nil, errors.New("user not found")
+	}
+
+	appendForumAssign = append(appendForumAssign, entities.ForumResponse{
+		Id:      forum[0].Id,
+		Title:   forum[0].Title,
+		Caption: forum[0].Caption,
+		Media:   []entities.ForumMedia{},
+		Comment: []entities.ForumComment{
+			{
+				Id:      c.Id,
+				Comment: c.Comment,
+				User: entities.ForumCommentUser{
+					Id:       commentUser[0].Id,
+					Avatar:   commentUser[0].Avatar,
+					Fullname: commentUser[0].Fullname,
+				},
+				IsLiked:    false,
+				Reply:      []entities.ForumCommentReply{},
+				ReplyCount: 0,
+				CreatedAt:  time.Now(),
+			},
+		},
+		CommentCount: 0,
+		Like:         []entities.ForumLike{},
+		IsLiked:      false,
+		LikeCount:    0,
+		ForumType: entities.ForumType{
+			Id:   forum[0].ForumTypeId,
+			Name: forum[0].ForumTypeName,
+		},
+		User: entities.ForumUser{
+			Id:       forum[0].UserId,
+			Avatar:   forum[0].Avatar,
+			Fullname: forum[0].Fullname,
+			Email:    forum[0].Email,
+			Phone:    forum[0].Phone,
+		},
+		CreatedAt: time.Now(),
+	})
+
+	return map[string]any{
+		"data": appendForumAssign[0],
+	}, nil
+}
+
+func ReplyStore(r *entities.ReplyStore) (map[string]any, error) {
+	var appendForumAssign = make([]entities.ForumResponse, 0)
+
+	forum := []entities.Forum{}
+	comment := []entities.ForumCommentDetail{}
+	replyUser := []entities.ForumUser{}
+
+	errComment := db.Debug().Raw(`SELECT fc.uid AS id, fc.comment, fc.user_id, fc.forum_id, p.fullname, p.avatar
+	FROM forum_comments fc
+	INNER JOIN profiles p ON p.user_id = fc.user_id`).Scan(&comment).Error
+
+	if errComment != nil {
+		helper.Logger("error", "In Server: "+errComment.Error())
+		return nil, errors.New(errComment.Error())
+	}
+
+	comments := len(comment)
+
+	if comments == 0 {
+		helper.Logger("error", "In Server: Comment not found")
+		return nil, errors.New("comment not found")
+	}
+
+	errForum := db.Debug().Raw(`SELECT f.uid AS id, f.title, f.caption,
+	p.avatar,
+	p.fullname, 
+	p.user_id,
+	u.email,
+	u.phone,
+	ft.id AS forum_type_id, 
+	ft.name AS forum_type_name, 
+	f.user_id, f.created_at
+	FROM forums f
+	INNER JOIN forum_types ft ON ft.id = f.type
+	INNER JOIN profiles p ON f.user_id = p.user_id
+	INNER JOIN users u ON u.uid = p.user_id
+	WHERE f.uid = ?`, comment[0].ForumId).Scan(&forum).Error
+
+	if errForum != nil {
+		helper.Logger("error", "In Server: "+errForum.Error())
+		return nil, errors.New(errForum.Error())
+	}
+
+	forums := len(forum)
+
+	if forums == 0 {
+		helper.Logger("error", "In Server: Forum not found")
+		return nil, errors.New("forum not found")
+	}
+	errInsertReply := db.Debug().Exec(`INSERT INTO forum_comment_replies (uid, user_id, comment_id, reply) 
+	VALUES (?, ?, ?, ?)`, r.Id, r.UserId, r.CommentId, r.Reply).Error
+
+	if errInsertReply != nil {
+		helper.Logger("error", "In Server: "+errInsertReply.Error())
+		return nil, errors.New(errInsertReply.Error())
+	}
+
+	errCheckUser := db.Debug().Raw(`SELECT p.user_id AS id, u.email, u.phone, p.avatar, p.fullname 
+	FROM forums f 
+	INNER JOIN profiles p ON f.user_id = p.user_id 
+	INNER JOIN users u ON u.uid = p.user_id
+	WHERE f.user_id = ?`, r.UserId).Scan(&replyUser).Error
+
+	if errCheckUser != nil {
+		helper.Logger("error", "In Server: "+errCheckUser.Error())
+		return nil, errors.New(errCheckUser.Error())
+	}
+
+	isUserExist := len(replyUser)
+
+	if isUserExist == 0 {
+		helper.Logger("error", "In Server: User not found")
+		return nil, errors.New("user not found")
+	}
+
+	appendForumAssign = append(appendForumAssign, entities.ForumResponse{
+		Id:      forum[0].Id,
+		Title:   forum[0].Title,
+		Caption: forum[0].Caption,
+		Media:   []entities.ForumMedia{},
+		Comment: []entities.ForumComment{
+			{
+				Id:      comment[0].Id,
+				Comment: comment[0].Comment,
+				User: entities.ForumCommentUser{
+					Id:       comment[0].UserId,
+					Avatar:   comment[0].Avatar,
+					Fullname: comment[0].Fullname,
+				},
+				IsLiked: false,
+				Reply: []entities.ForumCommentReply{
+					{
+						Id:    r.Id,
+						Reply: r.Reply,
+						User: entities.ForumCommentReplyUser{
+							Id:       replyUser[0].Id,
+							Avatar:   replyUser[0].Avatar,
+							Fullname: replyUser[0].Fullname,
+						},
+						IsLiked:   false,
+						CreatedAt: time.Now(),
+					},
+				},
+				ReplyCount: 0,
+				CreatedAt:  time.Now(),
+			},
+		},
+		CommentCount: 0,
+		Like:         []entities.ForumLike{},
+		IsLiked:      false,
+		LikeCount:    0,
+		ForumType: entities.ForumType{
+			Id:   forum[0].ForumTypeId,
+			Name: forum[0].ForumTypeName,
+		},
+		User: entities.ForumUser{
+			Id:       forum[0].UserId,
+			Avatar:   forum[0].Avatar,
+			Fullname: forum[0].Fullname,
+			Email:    forum[0].Email,
+			Phone:    forum[0].Phone,
+		},
+		CreatedAt: time.Now(),
+	})
+
+	return map[string]any{
+		"data": appendForumAssign[0],
+	}, nil
+}
+
 func ForumStoreLike(f *entities.ForumStoreLike) (map[string]any, error) {
 	var count int64
 
@@ -754,34 +986,6 @@ func ForumStoreLike(f *entities.ForumStoreLike) (map[string]any, error) {
 	}
 
 	return map[string]any{"message": "liked"}, nil
-}
-
-func CommentStore(c *entities.CommentStore) (map[string]any, error) {
-
-	errInsertComment := db.Debug().Exec(`INSERT INTO forum_comments (uid, forum_id, user_id, comment) 
-	VALUES (?, ?, ?, ?)`, c.Id, c.ForumId, c.UserId, c.Comment).Error
-
-	if errInsertComment != nil {
-		helper.Logger("error", "In Server: "+errInsertComment.Error())
-		return nil, errors.New(errInsertComment.Error())
-	}
-	return map[string]any{
-		"data": c.Id,
-	}, nil
-}
-
-func ReplyStore(r *entities.ReplyStore) (map[string]any, error) {
-
-	errInsertReply := db.Debug().Exec(`INSERT INTO forum_comment_replies (uid, user_id, comment_id, reply) 
-	VALUES (?, ?, ?, ?)`, r.Id, r.UserId, r.CommentId, r.Reply).Error
-
-	if errInsertReply != nil {
-		helper.Logger("error", "In Server: "+errInsertReply.Error())
-		return nil, errors.New(errInsertReply.Error())
-	}
-	return map[string]any{
-		"data": r.Id,
-	}, nil
 }
 
 func ForumDelete(f *models.Forum) (map[string]any, error) {
