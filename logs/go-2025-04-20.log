@@ -1,0 +1,6 @@
+[INFO]: 2025-04-20 15:49:36 - Forum Store success
+[INFO]: 2025-04-20 15:51:00 - Forum Store success
+[INFO]: 2025-04-20 15:51:52 - Forum Store success
+[ERROR]: 2025-04-20 15:52:21 - In Server: Error 1452: Cannot add or update a child row: a foreign key constraint fails (`tjl`.`forum_medias`, CONSTRAINT `forum_medias_ibfk_1` FOREIGN KEY (`forum_id`) REFERENCES `forums` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE)
+[ERROR]: 2025-04-20 15:52:49 - In Server: Error 1452: Cannot add or update a child row: a foreign key constraint fails (`tjl`.`forum_medias`, CONSTRAINT `forum_medias_ibfk_1` FOREIGN KEY (`forum_id`) REFERENCES `forums` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE)
+[INFO]: 2025-04-20 15:53:17 - Forum Store success
