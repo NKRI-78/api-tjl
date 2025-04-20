@@ -8,3 +8,7 @@
 [ERROR]: 2025-04-20 16:26:28 - In Server: User not found
 [INFO]: 2025-04-20 16:30:10 - Forum Store success
 [INFO]: 2025-04-20 16:30:25 - Forum Store success
+[ERROR]: 2025-04-20 18:46:06 - In Server: invalid connection
+[INFO]: 2025-04-20 18:46:08 - Forum List success
+[INFO]: 2025-04-20 18:46:48 - Comment Store success
+[INFO]: 2025-04-20 18:47:00 - Forum List success
