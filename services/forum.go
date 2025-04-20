@@ -655,6 +655,17 @@ func ForumStore(f *entities.ForumStore) (map[string]any, error) {
 		return nil, errors.New(errInsertForum.Error())
 	}
 
+	if f.Type == 3 || f.Type == 2 {
+		for _, media := range f.Media {
+			errInsertForumMedia := db.Debug().Exec(`INSERT INTO forum_medias (forum_id, path) VALUES (?, ?)`, forum.Id, media).Error
+
+			if errInsertForumMedia != nil {
+				helper.Logger("error", "In Server: "+errInsertForumMedia.Error())
+				return nil, errors.New(errInsertForumMedia.Error())
+			}
+		}
+	}
+
 	return map[string]any{
 		"data": forum.Id,
 	}, nil
