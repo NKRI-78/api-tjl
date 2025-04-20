@@ -8,6 +8,7 @@ import (
 	entities "superapps/entities"
 	helper "superapps/helpers"
 	models "superapps/models"
+	"time"
 
 	uuid "github.com/satori/go.uuid"
 )
@@ -622,23 +623,23 @@ func ForumCategory() (map[string]any, error) {
 }
 
 func ForumStore(f *entities.ForumStore) (map[string]any, error) {
+	var appendForumAssign = make([]entities.ForumResponse, 0)
+	var dataForumMedia = make([]entities.ForumMedia, 0)
+
 	forum := entities.ForumStore{}
-	forumTypes := []entities.ForumCategory{}
+	forumUser := []entities.ForumUser{}
+	forumType := []entities.ForumCategory{}
 
 	forum.Id = uuid.NewV4().String()
 
-	forum.Title = f.Title
-	forum.Desc = f.Desc
-	forum.Type = f.Type
-
-	errCheckForumCategory := db.Debug().Raw(`SELECT id FROM forum_types WHERE id = '` + strconv.Itoa(forum.Type) + `'`).Scan(&forumTypes).Error
+	errCheckForumCategory := db.Debug().Raw(`SELECT id, name FROM forum_types WHERE id = ?`, f.Type).Scan(&forumType).Error
 
 	if errCheckForumCategory != nil {
 		helper.Logger("error", "In Server: "+errCheckForumCategory.Error())
 		return nil, errors.New(errCheckForumCategory.Error())
 	}
 
-	isForumTypeExist := len(forumTypes)
+	isForumTypeExist := len(forumType)
 
 	if isForumTypeExist == 0 {
 		helper.Logger("error", "In Server: Forum type not found")
@@ -648,7 +649,7 @@ func ForumStore(f *entities.ForumStore) (map[string]any, error) {
 	errInsertForum := db.Debug().Exec(`
 		INSERT INTO forums (uid, title, caption, user_id, type) 
 		VALUES (?, ?, ?, ?, ?)`,
-		forum.Id, forum.Title, forum.Desc, f.UserId, strconv.Itoa(forum.Type)).Error
+		forum.Id, f.Title, f.Caption, f.UserId, strconv.Itoa(f.Type)).Error
 
 	if errInsertForum != nil {
 		helper.Logger("error", "In Server: "+errInsertForum.Error())
@@ -656,18 +657,65 @@ func ForumStore(f *entities.ForumStore) (map[string]any, error) {
 	}
 
 	if f.Type == 3 || f.Type == 2 {
-		for _, media := range f.Media {
+		for i, media := range f.Media {
 			errInsertForumMedia := db.Debug().Exec(`INSERT INTO forum_medias (forum_id, path) VALUES (?, ?)`, forum.Id, media).Error
 
 			if errInsertForumMedia != nil {
 				helper.Logger("error", "In Server: "+errInsertForumMedia.Error())
 				return nil, errors.New(errInsertForumMedia.Error())
 			}
+
+			dataForumMedia = append(dataForumMedia, entities.ForumMedia{
+				Id:   i + 1,
+				Path: media,
+			})
 		}
 	}
 
+	errCheckUser := db.Debug().Raw(`SELECT p.user_id AS id, u.email, u.phone, p.avatar, p.fullname 
+	FROM forums f 
+	INNER JOIN profiles p ON f.user_id = p.user_id 
+	INNER JOIN users u ON u.uid = p.user_id
+	WHERE f.user_id = ?`, f.UserId).Scan(&forumUser).Error
+
+	if errCheckUser != nil {
+		helper.Logger("error", "In Server: "+errCheckUser.Error())
+		return nil, errors.New(errCheckUser.Error())
+	}
+
+	isUserExist := len(forumUser)
+
+	if isUserExist == 0 {
+		helper.Logger("error", "In Server: User not found")
+		return nil, errors.New("user not found")
+	}
+
+	appendForumAssign = append(appendForumAssign, entities.ForumResponse{
+		Id:           forum.Id,
+		Title:        f.Title,
+		Caption:      f.Caption,
+		Media:        dataForumMedia,
+		Comment:      []entities.ForumComment{},
+		CommentCount: 0,
+		Like:         []entities.ForumLike{},
+		IsLiked:      false,
+		LikeCount:    0,
+		ForumType: entities.ForumType{
+			Id:   forumType[0].Id,
+			Name: forumType[0].Name,
+		},
+		User: entities.ForumUser{
+			Id:       forumUser[0].Id,
+			Avatar:   forumUser[0].Avatar,
+			Fullname: forumUser[0].Fullname,
+			Email:    forumUser[0].Email,
+			Phone:    forumUser[0].Phone,
+		},
+		CreatedAt: time.Now(),
+	})
+
 	return map[string]any{
-		"data": forum.Id,
+		"data": appendForumAssign[0],
 	}, nil
 }
 

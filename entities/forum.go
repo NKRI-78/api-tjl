@@ -126,12 +126,12 @@ type ForumCategory struct {
 }
 
 type ForumStore struct {
-	Id     string   `json:"id"`
-	Title  string   `json:"title"`
-	Desc   string   `json:"desc"`
-	Media  []string `json:"medias"`
-	Type   int      `json:"type"`
-	UserId string   `json:"user_id"`
+	Id      string   `json:"id"`
+	Title   string   `json:"title"`
+	Caption string   `json:"desc"`
+	Media   []string `json:"medias"`
+	Type    int      `json:"type"`
+	UserId  string   `json:"user_id"`
 }
 
 type ForumStoreLike struct {

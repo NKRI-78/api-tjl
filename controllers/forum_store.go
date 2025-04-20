@@ -30,7 +30,7 @@ func ForumStore(w http.ResponseWriter, r *http.Request) {
 	userId, _ := claims["id"].(string)
 
 	Title := data.Title
-	Desc := data.Desc
+	Desc := data.Caption
 
 	data.UserId = userId
 
