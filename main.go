@@ -73,7 +73,6 @@ func main() {
 
 	// Register User Branch
 	router.HandleFunc("/api/v1/admin/register-user-branch", controllers.RegisterUserBranch).Methods("POST")
-	router.HandleFunc("/api/v1/admin/delete-user", controllers.DeleteUser).Methods("DELETE")
 
 	// Auth
 	router.Handle("/api/v1/login", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.Login))).Methods("POST")
@@ -85,7 +84,8 @@ func main() {
 	router.Handle("/api/v1/login-admin", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.LoginAdmin))).Methods("POST")
 
 	// Admin User
-	router.Handle("/api/v1/admin/list/user", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.AdminListUser))).Methods("GET")
+	router.HandleFunc("/api/v1/admin/list/user", controllers.AdminListUser).Methods("GET")
+	router.HandleFunc("/api/v1/admin/delete/user", controllers.DeleteUser).Methods("DELETE")
 
 	// Branch
 	router.HandleFunc("/api/v1/branch", controllers.Branch).Methods("GET")
