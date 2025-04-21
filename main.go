@@ -73,6 +73,7 @@ func main() {
 
 	// Register User Branch
 	router.HandleFunc("/api/v1/admin/register-user-branch", controllers.RegisterUserBranch).Methods("POST")
+	router.HandleFunc("/api/v1/admin/delete-user", controllers.DeleteUser).Methods("DELETE")
 
 	// Auth
 	router.Handle("/api/v1/login", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.Login))).Methods("POST")
