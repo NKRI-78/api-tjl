@@ -54,7 +54,7 @@ func CompanyStore(c *entities.CompanyStore) (map[string]any, error) {
 
 	query := `INSERT INTO companies (uid, logo, name, place_id) VALUES (?, ?, ?, ?)`
 
-	err := db.Debug().Exec(query, Id, c.Logo, c.Name).Error
+	err := db.Debug().Exec(query, Id, c.Logo, c.Name, c.PlaceId).Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
