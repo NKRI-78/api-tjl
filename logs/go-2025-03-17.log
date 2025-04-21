@@ -1,6 +1,0 @@
-[ERROR]: 2025-03-17 10:18:33 - In Server: dial tcp 157.245.193.49:3306: connect: network is unreachable
-[ERROR]: 2025-03-17 10:18:33 - In Server: dial tcp 157.245.193.49:3306: connect: network is unreachable
-[ERROR]: 2025-03-17 11:18:15 - In Server: Error 1062: Duplicate entry '269517b0-5b7b-4521-acdc-de3c9ba9aca0' for key 'form_works.form_works_unique'
-[ERROR]: 2025-03-17 11:18:25 - In Server: Error 1062: Duplicate entry '269517b0-5b7b-4521-acdc-de3c9ba9aca0' for key 'form_works.form_works_unique'
-[INFO]: 2025-03-17 11:19:37 - Form Work success
-[INFO]: 2025-03-17 11:19:45 - Form Work success

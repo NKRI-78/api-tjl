@@ -1,5 +1,0 @@
-[ERROR]: 2025-03-03 18:35:25 - In Server: Missing auth token
-[ERROR]: 2025-03-03 18:35:29 - In Server: Error 1146: Table 'tjl.user_documents' doesn't exist
-[ERROR]: 2025-03-03 18:36:45 - In Server: Error 1146: Table 'tjl.user_documents' doesn't exist
-[INFO]: 2025-03-03 18:43:34 - Store Bannner success
-[INFO]: 2025-03-03 18:46:10 - Store Bannner success
