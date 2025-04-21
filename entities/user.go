@@ -45,6 +45,10 @@ type CheckJobs struct {
 	JobId string `json:"job_id"`
 }
 
+type DeleteUser struct {
+	Id string `json:"id"`
+}
+
 type User struct {
 	Uid      string `json:"uid"`
 	Id       string `json:"id"`

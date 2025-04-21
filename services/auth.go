@@ -12,6 +12,20 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+func DeleteUser(d *entities.DeleteUser) (map[string]any, error) {
+
+	query := `DELETE FROM users WHERE uid = ?`
+
+	err := db.Debug().Raw(query).Scan(&d.Id).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
 func RoleList() (map[string]any, error) {
 	var userRole []entities.UserRoles
 
