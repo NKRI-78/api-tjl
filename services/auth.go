@@ -16,7 +16,7 @@ func DeleteUser(d *entities.DeleteUser) (map[string]any, error) {
 
 	query := `DELETE FROM users WHERE uid = ?`
 
-	err := db.Debug().Raw(query).Scan(&d.Id).Error
+	err := db.Debug().Exec(query, d.Id).Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
