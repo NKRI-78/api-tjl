@@ -201,9 +201,9 @@ func ApplyJob(aj *models.ApplyJob) (map[string]any, error) {
 	var dataUserFcm entities.InitFcm
 	var allJob []models.CheckApplyJobQuery
 
-	queryCheck := `SELECT uid FROM apply_jobs 
-	WHERE user_id = ? 
-	AND job_id = ? 
+	queryCheck := `SELECT uid FROM apply_jobs
+	WHERE user_id = ?
+	AND job_id = ?
 	AND status = 3`
 
 	errAllJob := db.Debug().Raw(queryCheck, aj.UserId, aj.JobId).Scan(&allJob).Error
@@ -238,8 +238,8 @@ func ApplyJob(aj *models.ApplyJob) (map[string]any, error) {
 		return nil, errors.New(errHistory.Error())
 	}
 
-	queryUserFcm := `SELECT f.token, p.fullname FROM fcms f 
-	INNER JOIN profiles p ON p.user_id = f.user_id 
+	queryUserFcm := `SELECT f.token, p.fullname FROM fcms f
+	INNER JOIN profiles p ON p.user_id = f.user_id
 	WHERE f.user_id = ?`
 
 	rowUserFcm := db.Debug().Raw(queryUserFcm, aj.UserId).Row()
