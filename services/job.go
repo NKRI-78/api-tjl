@@ -213,6 +213,16 @@ func ApplyJob(aj *models.ApplyJob) (map[string]any, error) {
 		return nil, errors.New(errAllJob.Error())
 	}
 
+	if aj.IsOffline {
+		queryInsertApplyJobOffline := `INSERT INTO apply_job_offlines (apply_job_id, content) VALUES (?, ?)`
+
+		errInsertApplyJobOffline := db.Debug().Exec(queryInsertApplyJobOffline, aj.Id, aj.Content).Error
+
+		if errInsertApplyJobOffline != nil {
+			helper.Logger("error", "In Server: "+errInsertApplyJobOffline.Error())
+		}
+	}
+
 	var isUserAppliedJob = len(allJob)
 
 	if isUserAppliedJob == 1 {
