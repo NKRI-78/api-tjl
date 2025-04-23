@@ -233,8 +233,6 @@ func ApplyJob(aj *models.ApplyJob) (map[string]any, error) {
 		if errUserFcmRow != nil {
 			helper.Logger("error", "In Server: "+errUserFcmRow.Error())
 		}
-
-		// helper.SendEmail()
 	}
 
 	var isUserAppliedJob = len(allJob)

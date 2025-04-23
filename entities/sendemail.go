@@ -5,4 +5,5 @@ type SendEmailRequest struct {
 	App     string `json:"app"`
 	Subject string `json:"subject"`
 	Body    string `json:"body"`
+	Type    string `json:"type"`
 }

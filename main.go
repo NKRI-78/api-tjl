@@ -96,6 +96,9 @@ func main() {
 	router.HandleFunc("/api/v1/banner-update", controllers.BannerUpdate).Methods("PUT")
 	router.HandleFunc("/api/v1/banner-delete", controllers.BannerDelete).Methods("DELETE")
 
+	// Test Send E-mail
+	router.HandleFunc("/api/v1/email/send", controllers.SendEmail).Methods("POST")
+
 	// News
 	router.HandleFunc("/api/v1/news", controllers.NewsList).Methods("GET")
 	router.HandleFunc("/api/v1/news-detail/{id}", controllers.NewsDetail).Methods("GET")
@@ -218,6 +221,9 @@ func main() {
 
 	// Media
 	router.HandleFunc("/api/v1/media/upload", controllers.Upload).Methods("POST")
+
+	// Email
+	router.HandleFunc("/api/v1/email/send", controllers.SendEmail).Methods("POST")
 
 	portEnv := os.Getenv("PORT")
 	port := ":" + portEnv
