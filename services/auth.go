@@ -82,6 +82,8 @@ func RegisterUserBranch(rub *entities.RegisterUserBranch) (map[string]any, error
 		return nil, errors.New(errInsertUserBranch.Error())
 	}
 
+	helper.SendEmail(rub.Email, "TJL", "Registrasi Berhasil", "-", "tjl-create-user-branch")
+
 	return map[string]any{}, nil
 }
 
