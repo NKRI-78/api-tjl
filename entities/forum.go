@@ -74,7 +74,7 @@ type ForumComment struct {
 	IsLiked    bool                `json:"is_liked"`
 	Reply      []ForumCommentReply `json:"replies"`
 	ReplyCount int                 `json:"reply_count"`
-	CreatedAt  time.Time           `json:"created_At"`
+	CreatedAt  time.Time           `json:"created_at"`
 }
 
 type ForumCommentDetail struct {
