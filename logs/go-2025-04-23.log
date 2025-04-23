@@ -1,1 +1,26 @@
 [ERROR]: 2025-04-23 15:08:54 - In Server: Missing auth token
+[ERROR]: 2025-04-23 22:37:07 - In Server: sql: no rows in result set
+[INFO]: 2025-04-23 22:37:07 - Apply Job success
+[INFO]: 2025-04-23 22:37:15 - Fetch Admin Job List success
+[INFO]: 2025-04-23 22:37:53 - Get List Info Apply Job success
+[INFO]: 2025-04-23 22:59:41 - Get List Info Apply Job success
+[INFO]: 2025-04-23 23:00:12 - No FCM data found for user
+[ERROR]: 2025-04-23 23:00:12 - In Server: sql: no rows in result set
+[INFO]: 2025-04-23 23:00:12 - Update Apply Job success
+[ERROR]: 2025-04-23 23:03:07 - status INTERVIEW can only move to ACCEPTED or DECLINED
+[INFO]: 2025-04-23 23:03:14 - No FCM data found for user
+[ERROR]: 2025-04-23 23:03:14 - In Server: sql: no rows in result set
+[ERROR]: 2025-04-23 23:03:14 - In Server: sql: no rows in result set
+[INFO]: 2025-04-23 23:03:14 - Update Apply Job success
+[INFO]: 2025-04-23 23:10:29 - No FCM data found for user
+[ERROR]: 2025-04-23 23:10:29 - In Server: sql: no rows in result set
+[ERROR]: 2025-04-23 23:10:29 - In Server: sql: no rows in result set
+[INFO]: 2025-04-23 23:10:29 - Update Apply Job success
+[ERROR]: 2025-04-23 23:10:31 - status [ACCEPTED] already passed
+[INFO]: 2025-04-23 23:13:23 - No FCM data found for user
+[ERROR]: 2025-04-23 23:13:23 - In Server: sql: no rows in result set
+[ERROR]: 2025-04-23 23:13:23 - In Server: sql: no rows in result set
+[INFO]: 2025-04-23 23:13:23 - Update Apply Job success
+[ERROR]: 2025-04-23 23:13:25 - status [ACCEPTED] already passed
+[INFO]: 2025-04-23 23:17:20 - Send Email Success
+[INFO]: 2025-04-23 23:17:20 - Update Apply Job success

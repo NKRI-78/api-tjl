@@ -213,33 +213,6 @@ func ApplyJob(aj *models.ApplyJob) (map[string]any, error) {
 		return nil, errors.New(errAllJob.Error())
 	}
 
-	if aj.IsOffline {
-		queryInsertApplyJobOffline := `INSERT INTO apply_job_offlines (apply_job_id, content) VALUES (?, ?)`
-
-		errInsertApplyJobOffline := db.Debug().Exec(queryInsertApplyJobOffline, aj.Id, aj.Content).Error
-
-		if errInsertApplyJobOffline != nil {
-			helper.Logger("error", "In Server: "+errInsertApplyJobOffline.Error())
-		}
-
-		queryUserFcm := `SELECT f.token, u.email, p.fullname FROM fcms f
-		INNER JOIN profiles p ON p.user_id = f.user_id
-		INNER JOIN users u ON p.user_id = u.uid
-		WHERE f.user_id = ?`
-
-		rowUserFcm := db.Debug().Raw(queryUserFcm, aj.UserId).Row()
-
-		errUserFcmRow := rowUserFcm.Scan(&dataUserFcm.Token, &dataUserFcm.Email, &dataUserFcm.Fullname)
-
-		if errUserFcmRow != nil {
-			helper.Logger("error", "In Server: "+errUserFcmRow.Error())
-		}
-
-		message := fmt.Sprintf("Silahkan periksa Alamat E-mail [%s] Anda untuk info lebih lanjut", dataUserFcm.Email)
-
-		helper.SendFcm("Interview", message, dataUserFcm.Token)
-	}
-
 	var isUserAppliedJob = len(allJob)
 
 	if isUserAppliedJob == 1 {
@@ -332,7 +305,7 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 	INNER JOIN profiles p ON p.user_id = f.user_id 
 	WHERE f.user_id = ?`
 
-	rowUserFcm := db.Debug().Raw(queryUserFcm, uaj.UserId).Row()
+	rowUserFcm := db.Debug().Raw(queryUserFcm, dataQuery.UserId).Row()
 
 	errUserFcmRow := rowUserFcm.Scan(&dataUserFcm.Token, &dataUserFcm.Fullname)
 
@@ -347,6 +320,37 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 	if dataUserFcm.Token != "" {
 		title := fmt.Sprintf("Selamat lamaran Anda sudah dalam tahap [%s]", status)
 		helper.SendFcm(title, dataUserFcm.Fullname, dataUserFcm.Token)
+	}
+
+	if uaj.IsOffline {
+		queryInsertApplyJobOffline := `INSERT INTO apply_job_offlines (apply_job_id, content) VALUES (?, ?)`
+
+		errInsertApplyJobOffline := db.Debug().Exec(queryInsertApplyJobOffline, uaj.ApplyJobId, uaj.Content).Error
+
+		if errInsertApplyJobOffline != nil {
+			helper.Logger("error", "In Server: "+errInsertApplyJobOffline.Error())
+		}
+
+		queryUserFcm := `SELECT f.token, u.email, p.fullname FROM fcms f
+		INNER JOIN profiles p ON p.user_id = f.user_id
+		INNER JOIN users u ON p.user_id = u.uid
+		WHERE f.user_id = ?`
+
+		rowUserFcm := db.Debug().Raw(queryUserFcm, dataQuery.UserId).Row()
+
+		errUserFcmRow := rowUserFcm.Scan(&dataUserFcm.Token, &dataUserFcm.Email, &dataUserFcm.Fullname)
+
+		if errUserFcmRow != nil {
+			helper.Logger("error", "In Server: "+errUserFcmRow.Error())
+		}
+
+		if dataUserFcm.Token != "" {
+			message := fmt.Sprintf("Silahkan periksa Alamat E-mail [%s] Anda untuk info lebih lanjut", dataUserFcm.Email)
+
+			helper.SendFcm("[ INTERVIEW ]", message, dataUserFcm.Token)
+
+			helper.SendEmail(dataUserFcm.Email, "TJL", "[ INTERVIEW ]", uaj.Content, "-")
+		}
 	}
 
 	// Perform the update
