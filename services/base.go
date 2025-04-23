@@ -1,9 +1,10 @@
 package services
 
 import (
-	helper "superapps/helpers"
 	"fmt"
 	"os"
+	helper "superapps/helpers"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/joho/godotenv"
@@ -26,7 +27,7 @@ func init() {
 	dbPort := os.Getenv("DB_PORT")
 	dbDriver := os.Getenv("DB_DRIVER")
 
-	dbURI := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", username, password, dbHost, dbPort, dbName)
+	dbURI := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&collation=utf8mb4_0900_ai_ci&parseTime=True&loc=Local", username, password, dbHost, dbPort, dbName)
 
 	conn, err := gorm.Open(dbDriver, dbURI)
 
@@ -35,7 +36,7 @@ func init() {
 	}
 
 	db = conn
-	db.Debug().AutoMigrate() 
+	db.Debug().AutoMigrate()
 }
 
 func GetDB() *gorm.DB {
