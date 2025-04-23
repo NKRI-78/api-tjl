@@ -145,7 +145,7 @@ func UpdateEmail(ue *models.UpdateEmail) (map[string]any, error) {
 		return nil, errUpdate
 	}
 
-	errEmail := helper.SendEmail(ue.NewEmail, "TJL", otp)
+	errEmail := helper.SendEmail(ue.NewEmail, "TJL", "Verification Account", otp)
 	if errEmail != nil {
 		helper.Logger("error", "Failed to send email: "+errEmail.Error())
 	}
@@ -236,7 +236,7 @@ func ResendOtp(u *models.User) (map[string]any, error) {
 			return nil, errors.New(errUpdateResendOtp.Error())
 		}
 
-		errEmail := helper.SendEmail(u.Val, "TJL", otp)
+		errEmail := helper.SendEmail(u.Val, "TJL", "Verification Account", otp)
 		if errEmail != nil {
 			helper.Logger("error", "Failed to send email: "+errEmail.Error())
 		}
@@ -281,7 +281,7 @@ func Login(u *models.User) (map[string]any, error) {
 			return nil, errors.New(err.Error())
 		}
 
-		errEmail := helper.SendEmail(u.Val, "TJL", otp)
+		errEmail := helper.SendEmail(u.Val, "TJL", "Verification Account", otp)
 		if errEmail != nil {
 			helper.Logger("error", "Failed to send email: "+errEmail.Error())
 		}
@@ -442,7 +442,7 @@ func Register(u *models.User) (map[string]any, error) {
 		return nil, errors.New(errInsertUserBranch.Error())
 	}
 
-	errEmail := helper.SendEmail(user.Email, "TJL", otp)
+	errEmail := helper.SendEmail(user.Email, "TJL", "Verification Account", otp)
 	if errEmail != nil {
 		helper.Logger("error", "Failed to send email: "+errEmail.Error())
 	}

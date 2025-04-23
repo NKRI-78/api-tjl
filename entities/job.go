@@ -100,6 +100,8 @@ type InfoApplyJob struct {
 type ApplyJob struct {
 	Id            string `json:"uid"`
 	Link          string `json:"link"`
+	IsOffline     bool   `json:"is_offline"`
+	Content       string `json:"content"`
 	Schedule      string `json:"schedule"`
 	UserId        string `json:"user_id"`
 	UserConfirmId string `json:"user_confirm_id"`

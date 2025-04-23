@@ -75,14 +75,14 @@ func FormatDate(t time.Time) string {
 	return fmt.Sprintf("%s, %02d %s %d %02d:%02d WIB", day, t.Day(), month, t.Year(), t.Hour(), t.Minute())
 }
 
-func SendEmail(to, app, otp string) error {
+func SendEmail(to, app, subject, otp string) error {
 
 	body := otp
 
 	emailData := &entities.SendEmailRequest{
 		To:      to,
 		App:     app,
-		Subject: "Verification Account",
+		Subject: subject,
 		Body:    body,
 	}
 
