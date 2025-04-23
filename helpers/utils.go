@@ -100,6 +100,8 @@ func SendEmail(to, app, subject, data, other string) error {
 
 	if resp.StatusCode != http.StatusOK {
 		return errors.New("failed to send email, status code: " + resp.Status)
+	} else {
+		Logger("info", "Send Email Success")
 	}
 
 	return nil
