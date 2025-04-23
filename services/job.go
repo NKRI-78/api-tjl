@@ -221,6 +221,20 @@ func ApplyJob(aj *models.ApplyJob) (map[string]any, error) {
 		if errInsertApplyJobOffline != nil {
 			helper.Logger("error", "In Server: "+errInsertApplyJobOffline.Error())
 		}
+
+		queryUserFcm := `SELECT f.token, p.fullname FROM fcms f
+		INNER JOIN profiles p ON p.user_id = f.user_id
+		WHERE f.user_id = ?`
+
+		rowUserFcm := db.Debug().Raw(queryUserFcm, aj.UserId).Row()
+
+		errUserFcmRow := rowUserFcm.Scan(&dataUserFcm.Token, &dataUserFcm.Fullname)
+
+		if errUserFcmRow != nil {
+			helper.Logger("error", "In Server: "+errUserFcmRow.Error())
+		}
+
+		// helper.SendEmail()
 	}
 
 	var isUserAppliedJob = len(allJob)
