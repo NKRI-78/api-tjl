@@ -222,17 +222,22 @@ func ApplyJob(aj *models.ApplyJob) (map[string]any, error) {
 			helper.Logger("error", "In Server: "+errInsertApplyJobOffline.Error())
 		}
 
-		queryUserFcm := `SELECT f.token, p.fullname FROM fcms f
+		queryUserFcm := `SELECT f.token, u.email, p.fullname FROM fcms f
 		INNER JOIN profiles p ON p.user_id = f.user_id
+		INNER JOIN users u ON p.user_id = u.uid
 		WHERE f.user_id = ?`
 
 		rowUserFcm := db.Debug().Raw(queryUserFcm, aj.UserId).Row()
 
-		errUserFcmRow := rowUserFcm.Scan(&dataUserFcm.Token, &dataUserFcm.Fullname)
+		errUserFcmRow := rowUserFcm.Scan(&dataUserFcm.Token, &dataUserFcm.Email, &dataUserFcm.Fullname)
 
 		if errUserFcmRow != nil {
 			helper.Logger("error", "In Server: "+errUserFcmRow.Error())
 		}
+
+		message := fmt.Sprintf("Silahkan periksa Alamat E-mail [%s] Anda untuk info lebih lanjut", dataUserFcm.Email)
+
+		helper.SendFcm("Interview", message, dataUserFcm.Token)
 	}
 
 	var isUserAppliedJob = len(allJob)
