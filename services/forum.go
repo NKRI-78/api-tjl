@@ -1017,3 +1017,27 @@ func ForumDelete(f *models.Forum) (map[string]any, error) {
 
 	return map[string]any{}, nil
 }
+
+func CommentDelete(c *models.CommentDelete) (map[string]any, error) {
+
+	errDeleteComment := db.Debug().Exec(`DELETE FROM forum_comments WHERE uid = '` + c.Id + `'`).Error
+
+	if errDeleteComment != nil {
+		helper.Logger("error", "In Server: "+errDeleteComment.Error())
+		return nil, errors.New(errDeleteComment.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
+func ReplyDelete(c *models.ReplyDelete) (map[string]any, error) {
+
+	errDeleteReply := db.Debug().Exec(`DELETE FROM forum_comment_replies WHERE uid = '` + c.Id + `'`).Error
+
+	if errDeleteReply != nil {
+		helper.Logger("error", "In Server: "+errDeleteReply.Error())
+		return nil, errors.New(errDeleteReply.Error())
+	}
+
+	return map[string]any{}, nil
+}

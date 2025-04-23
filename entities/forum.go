@@ -156,9 +156,17 @@ type CommentStore struct {
 	UserId  string `json:"user_id"`
 }
 
+type CommentDelete struct {
+	Id string `json:"id"`
+}
+
 type ReplyStore struct {
 	Id        string `json:"id"`
 	CommentId string `json:"comment_id"`
 	Reply     string `json:"reply"`
 	UserId    string `json:"user_id"`
+}
+
+type ReplyDelete struct {
+	Id string `json:"id"`
 }
