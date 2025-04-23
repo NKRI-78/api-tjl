@@ -33,6 +33,7 @@ func JwtAuthentication(next http.Handler) http.Handler {
 			"/api/v1/resend-otp",
 			"/api/v1/branch",
 			"/api/v1/news",
+			"/api/v1/email/send",
 			"/api/v1/job-categories",
 			"/api/v1/update-email",
 			"/api/v1/forgot-password",
