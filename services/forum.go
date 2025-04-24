@@ -656,7 +656,7 @@ func ForumStore(f *entities.ForumStore) (map[string]any, error) {
 		return nil, errors.New(errInsertForum.Error())
 	}
 
-	if f.Type == 3 || f.Type == 2 {
+	if f.Type == 3 || f.Type == 2 || f.Type == 4 {
 		for i, media := range f.Media {
 			errInsertForumMedia := db.Debug().Exec(`INSERT INTO forum_medias (forum_id, path) VALUES (?, ?)`, forum.Id, media).Error
 
