@@ -23,9 +23,13 @@ func ListInfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 		jc.name AS job_category,
 		p.avatar AS job_avatar,
 		p.fullname AS job_author,
+		c.uid AS company_id,
+		c.logo AS company_logo,
+		c.name AS company_name,
 		aj.created_at
 		FROM apply_jobs aj 
 		INNER JOIN jobs j ON j.uid = aj.job_id
+		INNER JOIN companies c ON c.uid = j.company_id 
 		INNER JOIN job_categories jc ON jc.uid = j.cat_id
 		INNER JOIN profiles p ON p.user_id = j.user_id
 		INNER JOIN job_statuses js ON js.id = aj.status
