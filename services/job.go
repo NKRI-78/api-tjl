@@ -349,7 +349,7 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 
 			helper.SendFcm("[ INTERVIEW ]", message, dataUserFcm.Token)
 
-			helper.SendEmail(dataUserFcm.Email, "TJL", "[ INTERVIEW ]", uaj.Content, "-")
+			helper.SendEmail(dataUserFcm.Email, "TJL", "[ INTERVIEW ]", uaj.Content, "apply-job-offline")
 		}
 	}
 
