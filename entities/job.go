@@ -21,6 +21,9 @@ type InfoApplyJobQuery struct {
 	ApplyUserName   string    `json:"apply_user_name"`
 	ConfirmUserId   string    `json:"confirm_user_id"`
 	ConfirmUserName string    `json:"confirm_user_name"`
+	CompanyId       string    `json:"company_id"`
+	CompanyLogo     string    `json:"company_logo"`
+	CompanyName     string    `json:"company_name"`
 	Status          string    `json:"status"`
 	Link            string    `json:"link"`
 	JobAvatar       string    `json:"job_avatar"`
@@ -50,9 +53,8 @@ type ResultInfoJob struct {
 	Id          string      `json:"id"`
 	Status      string      `json:"status"`
 	CreatedAt   time.Time   `json:"created_at"`
-	Schedule    string      `json:"schedule"`
-	Link        string      `json:"link"`
 	Job         JobApply    `json:"job"`
+	Company     JobCompany  `json:"company"`
 	UserApply   UserApply   `json:"user_apply"`
 	UserConfirm UserConfirm `json:"user_confirm"`
 }
@@ -64,6 +66,7 @@ type ResultInfoJobDetail struct {
 	Schedule    string      `json:"schedule"`
 	Link        string      `json:"link"`
 	Job         JobApply    `json:"job"`
+	Company     JobCompany  `json:"company"`
 	Doc         []DocApply  `json:"doc"`
 	UserApply   UserApply   `json:"user_apply"`
 	UserConfirm UserConfirm `json:"user_confirm"`
