@@ -59,6 +59,11 @@ func ListInfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 				JobAvatar:   dataQuery.JobAvatar,
 				JobAuthor:   dataQuery.JobAuthor,
 			},
+			Company: entities.JobCompany{
+				Id:   dataQuery.CompanyId,
+				Logo: dataQuery.CompanyLogo,
+				Name: dataQuery.CompanyName,
+			},
 			UserApply: entities.UserApply{
 				Id:   dataQuery.ApplyUserId,
 				Name: dataQuery.ApplyUserName,
@@ -92,9 +97,13 @@ func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 		j.title AS job_title,
 		jc.name AS job_category,
 		p.avatar AS job_avatar,
-		p.fullname AS job_author
+		p.fullname AS job_author,
+		c.uid AS company_id,
+		c.logo AS company_logo,
+		c.name AS company_name
 		FROM apply_job_histories aj 
 		INNER JOIN jobs j ON j.uid = aj.job_id
+		INNER JOIN companies c ON c.uid = j.company_id 
 		INNER JOIN job_categories jc ON jc.uid = j.cat_id
 		INNER JOIN profiles p ON p.user_id = j.user_id
 		INNER JOIN job_statuses js ON js.id = aj.status
@@ -164,6 +173,11 @@ func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 				JobCategory: dataQuery.JobCategory,
 				JobAvatar:   dataQuery.JobAvatar,
 				JobAuthor:   dataQuery.JobAuthor,
+			},
+			Company: entities.JobCompany{
+				Id:   dataQuery.CompanyId,
+				Logo: dataQuery.CompanyLogo,
+				Name: dataQuery.CompanyName,
 			},
 			UserApply: entities.UserApply{
 				Id:   dataQuery.ApplyUserId,
