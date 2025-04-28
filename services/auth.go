@@ -191,7 +191,7 @@ func VerifyOtp(u *models.User) (map[string]any, error) {
 		return nil, errUpdate
 	}
 
-	token, err := middleware.CreateToken(user.Uid)
+	token, err := middleware.CreateToken(0, user.Uid)
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
 		return nil, err
@@ -303,7 +303,7 @@ func Login(u *models.User) (map[string]any, error) {
 		return nil, errors.New("CREDENTIALS_IS_INCORRECT")
 	}
 
-	token, err := middleware.CreateToken(user.Id)
+	token, err := middleware.CreateToken(0, user.Id)
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
 		return nil, err
@@ -318,9 +318,11 @@ func LoginAdmin(u *models.UserAdmin) (entities.AdminResponse, error) {
 
 	users := []entities.UserAdmin{}
 
-	query := `SELECT u.uid AS user_id, u.enabled, u.password, p.fullname, p.avatar, ur.name AS role
+	query := `SELECT u.uid AS user_id, b.id AS branch_id, u.enabled, u.password, p.fullname, p.avatar, ur.name AS role
 	FROM users u
-	INNER JOIN profiles p 
+	INNER JOIN profiles p
+	INNER JOIN user_branches ub ON ub.user_id = u.uid
+	INNER JOIN branchs b ON b.id = ub.branch_id
 	INNER JOIN user_roles ur ON ur.id = u.role
 	WHERE u.email = '` + u.Val + `' OR u.phone = '` + u.Val + `' 
 	LIMIT 1`
@@ -347,7 +349,7 @@ func LoginAdmin(u *models.UserAdmin) (entities.AdminResponse, error) {
 		return entities.AdminResponse{}, errors.New("CREDENTIALS_IS_INCORRECT")
 	}
 
-	token, err := middleware.CreateToken(users[0].UserId)
+	token, err := middleware.CreateToken(users[0].BranchId, users[0].UserId)
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
 		return entities.AdminResponse{}, err
@@ -451,7 +453,7 @@ func Register(u *models.User) (map[string]any, error) {
 		helper.Logger("error", "Failed to send email: "+errEmail.Error())
 	}
 
-	token, err := middleware.CreateToken(user.Id)
+	token, err := middleware.CreateToken(0, user.Id)
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
 	}

@@ -50,7 +50,7 @@ func AdminListUser() (map[string]any, error) {
 
 		var branch entities.AdminListUserBranch
 		if len(adminListUserBranchData) > 0 {
-			branch = adminListUserBranchData[0] // Get the first branch
+			branch = adminListUserBranchData[0]
 		} else {
 			branch = entities.AdminListUserBranch{
 				Id:   0,
