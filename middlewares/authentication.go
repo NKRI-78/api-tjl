@@ -100,7 +100,7 @@ func JwtAuthentication(next http.Handler) http.Handler {
 	})
 }
 
-func CreateToken(branchId int, userId string) (map[string]string, error) {
+func CreateToken(branchId, userId string) (map[string]string, error) {
 
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
