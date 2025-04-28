@@ -447,7 +447,9 @@ func AdminListApplyJob(branchId string) (map[string]any, error) {
 	up.fullname AS user_name,
 	j.created_at,
 	js.id AS job_status_id,
-	js.name AS job_status_name
+	js.name AS job_status_name,
+	b.id AS branch_id,
+    b.name AS branch_name
 	FROM jobs j
 	INNER JOIN job_categories jc ON jc.uid = j.cat_id
 	INNER JOIN companies c ON c.uid = j.company_id 
@@ -458,6 +460,7 @@ func AdminListApplyJob(branchId string) (map[string]any, error) {
 	INNER JOIN profiles pc ON pc.user_id = aj.user_id
 	INNER JOIN users upc ON upc.uid = pc.user_id
 	INNER JOIN user_branches ub ON ub.user_id = aj.user_id
+	INNER JOIN branchs b ON b.id  = ub.branch_id
 	`
 
 	var rows *sql.Rows
@@ -800,6 +803,10 @@ func AdminListApplyJob(branchId string) (map[string]any, error) {
 				Id:     job.UserId,
 				Avatar: job.UserAvatar,
 				Name:   job.UserName,
+			},
+			Branch: entities.AdminBranch{
+				Id:   job.BranchId,
+				Name: job.BranchName,
 			},
 			Created: job.CreatedAt.Format("2006-01-02 15:04:05"),
 		})

@@ -150,6 +150,8 @@ type AdminListApplyJobQuery struct {
 	Salary             float64   `json:"salary"`
 	CatId              string    `json:"cat_id"`
 	CatName            string    `json:"cat_name"`
+	BranchId           int       `json:"branch_id"`
+	BranchName         string    `json:"branch_name"`
 	CompanyId          string    `json:"company_id"`
 	CompanyLogo        string    `json:"company_logo"`
 	CompanyName        string    `json:"company_name"`
@@ -243,6 +245,12 @@ type AdminListApplyJob struct {
 	JobCategory JobCategory   `json:"category"`
 	JobPlace    JobPlace      `json:"place"`
 	Author      AuthorJobUser `json:"author"`
+	Branch      AdminBranch   `json:"branch"`
+}
+
+type AdminBranch struct {
+	Id   int    `json:"id"`
+	Name string `json:"name"`
 }
 
 type Candidate struct {
