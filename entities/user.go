@@ -84,7 +84,7 @@ type User struct {
 
 type UserAdmin struct {
 	UserId   string `json:"user_id"`
-	BranchId int    `json:"branch_id"`
+	BranchId string `json:"branch_id"`
 	Fullname string `json:"fullname"`
 	Avatar   string `json:"avatar"`
 	Enabled  int    `json:"enabled"`

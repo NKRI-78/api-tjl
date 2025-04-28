@@ -16,10 +16,9 @@ func AdminListApplyJob(w http.ResponseWriter, r *http.Request) {
 
 	claims, _ := token.Claims.(jwt.MapClaims)
 
-	userId, _ := claims["id"].(string)
 	BranchId, _ := claims["branch_id"].(string)
 
-	result, err := services.AdminListApplyJob(userId, BranchId)
+	result, err := services.AdminListApplyJob(BranchId)
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]any{})
