@@ -65,3 +65,8 @@
 [ERROR]: 2025-04-28 17:52:33 - In Server: Error 1054: Unknown column 'b.id' in 'field list'
 [ERROR]: 2025-04-28 17:52:34 - In Server: Error 1054: Unknown column 'b.id' in 'field list'
 [INFO]: 2025-04-28 17:53:11 - Fetch Admin Job List success
+[ERROR]: 2025-04-28 20:14:37 - In Server: Missing auth token
+[INFO]: 2025-04-28 20:14:42 - Socmed List success
+[ERROR]: 2025-04-28 20:14:51 - In Server: link is required
+[INFO]: 2025-04-28 20:15:05 - Social Media Store success
+[INFO]: 2025-04-28 20:17:47 - Socmed List success
