@@ -1,0 +1,28 @@
+[ERROR]: 2025-04-28 14:39:46 - In Server: Error 1146: Table 'tjl.branches' doesn't exist
+[ERROR]: 2025-04-28 14:39:47 - In Server: Error 1146: Table 'tjl.branches' doesn't exist
+[ERROR]: 2025-04-28 14:39:59 - In Server: record not found
+[ERROR]: 2025-04-28 14:40:00 - In Server: record not found
+[ERROR]: 2025-04-28 14:40:20 - In Server: record not found
+[ERROR]: 2025-04-28 14:40:21 - In Server: record not found
+[ERROR]: 2025-04-28 14:40:22 - In Server: record not found
+[ERROR]: 2025-04-28 14:40:47 - In Server: record not found
+[ERROR]: 2025-04-28 14:40:48 - In Server: record not found
+[ERROR]: 2025-04-28 14:41:59 - In Server: record not found
+[ERROR]: 2025-04-28 14:42:06 - In Server: record not found
+[ERROR]: 2025-04-28 14:43:01 - In Server: record not found
+[ERROR]: 2025-04-28 14:47:16 - In Server: sql: Scan error on column index 3, name "avatar": converting NULL to string is unsupported
+[INFO]: 2025-04-28 14:47:43 - Get Admin List User success
+[INFO]: 2025-04-28 14:48:28 - Get Admin List User success
+[INFO]: 2025-04-28 14:48:31 - Get Admin List User success
+[INFO]: 2025-04-28 14:49:12 - Get Admin List User success
+[ERROR]: 2025-04-28 14:50:23 - In Server: sql: Scan error on column index 3, name "avatar": converting NULL to string is unsupported
+[INFO]: 2025-04-28 14:50:54 - Get Admin List User success
+[INFO]: 2025-04-28 14:51:29 - Get Admin List User success
+[INFO]: 2025-04-28 14:53:06 - Get Admin List User success
+[INFO]: 2025-04-28 14:53:59 - Get Admin List User success
+[INFO]: 2025-04-28 14:54:36 - Get Admin List User success
+[INFO]: 2025-04-28 14:58:25 - Get Admin List User success
+[INFO]: 2025-04-28 15:26:35 - Fetch Admin Job List success
+[INFO]: 2025-04-28 15:33:10 - Get Info Apply Job success
+[INFO]: 2025-04-28 15:33:31 - Get Info Apply Job success
+[INFO]: 2025-04-28 15:41:03 - Get Info Apply Job success

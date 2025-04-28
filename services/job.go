@@ -165,11 +165,27 @@ func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 			})
 		}
 
+		queryJobOffline := `SELECT apply_job_id FROM apply_job_offlines WHERE apply_job_id = ?`
+		var offlineFlag bool
+		rowsJobOffline, errJobOffline := db.Debug().Raw(queryJobOffline, dataQuery.ApplyJobId).Rows()
+
+		if errJobOffline != nil {
+			helper.Logger("error", "In Server: "+errJobOffline.Error())
+		} else {
+			if rowsJobOffline.Next() {
+				offlineFlag = true // Job is offline
+			} else {
+				offlineFlag = false // Job is not offline
+			}
+		}
+		defer rowsJobOffline.Close()
+
 		data = append(data, entities.ResultInfoJobDetail{
 			Id:        dataQuery.ApplyJobId,
 			Status:    dataQuery.Status,
 			Doc:       dataDoc,
 			CreatedAt: dataQuery.CreatedAt,
+			Offline:   offlineFlag,
 			Link:      helper.DefaultIfEmpty(dataQuery.Link, "-"),
 			Schedule:  helper.DefaultIfEmpty(dataQuery.Schedule, "-"),
 			Job: entities.JobApply{
@@ -396,7 +412,7 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 	return map[string]any{}, nil
 }
 
-func AdminListApplyJob() (map[string]any, error) {
+func AdminListApplyJob(userId string) (map[string]any, error) {
 	var job entities.AdminListApplyJobQuery
 	var candidateExercise entities.CandidateExerciseQuery
 	var candidateBiodata entities.CandidateBiodataQuery
@@ -440,8 +456,9 @@ func AdminListApplyJob() (map[string]any, error) {
 	INNER JOIN profiles up ON up.user_id = j.user_id
 	INNER JOIN profiles pc ON pc.user_id = aj.user_id
 	INNER JOIN users upc ON upc.uid = pc.user_id 
+	WHERE aj.user_confirm_id = ?
 	`
-	rows, err := db.Debug().Raw(query).Rows()
+	rows, err := db.Debug().Raw(query, userId).Rows()
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
