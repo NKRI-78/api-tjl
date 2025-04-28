@@ -31,3 +31,8 @@
 [INFO]: 2025-04-28 16:22:17 - Login Admin success
 [INFO]: 2025-04-28 16:22:37 - Login Admin success
 [INFO]: 2025-04-28 16:22:58 - Login Admin success
+[ERROR]: 2025-04-28 16:47:26 - In Server: sql: expected 0 arguments, got 1
+[ERROR]: 2025-04-28 16:47:34 - In Server: sql: expected 0 arguments, got 1
+[ERROR]: 2025-04-28 16:47:34 - In Server: sql: expected 0 arguments, got 1
+[ERROR]: 2025-04-28 16:47:35 - In Server: sql: expected 0 arguments, got 1
+[INFO]: 2025-04-28 16:47:50 - Fetch Admin Job List success
