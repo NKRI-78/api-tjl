@@ -457,7 +457,7 @@ func AdminListApplyJob(userId, branchId string) (map[string]any, error) {
 	INNER JOIN profiles pc ON pc.user_id = aj.user_id
 	INNER JOIN users upc ON upc.uid = pc.user_id 
 	`
-	rows, err := db.Debug().Raw(query, userId).Rows()
+	rows, err := db.Debug().Raw(query).Rows()
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
