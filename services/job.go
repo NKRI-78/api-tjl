@@ -412,7 +412,7 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 	return map[string]any{}, nil
 }
 
-func AdminListApplyJob(userId string) (map[string]any, error) {
+func AdminListApplyJob(userId, branchId string) (map[string]any, error) {
 	var job entities.AdminListApplyJobQuery
 	var candidateExercise entities.CandidateExerciseQuery
 	var candidateBiodata entities.CandidateBiodataQuery
@@ -456,7 +456,6 @@ func AdminListApplyJob(userId string) (map[string]any, error) {
 	INNER JOIN profiles up ON up.user_id = j.user_id
 	INNER JOIN profiles pc ON pc.user_id = aj.user_id
 	INNER JOIN users upc ON upc.uid = pc.user_id 
-	WHERE aj.user_confirm_id = ?
 	`
 	rows, err := db.Debug().Raw(query, userId).Rows()
 

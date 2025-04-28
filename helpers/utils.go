@@ -138,7 +138,7 @@ func DecodeJwt(val string) *jwt.Token {
 
 	tokenPart := splitted[1]
 
-	token, _ := jwt.Parse(tokenPart, func(token *jwt.Token) (interface{}, error) {
+	token, _ := jwt.Parse(tokenPart, func(token *jwt.Token) (any, error) {
 		return []byte(os.Getenv("JWT_SECRET")), nil
 	})
 	return token

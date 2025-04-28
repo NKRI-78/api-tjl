@@ -100,12 +100,13 @@ func JwtAuthentication(next http.Handler) http.Handler {
 	})
 }
 
-func CreateToken(userId string) (map[string]string, error) {
+func CreateToken(branchId int, userId string) (map[string]string, error) {
 
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
 	claims["authorized"] = true
 	claims["id"] = userId
+	claims["branch_id"] = branchId
 	// claims["exp"] = time.Now().Add(time.Hour * 168).Unix()
 
 	access, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
