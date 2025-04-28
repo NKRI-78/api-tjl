@@ -63,6 +63,7 @@ type ResultInfoJobDetail struct {
 	Id          string      `json:"id"`
 	Status      string      `json:"status"`
 	CreatedAt   time.Time   `json:"created_at"`
+	Offline     bool        `json:"offline"`
 	Schedule    string      `json:"schedule"`
 	Link        string      `json:"link"`
 	Job         JobApply    `json:"job"`

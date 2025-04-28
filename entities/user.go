@@ -1,6 +1,7 @@
 package entities
 
 import (
+	"database/sql"
 	"time"
 )
 
@@ -10,13 +11,30 @@ type ForgotPassword struct {
 }
 
 type AdminListUser struct {
-	Id        string    `json:"id"`
-	Avatar    string    `json:"avatar"`
-	Fullname  string    `json:"fullname"`
-	Email     string    `json:"email"`
-	Phone     string    `json:"phone"`
-	Role      string    `json:"role"`
-	CreatedAt time.Time `json:"created_at"`
+	Id        string                `json:"id"`
+	Avatar    sql.NullString        `json:"avatar"`
+	Fullname  string                `json:"fullname"`
+	Email     string                `json:"email"`
+	Phone     string                `json:"phone"`
+	Role      string                `json:"role"`
+	Branch    []AdminListUserBranch `json:"branch"`
+	CreatedAt time.Time             `json:"created_at"`
+}
+
+type AdminListUserResponse struct {
+	Id        string              `json:"id"`
+	Avatar    string              `json:"avatar"`
+	Fullname  string              `json:"fullname"`
+	Email     string              `json:"email"`
+	Phone     string              `json:"phone"`
+	Role      string              `json:"role"`
+	Branch    AdminListUserBranch `json:"branch"`
+	CreatedAt time.Time           `json:"created_at"`
+}
+
+type AdminListUserBranch struct {
+	Id   int    `json:"id"`
+	Name string `json:"name"`
 }
 
 type RegisterUserBranch struct {
