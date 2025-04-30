@@ -824,7 +824,8 @@ func JobList(userId, search, salary, country, position string) (map[string]any, 
 	var dataJob = make([]entities.JobList, 0)
 
 	query := `SELECT j.uid AS id, j.title, j.caption, j.salary, j.worker_count,
-	jc.uid as cat_id,
+	jc.uid AS cat_id,
+	jc.icon AS cat_icon,
 	jc.name AS cat_name, 
 	p.id AS place_id,
 	p.name AS place_name,
@@ -913,6 +914,7 @@ func JobList(userId, search, salary, country, position string) (map[string]any, 
 			Bookmark:    bookmark,
 			JobCategory: entities.JobCategory{
 				Id:   job.CatId,
+				Icon: job.CatIcon,
 				Name: job.CatName,
 			},
 			JobPlace: entities.JobPlace{
