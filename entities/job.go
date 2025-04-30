@@ -415,6 +415,7 @@ type JobSkillCategoryStore struct {
 
 type JobCategoryCount struct {
 	Name  string `json:"name"`
+	Icon  string `json:"icon"`
 	Total int    `json:"total"`
 }
 

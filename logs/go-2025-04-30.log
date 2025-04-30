@@ -2,3 +2,14 @@
 [INFO]: 2025-04-30 13:59:43 - Forum Detail success
 [INFO]: 2025-04-30 14:15:11 - Forum Detail success
 [INFO]: 2025-04-30 14:15:19 - Forum Detail success
+[ERROR]: 2025-04-30 16:28:50 - In Server: Missing auth token
+[INFO]: 2025-04-30 16:28:55 - Applicant Per Month
+[ERROR]: 2025-04-30 16:39:28 - Scan error: sql: expected 3 destination arguments in Scan, not 1
+[ERROR]: 2025-04-30 16:39:29 - Scan error: sql: expected 3 destination arguments in Scan, not 1
+[ERROR]: 2025-04-30 16:40:09 - Scan error: sql: expected 3 destination arguments in Scan, not 1
+[INFO]: 2025-04-30 16:41:12 - Applicant Per Month
+[INFO]: 2025-04-30 16:41:30 - Applicant Per Month
+[INFO]: 2025-04-30 16:41:31 - Applicant Per Month
+[INFO]: 2025-04-30 17:24:01 - Applicant Per Month
+[INFO]: 2025-04-30 17:24:16 - Applicant Per Month
+[INFO]: 2025-04-30 17:27:41 - Fetch Job Category Count success

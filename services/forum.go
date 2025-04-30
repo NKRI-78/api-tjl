@@ -288,13 +288,18 @@ func ForumList(userId, search, page, limit string) (map[string]any, error) {
 
 		// # CLOSE ----- forum comment ----- # //
 
+		totalCommentAndReply := 0
+		for _, c := range dataForumComment {
+			totalCommentAndReply += 1 + c.ReplyCount
+		}
+
 		appendForumAssign = append(appendForumAssign, entities.ForumResponse{
 			Id:           forum.Id,
 			Title:        forum.Title,
 			Caption:      forum.Caption,
 			Media:        dataForumMedia,
 			Comment:      dataForumComment,
-			CommentCount: len(dataForumComment),
+			CommentCount: totalCommentAndReply,
 			Like:         dataForumLike,
 			LikeCount:    len(dataForumLike),
 			IsLiked:      checkForumIsLike[0].IsExist,

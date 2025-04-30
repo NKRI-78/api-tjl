@@ -87,6 +87,9 @@ func main() {
 	router.HandleFunc("/api/v1/admin/list/user", controllers.AdminListUser).Methods("GET")
 	router.HandleFunc("/api/v1/admin/delete/user", controllers.DeleteUser).Methods("DELETE")
 
+	// Chart Admin
+	router.HandleFunc("/api/v1/admin/chart/summary", controllers.Summary).Methods("GET")
+
 	// Branch
 	router.HandleFunc("/api/v1/branch", controllers.Branch).Methods("GET")
 
