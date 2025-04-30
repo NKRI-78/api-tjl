@@ -474,6 +474,8 @@ func ForumDetail(f *models.Forum) (map[string]any, error) {
 
 	var dataForumComment = make([]entities.ForumComment, 0)
 
+	var dataForumCommentReply = make([]entities.ForumCommentReply, 0)
+
 	rows, errForumComment := db.Debug().Raw(`SELECT fc.uid AS id, fc.created_at, p.avatar, fc.comment, p.user_id, p.fullname 
 	FROM forum_comments fc
 	INNER JOIN profiles p ON p.user_id = fc.user_id
@@ -506,8 +508,6 @@ func ForumDetail(f *models.Forum) (map[string]any, error) {
 			helper.Logger("error", "In Server: "+errCheckForumCommentIsLike.Error())
 			return nil, errors.New(errCheckForumCommentIsLike.Error())
 		}
-
-		var dataForumCommentReply = make([]entities.ForumCommentReply, 0)
 
 		rows, errForumCommentReply := db.Debug().Raw(`SELECT fcr.uid AS id, fcr.created_at, fcr.reply, p.avatar, p.user_id, p.fullname 
 		FROM forum_comment_replies fcr
@@ -578,7 +578,7 @@ func ForumDetail(f *models.Forum) (map[string]any, error) {
 		Caption:      forum[0].Caption,
 		Media:        dataForumMedia,
 		Comment:      dataForumComment,
-		CommentCount: len(dataForumComment),
+		CommentCount: len(dataForumComment) + len(dataForumCommentReply),
 		Like:         dataForumLike,
 		IsLiked:      checkForumIsLike[0].IsExist,
 		LikeCount:    len(dataForumLike),
