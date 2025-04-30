@@ -825,7 +825,7 @@ func JobList(userId, search, salary, country, position string) (map[string]any, 
 
 	query := `SELECT j.uid AS id, j.title, j.caption, j.salary, j.worker_count,
 	jc.uid AS cat_id,
-	jc.icon AS cat_icon,
+	jc.logo AS cat_icon,
 	jc.name AS cat_name, 
 	p.id AS place_id,
 	p.name AS place_name,
