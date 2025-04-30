@@ -474,12 +474,10 @@ func ForumDetail(f *models.Forum) (map[string]any, error) {
 
 	var dataForumComment = make([]entities.ForumComment, 0)
 
-	var dataForumCommentReply = make([]entities.ForumCommentReply, 0)
-
 	rows, errForumComment := db.Debug().Raw(`SELECT fc.uid AS id, fc.created_at, p.avatar, fc.comment, p.user_id, p.fullname 
 	FROM forum_comments fc
 	INNER JOIN profiles p ON p.user_id = fc.user_id
-	WHERE fc.forum_id = '` + forum[0].Id + `'`).Rows()
+	WHERE fc.forum_id = ?`, forum[0].Id).Rows()
 
 	if errForumComment != nil {
 		helper.Logger("error", "In Server: "+errForumComment.Error())
@@ -513,6 +511,8 @@ func ForumDetail(f *models.Forum) (map[string]any, error) {
 		FROM forum_comment_replies fcr
 		INNER JOIN profiles p ON p.user_id = fcr.user_id
 		WHERE fcr.comment_id = '` + forumComment.Id + `'`).Rows()
+
+		var dataForumCommentReply = make([]entities.ForumCommentReply, 0)
 
 		for rows.Next() {
 			errScanRows := db.ScanRows(rows, &forumCommentReply)
@@ -572,13 +572,18 @@ func ForumDetail(f *models.Forum) (map[string]any, error) {
 
 	// # CLOSE ----- forum comment ----- # //
 
+	totalCommentAndReply := 0
+	for _, c := range dataForumComment {
+		totalCommentAndReply += 1 + c.ReplyCount
+	}
+
 	appendForumAssign = append(appendForumAssign, entities.ForumResponse{
 		Id:           forum[0].Id,
 		Title:        forum[0].Title,
 		Caption:      forum[0].Caption,
 		Media:        dataForumMedia,
 		Comment:      dataForumComment,
-		CommentCount: len(dataForumComment) + len(dataForumCommentReply),
+		CommentCount: totalCommentAndReply,
 		Like:         dataForumLike,
 		IsLiked:      checkForumIsLike[0].IsExist,
 		LikeCount:    len(dataForumLike),
