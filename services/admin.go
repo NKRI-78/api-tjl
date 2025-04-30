@@ -7,30 +7,32 @@ import (
 )
 
 func Summary(branchId string) (map[string]any, error) {
-
 	var dataChartSummary entities.ChartSummaryResponse
 
 	var genderQuery entities.GenderQuery
 	var genderResponse = make([]entities.GenderResponse, 0)
+
 	var countryQuery entities.CountryQuery
 	var countryResponse = make([]entities.CountryResponse, 0)
 
 	var applicantPerMonthdata entities.ApplicantPerMonthQuery
-
 	var applicantPerMonthResponse = make([]entities.ApplicantPerMonthResponse, 0)
 
-	// APPLICANTS PER MONTH
+	// === APPLICANTS PER MONTH ===
 	queryApplicantsPerMonth := `
 		SELECT DATE_FORMAT(aj.created_at, '%Y-%m') AS month, COUNT(*) AS total, b.name AS branch
 		FROM apply_jobs aj
 		INNER JOIN user_branches ub ON ub.user_id = aj.user_id
 		INNER JOIN branchs b ON b.id = ub.branch_id
-		WHERE b.id = ?
-		GROUP BY month 
-		ORDER BY month
 	`
+	var args []interface{}
+	if branchId != "" {
+		queryApplicantsPerMonth += " WHERE b.id = ?"
+		args = append(args, branchId)
+	}
+	queryApplicantsPerMonth += " GROUP BY month ORDER BY month"
 
-	rowsApplicantsPerMonth, err := db.Debug().Raw(queryApplicantsPerMonth, branchId).Rows()
+	rowsApplicantsPerMonth, err := db.Debug().Raw(queryApplicantsPerMonth, args...).Rows()
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
 		return nil, err
@@ -38,32 +40,32 @@ func Summary(branchId string) (map[string]any, error) {
 	defer rowsApplicantsPerMonth.Close()
 
 	for rowsApplicantsPerMonth.Next() {
-		errScanRows := db.ScanRows(rowsApplicantsPerMonth, &applicantPerMonthdata)
-
-		if errScanRows != nil {
-			helper.Logger("error", "In Server: "+errScanRows.Error())
-			return nil, errors.New(errScanRows.Error())
+		if err := db.ScanRows(rowsApplicantsPerMonth, &applicantPerMonthdata); err != nil {
+			helper.Logger("error", "In Server: "+err.Error())
+			return nil, err
 		}
-
 		applicantPerMonthResponse = append(applicantPerMonthResponse, entities.ApplicantPerMonthResponse{
 			Month:  applicantPerMonthdata.Month,
 			Branch: applicantPerMonthdata.Branch,
 			Total:  applicantPerMonthdata.Total,
 		})
-
 	}
 
-	// GENDER
+	// === GENDER ===
 	queryGender := `
 		SELECT fb.gender, COUNT(*) AS total
 		FROM form_biodatas fb
 		INNER JOIN user_branches ub ON ub.user_id = fb.user_id
-		INNER JOIN branchs b ON b.id = ub.branch_id 
-		WHERE b.id = ?
-		GROUP BY fb.gender
+		INNER JOIN branchs b ON b.id = ub.branch_id
 	`
+	args = []interface{}{}
+	if branchId != "" {
+		queryGender += " WHERE b.id = ?"
+		args = append(args, branchId)
+	}
+	queryGender += " GROUP BY fb.gender"
 
-	rowsGender, err := db.Debug().Raw(queryGender, branchId).Rows()
+	rowsGender, err := db.Debug().Raw(queryGender, args...).Rows()
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
 		return nil, err
@@ -71,20 +73,17 @@ func Summary(branchId string) (map[string]any, error) {
 	defer rowsGender.Close()
 
 	for rowsGender.Next() {
-		errScanRows := db.ScanRows(rowsGender, &genderQuery)
-
-		if errScanRows != nil {
-			helper.Logger("error", "In Server: "+errScanRows.Error())
-			return nil, errors.New(errScanRows.Error())
+		if err := db.ScanRows(rowsGender, &genderQuery); err != nil {
+			helper.Logger("error", "In Server: "+err.Error())
+			return nil, err
 		}
-
 		genderResponse = append(genderResponse, entities.GenderResponse{
 			Gender: genderQuery.Gender,
 			Total:  genderQuery.Total,
 		})
 	}
 
-	// COUNTRY
+	// === COUNTRY === (no filtering by branchId)
 	queryCountry := `
 		SELECT p.name AS country, COUNT(*) AS total
 		FROM jobs j
@@ -100,13 +99,10 @@ func Summary(branchId string) (map[string]any, error) {
 	defer rowsCountry.Close()
 
 	for rowsCountry.Next() {
-		errScanRows := db.ScanRows(rowsCountry, &countryQuery)
-
-		if errScanRows != nil {
-			helper.Logger("error", "In Server: "+errScanRows.Error())
-			return nil, errors.New(errScanRows.Error())
+		if err := db.ScanRows(rowsCountry, &countryQuery); err != nil {
+			helper.Logger("error", "In Server: "+err.Error())
+			return nil, err
 		}
-
 		countryResponse = append(countryResponse, entities.CountryResponse{
 			Country: countryQuery.Country,
 			Total:   countryQuery.Total,
