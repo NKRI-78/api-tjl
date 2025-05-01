@@ -101,6 +101,10 @@ type InfoApplyJob struct {
 	UserId string `json:"user_id"`
 }
 
+type AllJob struct {
+	Uid string `json:"uid"`
+}
+
 type ApplyJob struct {
 	Id            string `json:"uid"`
 	Link          string `json:"link"`

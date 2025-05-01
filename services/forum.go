@@ -68,9 +68,9 @@ func ForumList(userId, search, page, limit string) (map[string]any, error) {
 	INNER JOIN forum_types ft ON ft.id = f.type
 	INNER JOIN profiles p ON f.user_id = p.user_id
 	INNER JOIN users u ON u.uid = p.user_id
-	WHERE f.title LIKE '%` + search + `%'
+	WHERE f.title LIKE '%`+search+`%'
 	ORDER BY f.id DESC
-	LIMIT ` + offset + `, ` + limit + ``).Rows()
+	LIMIT ?, ?`, offset, limit).Rows()
 
 	if errForum != nil {
 		helper.Logger("error", "In Server: "+errForum.Error())
