@@ -6,6 +6,118 @@ import (
 	helper "superapps/helpers"
 )
 
+func Summary(branchId string) (map[string]any, error) {
+	var dataChartSummary entities.ChartSummaryResponse
+
+	var genderQuery entities.GenderQuery
+	var genderResponse = make([]entities.GenderResponse, 0)
+
+	var countryQuery entities.CountryQuery
+	var countryResponse = make([]entities.CountryResponse, 0)
+
+	var applicantPerMonthdata entities.ApplicantPerMonthQuery
+	var applicantPerMonthResponse = make([]entities.ApplicantPerMonthResponse, 0)
+
+	// === APPLICANTS PER MONTH ===
+	queryApplicantsPerMonth := `
+		SELECT DATE_FORMAT(aj.created_at, '%Y-%m') AS month, COUNT(*) AS total, b.name AS branch
+		FROM apply_jobs aj
+		INNER JOIN user_branches ub ON ub.user_id = aj.user_id
+		INNER JOIN branchs b ON b.id = ub.branch_id
+	`
+	var args []interface{}
+	if branchId != "" {
+		queryApplicantsPerMonth += " WHERE b.id = ?"
+		args = append(args, branchId)
+	}
+	queryApplicantsPerMonth += " GROUP BY month ORDER BY month"
+
+	rowsApplicantsPerMonth, err := db.Debug().Raw(queryApplicantsPerMonth, args...).Rows()
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, err
+	}
+	defer rowsApplicantsPerMonth.Close()
+
+	for rowsApplicantsPerMonth.Next() {
+		if err := db.ScanRows(rowsApplicantsPerMonth, &applicantPerMonthdata); err != nil {
+			helper.Logger("error", "In Server: "+err.Error())
+			return nil, err
+		}
+		applicantPerMonthResponse = append(applicantPerMonthResponse, entities.ApplicantPerMonthResponse{
+			Month:  applicantPerMonthdata.Month,
+			Branch: applicantPerMonthdata.Branch,
+			Total:  applicantPerMonthdata.Total,
+		})
+	}
+
+	// === GENDER ===
+	queryGender := `
+		SELECT fb.gender, COUNT(*) AS total
+		FROM form_biodatas fb
+		INNER JOIN user_branches ub ON ub.user_id = fb.user_id
+		INNER JOIN branchs b ON b.id = ub.branch_id
+	`
+	args = []interface{}{}
+	if branchId != "" {
+		queryGender += " WHERE b.id = ?"
+		args = append(args, branchId)
+	}
+	queryGender += " GROUP BY fb.gender"
+
+	rowsGender, err := db.Debug().Raw(queryGender, args...).Rows()
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, err
+	}
+	defer rowsGender.Close()
+
+	for rowsGender.Next() {
+		if err := db.ScanRows(rowsGender, &genderQuery); err != nil {
+			helper.Logger("error", "In Server: "+err.Error())
+			return nil, err
+		}
+		genderResponse = append(genderResponse, entities.GenderResponse{
+			Gender: genderQuery.Gender,
+			Total:  genderQuery.Total,
+		})
+	}
+
+	// === COUNTRY === (no filtering by branchId)
+	queryCountry := `
+		SELECT p.name AS country, COUNT(*) AS total
+		FROM jobs j
+		INNER JOIN places p ON p.id = j.place_id 
+		GROUP BY p.id
+	`
+
+	rowsCountry, err := db.Debug().Raw(queryCountry).Rows()
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, err
+	}
+	defer rowsCountry.Close()
+
+	for rowsCountry.Next() {
+		if err := db.ScanRows(rowsCountry, &countryQuery); err != nil {
+			helper.Logger("error", "In Server: "+err.Error())
+			return nil, err
+		}
+		countryResponse = append(countryResponse, entities.CountryResponse{
+			Country: countryQuery.Country,
+			Total:   countryQuery.Total,
+		})
+	}
+
+	dataChartSummary.ApplicantsPerMonth = applicantPerMonthResponse
+	dataChartSummary.Countries = countryResponse
+	dataChartSummary.Genders = genderResponse
+
+	return map[string]any{
+		"data": dataChartSummary,
+	}, nil
+}
+
 func AdminListUser() (map[string]any, error) {
 	var adminListUserData []entities.AdminListUserResponse
 
