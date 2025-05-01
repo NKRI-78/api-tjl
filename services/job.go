@@ -856,7 +856,8 @@ func JobList(userId, search, salary, country, position, page, limit string) (map
 	nextPage = pageinteger + 1
 
 	query := `SELECT j.uid AS id, j.title, j.caption, j.salary, j.worker_count,
-	jc.uid as cat_id,
+	jc.uid AS cat_id,
+	jc.logo AS cat_icon,
 	jc.name AS cat_name, 
 	p.id AS place_id,
 	p.name AS place_name,
@@ -946,6 +947,7 @@ func JobList(userId, search, salary, country, position, page, limit string) (map
 			Bookmark:    bookmark,
 			JobCategory: entities.JobCategory{
 				Id:   job.CatId,
+				Icon: job.CatIcon,
 				Name: job.CatName,
 			},
 			JobPlace: entities.JobPlace{
@@ -1396,7 +1398,7 @@ func JobFavourite(j *models.JobFavourite) (map[string]any, error) {
 func JobCategoryCount() (map[string]any, error) {
 	categoryCounts := []entities.JobCategoryCount{}
 
-	query := `SELECT jc.name, COUNT(j.cat_id) AS total
+	query := `SELECT jc.name, jc.logo AS icon, COUNT(j.cat_id) AS total
 	FROM job_categories jc
 	LEFT JOIN jobs j ON jc.uid = j.cat_id
 	GROUP BY jc.name

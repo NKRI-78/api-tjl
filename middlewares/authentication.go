@@ -28,6 +28,7 @@ func JwtAuthentication(next http.Handler) http.Handler {
 		publicPaths := []string{
 			"/api/v1/login-admin",
 			"/api/v1/login",
+			"/api/v1/media/socmed/list",
 			"/api/v1/register",
 			"/api/v1/verify-otp",
 			"/api/v1/resend-otp",

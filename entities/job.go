@@ -130,6 +130,7 @@ type JobListQuery struct {
 	Caption       string    `json:"caption"`
 	WorkerCount   int       `json:"worker_count"`
 	CatId         string    `json:"cat_id"`
+	CatIcon       string    `json:"cat_icon"`
 	CatName       string    `json:"cat_name"`
 	CompanyId     string    `json:"company_id"`
 	CompanyLogo   string    `json:"company_logo"`
@@ -418,6 +419,7 @@ type JobSkillCategoryStore struct {
 
 type JobCategoryCount struct {
 	Name  string `json:"name"`
+	Icon  string `json:"icon"`
 	Total int    `json:"total"`
 }
 
