@@ -975,8 +975,8 @@ func JobList(userId, search, salary, country, position, page, limit string) (map
 		"per_page":     int(perPage),
 		"prev_page":    prevPage,
 		"next_page":    nextPage,
-		"next_url":     url + "?page=" + nextUrl,
-		"prev_url":     url + "?page=" + prevUrl,
+		"next_url":     url + "/api/v1/job?page=" + nextUrl,
+		"prev_url":     url + "/api/v1/job?page=" + prevUrl,
 		"data":         &dataJob,
 	}, nil
 }

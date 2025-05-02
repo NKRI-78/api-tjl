@@ -327,8 +327,8 @@ func ForumList(userId, search, page, limit string) (map[string]any, error) {
 		"per_page":     int(perPage),
 		"prev_page":    prevPage,
 		"next_page":    nextPage,
-		"next_url":     url + "?page=" + nextUrl,
-		"prev_url":     url + "?page=" + prevUrl,
+		"next_url":     url + "/api/v1/forum-list?page=" + nextUrl,
+		"prev_url":     url + "/api/v1/forum-list?page=" + prevUrl,
 		"data":         &appendForumAssign,
 	}, nil
 }
