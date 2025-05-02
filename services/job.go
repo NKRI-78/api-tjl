@@ -820,7 +820,7 @@ func AdminListApplyJob(branchId string) (map[string]any, error) {
 	}, nil
 }
 
-func JobList(userId, search, salary, country, position, page, limit string) (map[string]any, error) {
+func JobList(userId, search, salary, country, position, page, limit string, isRecommendation bool) (map[string]any, error) {
 	url := os.Getenv("API_URL_PROD")
 
 	var allJob []models.AllJob
@@ -881,12 +881,17 @@ func JobList(userId, search, salary, country, position, page, limit string) (map
 	WHERE p.name LIKE '%` + country + `%'
 	AND jc.name LIKE '%` + position + `%'
 	AND (j.title LIKE '%` + search + `%' OR j.caption LIKE '%` + search + `%' OR jc.name LIKE '%` + search + `%')
-	LIMIT ?, ?
 	`
 
 	if salary != "" {
 		query += ` AND (j.salary * p.kurs) >= '` + salary + `' `
 	}
+
+	if isRecommendation {
+		query += ` ORDER BY j.clicked_count DESC`
+	}
+
+	query += ` LIMIT ?, ?`
 
 	var rows *sql.Rows
 	var err error
@@ -981,13 +986,15 @@ func JobList(userId, search, salary, country, position, page, limit string) (map
 	}, nil
 }
 
-func JobDetail(f *models.Job) (map[string]any, error) {
+func JobDetail(j *models.Job) (map[string]any, error) {
 	var job entities.JobListQuery
 	var jobFavourite []entities.JobFavourite
 	var jobSkillCategory []entities.JobSkillCategory
+
 	var dataJob = make([]entities.JobList, 0)
 
-	query := `SELECT j.uid AS id, j.title, j.caption, j.salary, j.worker_count,
+	query := `
+		SELECT j.uid AS id, j.title, j.caption, j.salary, j.worker_count,
 		jc.uid as cat_id,
 		jc.name AS cat_name, 
 		p.id AS place_id,
@@ -1010,12 +1017,19 @@ func JobDetail(f *models.Job) (map[string]any, error) {
 		WHERE j.uid = ?
 	`
 
-	rows, err := db.Debug().Raw(query, f.Id).Rows()
+	rows, err := db.Debug().Raw(query, j.Id).Rows()
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
 	}
 	defer rows.Close()
+
+	errUpdateClickedCount := db.Debug().Exec(`UPDATE jobs SET clicked_count = clicked_count + 1 WHERE uid = ?`, j.Id).Error
+
+	if errUpdateClickedCount != nil {
+		helper.Logger("error", "In Server: "+errUpdateClickedCount.Error())
+		return nil, errors.New(errUpdateClickedCount.Error())
+	}
 
 	found := false
 	for rows.Next() {
@@ -1028,7 +1042,7 @@ func JobDetail(f *models.Job) (map[string]any, error) {
 		}
 
 		bookmarkQuery := `SELECT job_id, user_id FROM job_favourites WHERE user_id = ? AND job_id = ?`
-		errBookmark := db.Debug().Raw(bookmarkQuery, f.UserId, job.Id).Scan(&jobFavourite).Error
+		errBookmark := db.Debug().Raw(bookmarkQuery, j.UserId, job.Id).Scan(&jobFavourite).Error
 
 		if errBookmark != nil {
 			helper.Logger("error", "In Server: "+errBookmark.Error())

@@ -1,0 +1,9 @@
+[INFO]: 2025-05-02 10:40:32 - Job Detail success
+[INFO]: 2025-05-02 10:41:21 - Job Detail success
+[INFO]: 2025-05-02 10:44:11 - Job Detail success
+[INFO]: 2025-05-02 10:49:34 - Job List success
+[INFO]: 2025-05-02 10:49:48 - Job List success
+[ERROR]: 2025-05-02 10:49:51 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ORDER BY j.clicked_count DESC' at line 28
+[ERROR]: 2025-05-02 10:51:36 - In Server: sql: expected 0 arguments, got 2
+[INFO]: 2025-05-02 10:51:39 - Job List success
+[INFO]: 2025-05-02 10:51:57 - Job List success
