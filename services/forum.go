@@ -14,7 +14,7 @@ import (
 )
 
 func ForumList(userId, search, page, limit string) (map[string]any, error) {
-	url := os.Getenv("API_URL_DEV")
+	url := os.Getenv("API_URL_PROD")
 
 	var allForum []models.Forum
 	var appendForumAssign = make([]entities.ForumResponse, 0)

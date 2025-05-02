@@ -821,7 +821,7 @@ func AdminListApplyJob(branchId string) (map[string]any, error) {
 }
 
 func JobList(userId, search, salary, country, position, page, limit string) (map[string]any, error) {
-	url := os.Getenv("API_URL_DEV")
+	url := os.Getenv("API_URL_PROD")
 
 	var allJob []models.AllJob
 	var job entities.JobListQuery
