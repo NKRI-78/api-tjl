@@ -14,7 +14,7 @@ import (
 )
 
 func ForumList(userId, search, page, limit string) (map[string]any, error) {
-	url := os.Getenv("API_URL_DEV")
+	url := os.Getenv("API_URL_PROD")
 
 	var allForum []models.Forum
 	var appendForumAssign = make([]entities.ForumResponse, 0)
@@ -68,9 +68,9 @@ func ForumList(userId, search, page, limit string) (map[string]any, error) {
 	INNER JOIN forum_types ft ON ft.id = f.type
 	INNER JOIN profiles p ON f.user_id = p.user_id
 	INNER JOIN users u ON u.uid = p.user_id
-	WHERE f.title LIKE '%` + search + `%'
+	WHERE f.title LIKE '%`+search+`%'
 	ORDER BY f.id DESC
-	LIMIT ` + offset + `, ` + limit + ``).Rows()
+	LIMIT ?, ?`, offset, limit).Rows()
 
 	if errForum != nil {
 		helper.Logger("error", "In Server: "+errForum.Error())
@@ -327,8 +327,8 @@ func ForumList(userId, search, page, limit string) (map[string]any, error) {
 		"per_page":     int(perPage),
 		"prev_page":    prevPage,
 		"next_page":    nextPage,
-		"next_url":     url + "?page=" + nextUrl,
-		"prev_url":     url + "?page=" + prevUrl,
+		"next_url":     url + "/api/v1/forum-list?page=" + nextUrl + "&limit=10",
+		"prev_url":     url + "/api/v1/forum-list?page=" + prevUrl + "&limit=10",
 		"data":         &appendForumAssign,
 	}, nil
 }
