@@ -33,7 +33,8 @@ type CountryResponse struct {
 }
 
 type ChartSummaryResponse struct {
-	ApplicantsPerMonth []ApplicantPerMonthResponse `json:"applicants_per_month"`
-	Genders            []GenderResponse            `json:"genders"`
-	Countries          []CountryResponse           `json:"countries"`
+	ApplicantsPerMonth  []ApplicantPerMonthResponse `json:"applicants_per_month"`
+	ApplicantsPerBranch []ApplicantPerMonthResponse `json:"applicants_per_branch"`
+	Genders             []GenderResponse            `json:"genders"`
+	Countries           []CountryResponse           `json:"countries"`
 }

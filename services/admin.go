@@ -15,8 +15,10 @@ func Summary(branchId string) (map[string]any, error) {
 	var countryQuery entities.CountryQuery
 	var countryResponse = make([]entities.CountryResponse, 0)
 
-	var applicantPerMonthdata entities.ApplicantPerMonthQuery
+	var applicantPerMonthData entities.ApplicantPerMonthQuery
+	var applicantPerBranchData entities.ApplicantPerMonthQuery
 	var applicantPerMonthResponse = make([]entities.ApplicantPerMonthResponse, 0)
+	var applicantPerBranchResponse = make([]entities.ApplicantPerMonthResponse, 0)
 
 	// === APPLICANTS PER MONTH ===
 	queryApplicantsPerMonth := `
@@ -25,7 +27,7 @@ func Summary(branchId string) (map[string]any, error) {
 		INNER JOIN user_branches ub ON ub.user_id = aj.user_id
 		INNER JOIN branchs b ON b.id = ub.branch_id
 	`
-	var args []interface{}
+	var args []any
 	if branchId != "" {
 		queryApplicantsPerMonth += " WHERE b.id = ?"
 		args = append(args, branchId)
@@ -40,14 +42,42 @@ func Summary(branchId string) (map[string]any, error) {
 	defer rowsApplicantsPerMonth.Close()
 
 	for rowsApplicantsPerMonth.Next() {
-		if err := db.ScanRows(rowsApplicantsPerMonth, &applicantPerMonthdata); err != nil {
+		if err := db.ScanRows(rowsApplicantsPerMonth, &applicantPerMonthData); err != nil {
 			helper.Logger("error", "In Server: "+err.Error())
 			return nil, err
 		}
 		applicantPerMonthResponse = append(applicantPerMonthResponse, entities.ApplicantPerMonthResponse{
-			Month:  applicantPerMonthdata.Month,
-			Branch: applicantPerMonthdata.Branch,
-			Total:  applicantPerMonthdata.Total,
+			Month:  applicantPerMonthData.Month,
+			Branch: applicantPerMonthData.Branch,
+			Total:  applicantPerMonthData.Total,
+		})
+	}
+
+	// === APPLICANTS PER BRANCH ===
+	queryApplicantsPerBranch := `
+		SELECT DATE_FORMAT(aj.created_at, '%Y-%m') AS month, COUNT(*) AS total, b.name AS branch
+		FROM apply_jobs aj
+		INNER JOIN user_branches ub ON ub.user_id = aj.user_id
+		INNER JOIN branchs b ON b.id = ub.branch_id
+		GROUP BY b.id
+	`
+
+	rowsApplicantsPerBranch, err := db.Debug().Raw(queryApplicantsPerBranch).Rows()
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, err
+	}
+	defer rowsApplicantsPerBranch.Close()
+
+	for rowsApplicantsPerBranch.Next() {
+		if err := db.ScanRows(rowsApplicantsPerBranch, &applicantPerBranchData); err != nil {
+			helper.Logger("error", "In Server: "+err.Error())
+			return nil, err
+		}
+		applicantPerBranchResponse = append(applicantPerBranchResponse, entities.ApplicantPerMonthResponse{
+			Month:  applicantPerBranchData.Month,
+			Branch: applicantPerBranchData.Branch,
+			Total:  applicantPerBranchData.Total,
 		})
 	}
 
@@ -110,6 +140,7 @@ func Summary(branchId string) (map[string]any, error) {
 	}
 
 	dataChartSummary.ApplicantsPerMonth = applicantPerMonthResponse
+	dataChartSummary.ApplicantsPerBranch = applicantPerBranchResponse
 	dataChartSummary.Countries = countryResponse
 	dataChartSummary.Genders = genderResponse
 
