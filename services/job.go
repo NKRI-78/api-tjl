@@ -4,6 +4,9 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"math"
+	"os"
+	"strconv"
 	entities "superapps/entities"
 	helper "superapps/helpers"
 	models "superapps/models"
@@ -817,11 +820,40 @@ func AdminListApplyJob(branchId string) (map[string]any, error) {
 	}, nil
 }
 
-func JobList(userId, search, salary, country, position string) (map[string]any, error) {
+func JobList(userId, search, salary, country, position, page, limit string) (map[string]any, error) {
+	url := os.Getenv("API_URL_PROD")
+
+	var allJob []models.AllJob
 	var job entities.JobListQuery
 	var jobFavourite []entities.JobFavourite
 	var jobSkillCategory []entities.JobSkillCategory
 	var dataJob = make([]entities.JobList, 0)
+
+	pageinteger, _ := strconv.Atoi(page)
+	limitinteger, _ := strconv.Atoi(limit)
+
+	var offset = strconv.Itoa((pageinteger - 1) * limitinteger)
+
+	errAllJob := db.Debug().Raw(`SELECT uid FROM jobs`).Scan(&allJob).Error
+
+	if errAllJob != nil {
+		helper.Logger("error", "In Server: "+errAllJob.Error())
+	}
+
+	var resultTotal = len(allJob)
+
+	var perPage = math.Ceil(float64(resultTotal) / float64(limitinteger))
+
+	var prevPage int
+	var nextPage int
+
+	if pageinteger == 1 {
+		prevPage = 1
+	} else {
+		prevPage = pageinteger - 1
+	}
+
+	nextPage = pageinteger + 1
 
 	query := `SELECT j.uid AS id, j.title, j.caption, j.salary, j.worker_count,
 	jc.uid AS cat_id,
@@ -848,7 +880,8 @@ func JobList(userId, search, salary, country, position string) (map[string]any, 
 	INNER JOIN profiles up ON up.user_id = j.user_id
 	WHERE p.name LIKE '%` + country + `%'
 	AND jc.name LIKE '%` + position + `%'
-	AND (j.title LIKE '%` + search + `%' OR j.caption LIKE '%` + search + `%' OR jc.name LIKE '%` + search + `%')  
+	AND (j.title LIKE '%` + search + `%' OR j.caption LIKE '%` + search + `%' OR jc.name LIKE '%` + search + `%')
+	LIMIT ?, ?
 	`
 
 	if salary != "" {
@@ -858,7 +891,7 @@ func JobList(userId, search, salary, country, position string) (map[string]any, 
 	var rows *sql.Rows
 	var err error
 
-	rows, err = db.Debug().Raw(query).Rows()
+	rows, err = db.Debug().Raw(query, offset, limit).Rows()
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
@@ -933,8 +966,18 @@ func JobList(userId, search, salary, country, position string) (map[string]any, 
 		})
 	}
 
+	var nextUrl = strconv.Itoa(nextPage)
+	var prevUrl = strconv.Itoa(prevPage)
+
 	return map[string]any{
-		"data": dataJob,
+		"total":        resultTotal,
+		"current_page": pageinteger,
+		"per_page":     int(perPage),
+		"prev_page":    prevPage,
+		"next_page":    nextPage,
+		"next_url":     url + "/api/v1/job?page=" + nextUrl + "&limit=10",
+		"prev_url":     url + "/api/v1/job?page=" + prevUrl + "&limit=10",
+		"data":         &dataJob,
 	}, nil
 }
 

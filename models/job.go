@@ -15,6 +15,7 @@ type ResultInfoJob entities.ResultInfoJob
 type InfoApplyJob entities.InfoApplyJob
 type Job entities.Job
 type JobFavourite entities.JobFavourite
+type AllJob entities.AllJob
 type JobList entities.JobList
 type JobCategory entities.JobCategory
 type JobCategoryStore entities.JobCategoryStore
