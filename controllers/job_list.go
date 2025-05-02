@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 	helper "superapps/helpers"
 	"superapps/services"
 )
@@ -15,8 +16,10 @@ func JobList(w http.ResponseWriter, r *http.Request) {
 	position := r.URL.Query().Get("position")
 	search := r.URL.Query().Get("search")
 	userId := r.URL.Query().Get("user_id")
+	isRecommendationQuery := r.URL.Query().Get("is_recommendation")
+	isRecommendation, err := strconv.ParseBool(isRecommendationQuery)
 
-	result, err := services.JobList(userId, search, salary, country, position, page, limit)
+	result, err := services.JobList(userId, search, salary, country, position, page, limit, isRecommendation)
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]any{})
