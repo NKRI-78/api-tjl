@@ -133,6 +133,9 @@ func main() {
 	// Assign Document Apply Job
 	router.HandleFunc("/api/v1/assign/document/apply/job", controllers.AssignDocumentApplyJob).Methods("POST")
 
+	// Badges
+	router.HandleFunc("/api/v1/apply-job-badges", controllers.ApplyJobBadges).Methods("GET")
+
 	// Update Apply Job
 	router.HandleFunc("/api/v1/update/apply/job", controllers.UpdateApplyJob).Methods("PUT")
 
