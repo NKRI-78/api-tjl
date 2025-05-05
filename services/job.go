@@ -176,9 +176,9 @@ func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 			helper.Logger("error", "In Server: "+errJobOffline.Error())
 		} else {
 			if rowsJobOffline.Next() {
-				offlineFlag = true // Job is offline
+				offlineFlag = true
 			} else {
-				offlineFlag = false // Job is not offline
+				offlineFlag = false
 			}
 		}
 		defer rowsJobOffline.Close()
@@ -216,22 +216,6 @@ func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 	return map[string]any{
 		"data": data,
 	}, nil
-}
-
-func AssignDocumentApplyJob(adaj *models.AssignDocumentApplyJob) (map[string]any, error) {
-	query := `
-		INSERT INTO apply_job_documents (apply_job_id, doc_id, path) 
-		VALUES (?, ?, ?) 
-		ON DUPLICATE KEY UPDATE path = VALUES(path)
-	`
-
-	err := db.Debug().Exec(query, adaj.ApplyJobId, adaj.DocId, adaj.Path).Error
-	if err != nil {
-		helper.Logger("error", "In Server: "+err.Error())
-		return nil, errors.New(err.Error())
-	}
-
-	return map[string]any{}, nil
 }
 
 func ApplyJob(aj *models.ApplyJob) (map[string]any, error) {
@@ -288,9 +272,11 @@ func ApplyJob(aj *models.ApplyJob) (map[string]any, error) {
 	}
 
 	message := fmt.Sprintf("Silahkan menunggu untuk tahap selanjutnya [%s]", dataUserFcm.Fullname)
-	helper.SendFcm("Selamat Anda telah berhasil melamar", message, dataUserFcm.Token)
+	helper.SendFcm("Selamat Anda telah berhasil melamar", message, dataUserFcm.Token, "apply-job-detail", aj.Id)
 
-	return map[string]any{}, nil
+	return map[string]any{
+		"data": aj.Id,
+	}, nil
 }
 
 func ApplyJobBadges(userId string) (map[string]any, error) {
@@ -311,6 +297,22 @@ func ApplyJobBadges(userId string) (map[string]any, error) {
 	return map[string]any{
 		"data": dataApplyJobBadges,
 	}, nil
+}
+
+func AssignDocumentApplyJob(adaj *models.AssignDocumentApplyJob) (map[string]any, error) {
+	query := `
+		INSERT INTO apply_job_documents (apply_job_id, doc_id, path) 
+		VALUES (?, ?, ?) 
+		ON DUPLICATE KEY UPDATE path = VALUES(path)
+	`
+
+	err := db.Debug().Exec(query, adaj.ApplyJobId, adaj.DocId, adaj.Path).Error
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
 }
 
 func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
@@ -374,10 +376,8 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 		helper.Logger("error", "In Server: "+errUserFcmRow.Error())
 	}
 
-	if dataUserFcm.Token != "" {
-		title := fmt.Sprintf("Selamat lamaran Anda sudah dalam tahap [%s]", status)
-		helper.SendFcm(title, dataUserFcm.Fullname, dataUserFcm.Token)
-	}
+	title := fmt.Sprintf("Selamat lamaran Anda sudah dalam tahap [%s]", status)
+	helper.SendFcm(title, dataUserFcm.Fullname, dataUserFcm.Token, "apply-job-detail", uaj.ApplyJobId)
 
 	if uaj.IsOffline {
 		queryInsertApplyJobOffline := `INSERT INTO apply_job_offlines (apply_job_id, content) VALUES (?, ?)`
@@ -401,13 +401,11 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 			helper.Logger("error", "In Server: "+errUserFcmRow.Error())
 		}
 
-		if dataUserFcm.Token != "" {
-			message := fmt.Sprintf("Silahkan periksa Alamat E-mail [%s] Anda untuk info lebih lanjut", dataUserFcm.Email)
+		message := fmt.Sprintf("Silahkan periksa Alamat E-mail [%s] Anda untuk info lebih lanjut", dataUserFcm.Email)
 
-			helper.SendFcm("[ INTERVIEW ]", message, dataUserFcm.Token)
+		helper.SendFcm("[ INTERVIEW ]", message, dataUserFcm.Token, "apply-job-detail", uaj.ApplyJobId)
 
-			helper.SendEmail(dataUserFcm.Email, "TJL", "[ INTERVIEW ]", uaj.Content, "apply-job-offline")
-		}
+		helper.SendEmail(dataUserFcm.Email, "TJL", "[ INTERVIEW ]", uaj.Content, "apply-job-offline")
 	}
 
 	// Perform the update
@@ -419,8 +417,8 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 	}
 
 	// Insert into history
-	queryHistory := `INSERT INTO apply_job_histories 
-	(uid, job_id, user_id, user_confirm_id, status, link, schedule) 
+	queryHistory := `INSERT INTO apply_job_histories
+	(uid, job_id, user_id, user_confirm_id, status, link, schedule)
 	VALUES (?, ?, ?, ?, ?, ?, ?)`
 	errHistory := db.Debug().Exec(queryHistory,
 		dataQuery.Uid, dataQuery.JobId, dataQuery.UserId,
@@ -490,9 +488,10 @@ func AdminListApplyJob(branchId string) (map[string]any, error) {
 	var err error
 
 	if branchId != "" {
-		query += " WHERE ub.branch_id = ?"
+		query += " WHERE ub.branch_id = ? ORDER BY aj.created_at DESC"
 		rows, err = db.Debug().Raw(query, branchId).Rows()
 	} else {
+		query += " ORDER BY aj.created_at DESC"
 		rows, err = db.Debug().Raw(query).Rows()
 	}
 
@@ -1022,6 +1021,7 @@ func JobDetail(j *models.Job) (map[string]any, error) {
 		p.currency AS place_currency,
 		p.kurs AS place_kurs,
 		p.info AS place_info,
+		p.symbol AS place_symbol,
 		c.uid AS company_id,
 		c.logo AS company_logo,
 		c.name AS company_name,
@@ -1108,6 +1108,7 @@ func JobDetail(j *models.Job) (map[string]any, error) {
 				Name:     job.PlaceName,
 				Currency: job.PlaceCurrency,
 				Kurs:     int(job.PlaceKurs),
+				Symbol:   job.PlaceSymbol,
 				Info:     job.PlaceInfo,
 			},
 			Author: entities.AuthorJobUser{

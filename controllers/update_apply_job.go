@@ -31,8 +31,6 @@ func UpdateApplyJob(w http.ResponseWriter, r *http.Request) {
 	userId, _ := claims["id"].(string)
 
 	ApplyJobId := data.ApplyJobId
-	// Link := data.Link
-	// Schedule := data.Schedule
 
 	if data.Status == 1 {
 		helper.Logger("error", "In Server: status [IN_PROGRESS] already passed")
@@ -45,18 +43,6 @@ func UpdateApplyJob(w http.ResponseWriter, r *http.Request) {
 		helper.Response(w, 400, true, "apply job id is required", map[string]any{})
 		return
 	}
-
-	// if Link == "" {
-	// 	helper.Logger("error", "In Server: link is required")
-	// 	helper.Response(w, 400, true, "link is required", map[string]any{})
-	// 	return
-	// }
-
-	// if Schedule == "" {
-	// 	helper.Logger("error", "In Server: schedule is required")
-	// 	helper.Response(w, 400, true, "schedule is required", map[string]any{})
-	// 	return
-	// }
 
 	data.UserConfirmId = userId
 
