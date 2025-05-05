@@ -470,9 +470,10 @@ func AdminListApplyJob(branchId string) (map[string]any, error) {
 	var err error
 
 	if branchId != "" {
-		query += " WHERE ub.branch_id = ?"
+		query += " WHERE ub.branch_id = ? ORDER BY aj.created_at DESC"
 		rows, err = db.Debug().Raw(query, branchId).Rows()
 	} else {
+		query += " ORDER BY aj.created_at DESC"
 		rows, err = db.Debug().Raw(query).Rows()
 	}
 
