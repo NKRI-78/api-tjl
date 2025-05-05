@@ -75,7 +75,7 @@ func FormatDate(t time.Time) string {
 	return fmt.Sprintf("%s, %02d %s %d %02d:%02d WIB", day, t.Day(), month, t.Year(), t.Hour(), t.Minute())
 }
 
-func SendEmail(to, app, subject, data, other string) error {
+func SendEmail(to, app, subject, data, Type string) error {
 
 	body := data
 
@@ -84,7 +84,7 @@ func SendEmail(to, app, subject, data, other string) error {
 		App:     app,
 		Subject: subject,
 		Body:    body,
-		Type:    other,
+		Type:    Type,
 	}
 
 	jsonData, err := json.Marshal(emailData)
@@ -110,9 +110,9 @@ func SendEmail(to, app, subject, data, other string) error {
 func SendFcm(title, message, token string) error {
 
 	FcmData := &entities.SendFcmRequest{
+		Token: token,
 		Title: title,
 		Body:  message,
-		Token: token,
 	}
 
 	jsonData, err := json.Marshal(FcmData)

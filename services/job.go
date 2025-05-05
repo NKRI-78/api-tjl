@@ -354,10 +354,8 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 		helper.Logger("error", "In Server: "+errUserFcmRow.Error())
 	}
 
-	if dataUserFcm.Token != "" {
-		title := fmt.Sprintf("Selamat lamaran Anda sudah dalam tahap [%s]", status)
-		helper.SendFcm(title, dataUserFcm.Fullname, dataUserFcm.Token)
-	}
+	title := fmt.Sprintf("Selamat lamaran Anda sudah dalam tahap [%s]", status)
+	helper.SendFcm(title, dataUserFcm.Fullname, dataUserFcm.Token)
 
 	if uaj.IsOffline {
 		queryInsertApplyJobOffline := `INSERT INTO apply_job_offlines (apply_job_id, content) VALUES (?, ?)`
@@ -381,13 +379,11 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 			helper.Logger("error", "In Server: "+errUserFcmRow.Error())
 		}
 
-		if dataUserFcm.Token != "" {
-			message := fmt.Sprintf("Silahkan periksa Alamat E-mail [%s] Anda untuk info lebih lanjut", dataUserFcm.Email)
+		message := fmt.Sprintf("Silahkan periksa Alamat E-mail [%s] Anda untuk info lebih lanjut", dataUserFcm.Email)
 
-			helper.SendFcm("[ INTERVIEW ]", message, dataUserFcm.Token)
+		helper.SendFcm("[ INTERVIEW ]", message, dataUserFcm.Token)
 
-			helper.SendEmail(dataUserFcm.Email, "TJL", "[ INTERVIEW ]", uaj.Content, "apply-job-offline")
-		}
+		helper.SendEmail(dataUserFcm.Email, "TJL", "[ INTERVIEW ]", uaj.Content, "apply-job-offline")
 	}
 
 	// Perform the update
@@ -399,8 +395,8 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 	}
 
 	// Insert into history
-	queryHistory := `INSERT INTO apply_job_histories 
-	(uid, job_id, user_id, user_confirm_id, status, link, schedule) 
+	queryHistory := `INSERT INTO apply_job_histories
+	(uid, job_id, user_id, user_confirm_id, status, link, schedule)
 	VALUES (?, ?, ?, ?, ?, ?, ?)`
 	errHistory := db.Debug().Exec(queryHistory,
 		dataQuery.Uid, dataQuery.JobId, dataQuery.UserId,
