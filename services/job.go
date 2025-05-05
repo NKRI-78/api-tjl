@@ -293,6 +293,26 @@ func ApplyJob(aj *models.ApplyJob) (map[string]any, error) {
 	return map[string]any{}, nil
 }
 
+func ApplyJobBadges(userId string) (map[string]any, error) {
+	var dataApplyJobBadges entities.ApplyJobBadges
+
+	queryApplyJobBadges := `SELECT COUNT(*) AS total FROM users u 
+	INNER JOIN apply_jobs aj ON aj.user_id = u.uid
+	WHERE aj.status = 2 AND aj.user_id = ?`
+
+	rowUserFcm := db.Debug().Raw(queryApplyJobBadges, userId).Row()
+
+	errUserFcmRow := rowUserFcm.Scan(&dataApplyJobBadges)
+
+	if errUserFcmRow != nil {
+		helper.Logger("error", "In Server: "+errUserFcmRow.Error())
+	}
+
+	return map[string]any{
+		"data": dataApplyJobBadges,
+	}, nil
+}
+
 func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 	var dataUserFcm entities.InitFcm
 	var dataQuery entities.ApplyJobQuery
