@@ -288,7 +288,7 @@ func ApplyJob(aj *models.ApplyJob) (map[string]any, error) {
 	}
 
 	message := fmt.Sprintf("Silahkan menunggu untuk tahap selanjutnya [%s]", dataUserFcm.Fullname)
-	helper.SendFcm("Selamat Anda telah berhasil melamar", message, dataUserFcm.Token)
+	helper.SendFcm("Selamat Anda telah berhasil melamar", message, dataUserFcm.Token, "apply-job-detail")
 
 	return map[string]any{
 		"data": aj.Id,
@@ -357,7 +357,7 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 	}
 
 	title := fmt.Sprintf("Selamat lamaran Anda sudah dalam tahap [%s]", status)
-	helper.SendFcm(title, dataUserFcm.Fullname, dataUserFcm.Token)
+	helper.SendFcm(title, dataUserFcm.Fullname, dataUserFcm.Token, "apply-job-detail")
 
 	if uaj.IsOffline {
 		queryInsertApplyJobOffline := `INSERT INTO apply_job_offlines (apply_job_id, content) VALUES (?, ?)`
@@ -383,7 +383,7 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 
 		message := fmt.Sprintf("Silahkan periksa Alamat E-mail [%s] Anda untuk info lebih lanjut", dataUserFcm.Email)
 
-		helper.SendFcm("[ INTERVIEW ]", message, dataUserFcm.Token)
+		helper.SendFcm("[ INTERVIEW ]", message, dataUserFcm.Token, "apply-job-detail")
 
 		helper.SendEmail(dataUserFcm.Email, "TJL", "[ INTERVIEW ]", uaj.Content, "apply-job-offline")
 	}
