@@ -1002,6 +1002,7 @@ func JobDetail(j *models.Job) (map[string]any, error) {
 		p.currency AS place_currency,
 		p.kurs AS place_kurs,
 		p.info AS place_info,
+		p.symbol AS place_symbol,
 		c.uid AS company_id,
 		c.logo AS company_logo,
 		c.name AS company_name,
@@ -1088,6 +1089,7 @@ func JobDetail(j *models.Job) (map[string]any, error) {
 				Name:     job.PlaceName,
 				Currency: job.PlaceCurrency,
 				Kurs:     int(job.PlaceKurs),
+				Symbol:   job.PlaceSymbol,
 				Info:     job.PlaceInfo,
 			},
 			Author: entities.AuthorJobUser{
