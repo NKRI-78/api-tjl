@@ -290,7 +290,9 @@ func ApplyJob(aj *models.ApplyJob) (map[string]any, error) {
 	message := fmt.Sprintf("Silahkan menunggu untuk tahap selanjutnya [%s]", dataUserFcm.Fullname)
 	helper.SendFcm("Selamat Anda telah berhasil melamar", message, dataUserFcm.Token)
 
-	return map[string]any{}, nil
+	return map[string]any{
+		"data": aj.Id,
+	}, nil
 }
 
 func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
