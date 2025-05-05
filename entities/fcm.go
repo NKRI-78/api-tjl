@@ -4,4 +4,5 @@ type SendFcmRequest struct {
 	Title string `json:"title"`
 	Body  string `json:"body"`
 	Token string `json:"token"`
+	BroadcastType  string `json:"broadcast_type"`
 }

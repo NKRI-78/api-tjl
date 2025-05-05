@@ -107,12 +107,13 @@ func SendEmail(to, app, subject, data, Type string) error {
 	return nil
 }
 
-func SendFcm(title, message, token string) error {
+func SendFcm(title, message, token, BroadcastType string) error {
 
 	FcmData := &entities.SendFcmRequest{
-		Token: token,
-		Title: title,
-		Body:  message,
+		Token:         token,
+		Title:         title,
+		Body:          message,
+		BroadcastType: BroadcastType,
 	}
 
 	jsonData, err := json.Marshal(FcmData)
