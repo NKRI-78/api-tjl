@@ -116,6 +116,7 @@ func main() {
 	router.HandleFunc("/api/v1/event", controllers.EventList).Methods("GET")
 	router.HandleFunc("/api/v1/event-detail/{id}", controllers.NewsDetail).Methods("GET")
 	router.HandleFunc("/api/v1/event-store", controllers.EventStore).Methods("POST")
+	router.HandleFunc("/api/v1/event-update", controllers.EventUpdate).Methods("PUT")
 
 	// Document
 	router.HandleFunc("/api/v1/document", controllers.DocumentList).Methods("GET")
