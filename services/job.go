@@ -224,8 +224,7 @@ func ApplyJob(aj *models.ApplyJob) (map[string]any, error) {
 
 	queryCheck := `SELECT uid FROM apply_jobs
 	WHERE user_id = ?
-	AND job_id = ?
-	AND status = 3`
+	AND job_id = ?`
 
 	errAllJob := db.Debug().Raw(queryCheck, aj.UserId, aj.JobId).Scan(&allJob).Error
 
