@@ -19,6 +19,12 @@ type Event struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
+type EventUpdate struct {
+	Id      string `json:"id"`
+	Title   string `json:"title"`
+	Caption string `json:"caption"`
+}
+
 type EventResponse struct {
 	Id        int          `json:"id"`
 	Title     string       `json:"title"`
