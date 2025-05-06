@@ -17,7 +17,7 @@ import (
 func CandidatePassesList() (map[string]any, error) {
 
 	var dataQuery entities.InfoApplyJobQuery
-	var data []entities.ResultInfoJob
+	var data []entities.ResultInfoApplyJob
 
 	query := `SELECT paa.user_id AS apply_user_id, paa.fullname AS apply_user_name, 
 		pac.user_id AS confirm_user_id, pac.fullname AS confirm_user_name,
@@ -56,7 +56,7 @@ func CandidatePassesList() (map[string]any, error) {
 			return nil, errors.New(errJobRows.Error())
 		}
 
-		data = append(data, entities.ResultInfoJob{
+		data = append(data, entities.ResultInfoApplyJob{
 			Id:        dataQuery.ApplyJobId,
 			Status:    dataQuery.Status,
 			CreatedAt: dataQuery.CreatedAt,
@@ -83,7 +83,60 @@ func CandidatePassesList() (map[string]any, error) {
 	}
 
 	if data == nil {
-		data = []entities.ResultInfoJob{}
+		data = []entities.ResultInfoApplyJob{}
+	}
+
+	return map[string]any{
+		"data": data,
+	}, nil
+}
+
+func CandidatePassesFormList() (map[string]any, error) {
+
+	var dataQuery entities.CandidatePassesFormListQuery
+	var data []entities.CandidatePassesFormListResult
+
+	query := `SELECT d.id, d.date_departure, d.time_departure, d.airplane, d.location, d.destination, d.created_at, d.updated_at,
+	 	p.fullname AS user_fullname, p.avatar AS user_avatar, p.user_id
+		FROM departures d 
+		INNER JOIN candidate_passes cp 
+		ON cp.departure_id = d.id
+		INNER JOIN profiles p ON p.user_id = cp.user_candidate_id
+	`
+	rows, err := db.Debug().Raw(query).Rows()
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		errDepartureRows := db.ScanRows(rows, &dataQuery)
+
+		if errDepartureRows != nil {
+			helper.Logger("error", "In Server: "+errDepartureRows.Error())
+			return nil, errors.New(errDepartureRows.Error())
+		}
+
+		data = append(data, entities.CandidatePassesFormListResult{
+			Id:            dataQuery.Id,
+			DateDeparture: dataQuery.DateDeparture,
+			TimeDeparture: dataQuery.TimeDeparture,
+			Airplane:      dataQuery.Airplane,
+			Location:      dataQuery.Location,
+			Destination:   dataQuery.Destination,
+			User: entities.CandidatePassesFormUser{
+				Id:       dataQuery.UserId,
+				Avatar:   dataQuery.UserAvatar,
+				Fullname: dataQuery.UserFullname,
+			},
+			CreatedAt: dataQuery.CreatedAt,
+			UpdatedAt: dataQuery.UpdatedAt,
+		})
+	}
+
+	if data == nil {
+		data = []entities.CandidatePassesFormListResult{}
 	}
 
 	return map[string]any{
@@ -94,7 +147,7 @@ func CandidatePassesList() (map[string]any, error) {
 func ListInfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 
 	var dataQuery entities.InfoApplyJobQuery
-	var data []entities.ResultInfoJob
+	var data []entities.ResultInfoApplyJob
 
 	query := `SELECT paa.user_id AS apply_user_id, paa.fullname AS apply_user_name, 
 		pac.user_id AS confirm_user_id, pac.fullname AS confirm_user_name,
@@ -133,7 +186,7 @@ func ListInfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 			return nil, errors.New(errJobRows.Error())
 		}
 
-		data = append(data, entities.ResultInfoJob{
+		data = append(data, entities.ResultInfoApplyJob{
 			Id:        dataQuery.ApplyJobId,
 			Status:    dataQuery.Status,
 			CreatedAt: dataQuery.CreatedAt,
@@ -160,7 +213,7 @@ func ListInfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 	}
 
 	if data == nil {
-		data = []entities.ResultInfoJob{}
+		data = []entities.ResultInfoApplyJob{}
 	}
 
 	return map[string]any{

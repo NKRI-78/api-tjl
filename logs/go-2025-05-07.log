@@ -4,3 +4,17 @@
 [INFO]: 2025-05-07 03:09:53 - Candidate Passes Form success
 [INFO]: 2025-05-07 03:16:03 - Candidate Passes Form success
 [INFO]: 2025-05-07 03:18:17 - Candidate Passes Form success
+[INFO]: 2025-05-07 05:38:33 - Fetch Candidate Passes List success
+[INFO]: 2025-05-07 05:39:54 - Fetch Candidate Passes Form List success
+[INFO]: 2025-05-07 05:39:55 - Fetch Candidate Passes Form List success
+[ERROR]: 2025-05-07 05:43:43 - In Server: Missing auth token
+[INFO]: 2025-05-07 05:43:46 - Fetch Candidate Passes List success
+[INFO]: 2025-05-07 05:43:53 - Candidate Passes Form success
+[INFO]: 2025-05-07 05:43:55 - Fetch Candidate Passes List success
+[INFO]: 2025-05-07 05:43:57 - Fetch Candidate Passes Form List success
+[INFO]: 2025-05-07 05:46:35 - Fetch Candidate Passes Form List success
+[INFO]: 2025-05-07 05:49:07 - Fetch Candidate Passes Form List success
+[ERROR]: 2025-05-07 06:01:47 - In Server: Error 1054: Unknown column 'cp.user_id' in 'on clause'
+[ERROR]: 2025-05-07 06:01:48 - In Server: Error 1054: Unknown column 'cp.user_id' in 'on clause'
+[ERROR]: 2025-05-07 06:01:49 - In Server: Error 1054: Unknown column 'cp.user_id' in 'on clause'
+[INFO]: 2025-05-07 06:02:17 - Fetch Candidate Passes Form List success

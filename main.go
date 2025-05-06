@@ -76,6 +76,7 @@ func main() {
 
 	// List Candidate Passes
 	router.HandleFunc("/api/v1/candidate-passes/list", controllers.CandidatePassesList).Methods("GET")
+	router.HandleFunc("/api/v1/candidate-passes/form/list", controllers.CandidatePassesFormList).Methods("GET")
 	router.HandleFunc("/api/v1/candidate-passes/form", controllers.CandidatePassesForm).Methods("POST")
 
 	// Auth
