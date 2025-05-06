@@ -896,11 +896,13 @@ func JobList(userId, search, salary, country, position, page, limit string, isRe
 	FROM jobs j
 	INNER JOIN job_categories jc ON jc.uid = j.cat_id
 	INNER JOIN companies c ON c.uid = j.company_id 
+	INNER JOIN job_skills js ON js.job_id = j.uid
+	INNER JOIN job_skill_categories jsc ON jsc.uid = js.cat_id
 	INNER JOIN places p ON p.id = j.place_id
 	INNER JOIN profiles up ON up.user_id = j.user_id
 	WHERE p.name LIKE '%` + country + `%'
 	AND jc.name LIKE '%` + position + `%'
-	AND (jc.name LIKE '%` + search + `%' OR c.name LIKE '%` + search + `%' OR p.name '%` + search + `%') 
+	AND (jc.name LIKE '%` + search + `%' OR c.name LIKE '%` + search + `%' OR p.name LIKE '%` + search + `%' OR jsc.name LIKE '%` + search + `%') 
 	`
 
 	if salary != "" {
