@@ -48,6 +48,16 @@ type EventStore struct {
 	UserId    string `json:"user_id"`
 }
 
+type EventStoreImage struct {
+	EventId string `json:"event_id"`
+	Path    string `json:"path"`
+}
+
+type EventUpdateImage struct {
+	Id   string `json:"id"`
+	Path string `json:"path"`
+}
+
 type EventUser struct {
 	Id   string `json:"id"`
 	Name string `json:"fullname"`
