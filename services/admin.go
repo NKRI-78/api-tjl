@@ -149,16 +149,24 @@ func Summary(branchId string) (map[string]any, error) {
 	}, nil
 }
 
-func AdminListUser() (map[string]any, error) {
+func AdminListUser(branchId string) (map[string]any, error) {
 	var adminListUserData []entities.AdminListUserResponse
 
 	queryUsers := `SELECT p.user_id AS id, u.email, u.phone, p.avatar, p.fullname, ur.name AS role, u.created_at
 		FROM users u 
 		INNER JOIN profiles p ON p.user_id = u.uid
 		INNER JOIN user_roles ur ON ur.id = u.role
+		INNER JOIN user_branches ub ON ub.user_id = u.uid
+		INNER JOIN branchs b ON b.id = ub.branch_id
 	`
 
-	rows, err := db.Debug().Raw(queryUsers).Rows()
+	var args []any
+	if branchId != "" {
+		queryUsers += " WHERE b.id = ?"
+		args = append(args, branchId)
+	}
+
+	rows, err := db.Debug().Raw(queryUsers, args...).Rows()
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
 		return nil, errors.New(err.Error())
