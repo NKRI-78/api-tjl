@@ -56,3 +56,5 @@
 [ERROR]: 2025-05-06 20:18:58 - In Server: json: cannot unmarshal string into Go struct field Event.id of type int
 [ERROR]: 2025-05-06 20:20:46 - In Server: json: cannot unmarshal string into Go struct field Event.id of type int
 [INFO]: 2025-05-06 20:21:43 - Event Delete Image success
+[ERROR]: 2025-05-06 21:21:02 - In Server: Missing auth token
+[INFO]: 2025-05-06 21:21:05 - Fetch Candidate Passes List success

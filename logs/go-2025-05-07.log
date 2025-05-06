@@ -1,0 +1,6 @@
+[ERROR]: 2025-05-07 03:04:27 - In Server: Missing auth token
+[ERROR]: 2025-05-07 03:04:31 - In Server: user_candidate_id required
+[ERROR]: 2025-05-07 03:08:01 - In Server: Error 1452: Cannot add or update a child row: a foreign key constraint fails (`tjl`.`candidate_passes`, CONSTRAINT `candidate_passes_ibfk_3` FOREIGN KEY (`departure_id`) REFERENCES `departures` (`id`) ON DELETE CASCADE ON UPDATE CASCADE)
+[INFO]: 2025-05-07 03:09:53 - Candidate Passes Form success
+[INFO]: 2025-05-07 03:16:03 - Candidate Passes Form success
+[INFO]: 2025-05-07 03:18:17 - Candidate Passes Form success

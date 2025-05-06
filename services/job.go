@@ -14,6 +14,83 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+func CandidatePassesList() (map[string]any, error) {
+
+	var dataQuery entities.InfoApplyJobQuery
+	var data []entities.ResultInfoJob
+
+	query := `SELECT paa.user_id AS apply_user_id, paa.fullname AS apply_user_name, 
+		pac.user_id AS confirm_user_id, pac.fullname AS confirm_user_name,
+		js.name AS status, aj.uid AS apply_job_id,
+		j.title AS job_title,
+		jc.name AS job_category,
+		p.avatar AS job_avatar,
+		p.fullname AS job_author,
+		c.uid AS company_id,
+		c.logo AS company_logo,
+		c.name AS company_name,
+		aj.created_at
+		FROM apply_jobs aj 
+		INNER JOIN jobs j ON j.uid = aj.job_id
+		INNER JOIN companies c ON c.uid = j.company_id 
+		INNER JOIN job_categories jc ON jc.uid = j.cat_id
+		INNER JOIN profiles p ON p.user_id = j.user_id
+		INNER JOIN job_statuses js ON js.id = aj.status
+		INNER JOIN profiles paa ON paa.user_id = aj.user_id
+		LEFT JOIN profiles pac ON pac.user_id = aj.user_confirm_id 
+		WHERE aj.status = ?
+		ORDER BY aj.created_at DESC
+	`
+	rows, err := db.Debug().Raw(query, "3").Rows()
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		errJobRows := db.ScanRows(rows, &dataQuery)
+
+		if errJobRows != nil {
+			helper.Logger("error", "In Server: "+errJobRows.Error())
+			return nil, errors.New(errJobRows.Error())
+		}
+
+		data = append(data, entities.ResultInfoJob{
+			Id:        dataQuery.ApplyJobId,
+			Status:    dataQuery.Status,
+			CreatedAt: dataQuery.CreatedAt,
+			Job: entities.JobApply{
+				JobTitle:    dataQuery.JobTitle,
+				JobCategory: dataQuery.JobCategory,
+				JobAvatar:   dataQuery.JobAvatar,
+				JobAuthor:   dataQuery.JobAuthor,
+			},
+			Company: entities.JobCompany{
+				Id:   dataQuery.CompanyId,
+				Logo: dataQuery.CompanyLogo,
+				Name: dataQuery.CompanyName,
+			},
+			UserApply: entities.UserApply{
+				Id:   dataQuery.ApplyUserId,
+				Name: dataQuery.ApplyUserName,
+			},
+			UserConfirm: entities.UserConfirm{
+				Id:   helper.DefaultIfEmpty(dataQuery.ConfirmUserId, "-"),
+				Name: helper.DefaultIfEmpty(dataQuery.ConfirmUserName, "-"),
+			},
+		})
+	}
+
+	if data == nil {
+		data = []entities.ResultInfoJob{}
+	}
+
+	return map[string]any{
+		"data": data,
+	}, nil
+}
+
 func ListInfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 
 	var dataQuery entities.InfoApplyJobQuery
@@ -1468,6 +1545,38 @@ func JobCategoryStore(j *models.JobCategoryStore) (map[string]any, error) {
 	}
 
 	return map[string]any{}, nil
+}
+
+func CandidatePassesForm(dp *entities.DepartureForm) (map[string]any, error) {
+	queryDepartures := `INSERT INTO departures (date_departure, time_departure, airplane, location, destination) VALUES (?, ?, ?, ?, ?)`
+
+	resultDepartures, _ := db.DB().Exec(queryDepartures, dp.DateDeparture, dp.TimeDeparture, dp.Airplane, dp.Location, dp.Destination)
+
+	lastID, errDepartures := resultDepartures.LastInsertId()
+	if errDepartures != nil {
+		helper.Logger("error", "In Server: "+errDepartures.Error())
+		return nil, errors.New(errDepartures.Error())
+	}
+
+	queryCandidatePasses := `INSERT INTO candidate_passes (departure_id, apply_job_id, user_candidate_id) VALUES (?, ?, ?)`
+
+	errCandidatePasses := db.Debug().Exec(queryCandidatePasses, lastID, dp.ApplyJobId, dp.UserCandidateId).Error
+
+	if errCandidatePasses != nil {
+		helper.Logger("error", "In Server: "+errCandidatePasses.Error())
+		return nil, errors.New(errCandidatePasses.Error())
+	}
+
+	return map[string]any{
+		"date_departure":    dp.DateDeparture,
+		"time_departure":    dp.TimeDeparture,
+		"airplane":          dp.Airplane,
+		"location":          dp.Location,
+		"destination":       dp.Destination,
+		"departure_id":      lastID,
+		"apply_job_id":      dp.ApplyJobId,
+		"user_candidate_id": dp.UserCandidateId,
+	}, nil
 }
 
 func JobCategoryUpdate(j *models.JobCategoryUpdate) (map[string]any, error) {
