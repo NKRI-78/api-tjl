@@ -1,0 +1,16 @@
+[ERROR]: 2025-05-06 13:19:08 - In Server: sql: Scan error on column index 0, name "total": unsupported Scan, storing driver.Value type int64 into type *entities.ApplyJobBadges
+[INFO]: 2025-05-06 13:19:08 - Apply Job Badges success
+[ERROR]: 2025-05-06 13:20:00 - In Server: sql: Scan error on column index 0, name "total": unsupported Scan, storing driver.Value type int64 into type *entities.ApplyJobBadges
+[INFO]: 2025-05-06 13:20:00 - Apply Job Badges success
+[ERROR]: 2025-05-06 13:20:02 - In Server: sql: Scan error on column index 0, name "total": unsupported Scan, storing driver.Value type int64 into type *entities.ApplyJobBadges
+[INFO]: 2025-05-06 13:20:02 - Apply Job Badges success
+[ERROR]: 2025-05-06 13:20:16 - In Server: sql: Scan error on column index 0, name "total": unsupported Scan, storing driver.Value type int64 into type *entities.ApplyJobBadges
+[INFO]: 2025-05-06 13:20:16 - Apply Job Badges success
+[ERROR]: 2025-05-06 13:20:20 - In Server: sql: Scan error on column index 0, name "total": unsupported Scan, storing driver.Value type int64 into type *entities.ApplyJobBadges
+[INFO]: 2025-05-06 13:20:20 - Apply Job Badges success
+[ERROR]: 2025-05-06 13:20:35 - In Server: sql: Scan error on column index 0, name "total": unsupported Scan, storing driver.Value type int64 into type *entities.ApplyJobBadges
+[INFO]: 2025-05-06 13:20:35 - Apply Job Badges success
+[ERROR]: 2025-05-06 13:20:36 - In Server: sql: Scan error on column index 0, name "total": unsupported Scan, storing driver.Value type int64 into type *entities.ApplyJobBadges
+[INFO]: 2025-05-06 13:20:36 - Apply Job Badges success
+[INFO]: 2025-05-06 13:21:26 - Apply Job Badges success
+[INFO]: 2025-05-06 13:23:48 - Apply Job Badges success
