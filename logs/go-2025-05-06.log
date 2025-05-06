@@ -50,3 +50,9 @@
 [ERROR]: 2025-05-06 19:51:02 - In Server: Error 1054: Unknown column 'js.uid' in 'on clause'
 [INFO]: 2025-05-06 19:51:32 - Job List success
 [INFO]: 2025-05-06 19:51:38 - Job List success
+[ERROR]: 2025-05-06 20:18:29 - In Server: Missing auth token
+[INFO]: 2025-05-06 20:18:32 - Event Store Image success
+[ERROR]: 2025-05-06 20:18:54 - In Server: Missing auth token
+[ERROR]: 2025-05-06 20:18:58 - In Server: json: cannot unmarshal string into Go struct field Event.id of type int
+[ERROR]: 2025-05-06 20:20:46 - In Server: json: cannot unmarshal string into Go struct field Event.id of type int
+[INFO]: 2025-05-06 20:21:43 - Event Delete Image success

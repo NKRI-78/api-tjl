@@ -249,7 +249,7 @@ func NewsUpdateImage(n *entities.NewsUpdateImage) (map[string]any, error) {
 	return map[string]any{}, nil
 }
 
-func NewsDelete(n *entities.News) (map[string]any, error) {
+func NewsDelete(n *entities.NewsDelete) (map[string]any, error) {
 	query := `DELETE FROM news WHERE id = ?`
 
 	err := db.Debug().Exec(query, n.Id).Error
@@ -262,7 +262,7 @@ func NewsDelete(n *entities.News) (map[string]any, error) {
 	return map[string]any{}, nil
 }
 
-func NewsDeleteImage(n *entities.News) (map[string]any, error) {
+func NewsDeleteImage(n *entities.NewsDelete) (map[string]any, error) {
 	query := `DELETE FROM news_medias WHERE id = ?`
 
 	err := db.Debug().Exec(query, n.Id).Error

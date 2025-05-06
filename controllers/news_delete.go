@@ -9,7 +9,7 @@ import (
 )
 
 func NewsDelete(w http.ResponseWriter, r *http.Request) {
-	data := &entities.News{}
+	data := &entities.NewsDelete{}
 
 	err := json.NewDecoder(r.Body).Decode(data)
 

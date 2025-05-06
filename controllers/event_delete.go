@@ -9,7 +9,7 @@ import (
 )
 
 func EventDelete(w http.ResponseWriter, r *http.Request) {
-	data := &entities.Event{}
+	data := &entities.EventDelete{}
 
 	err := json.NewDecoder(r.Body).Decode(data)
 
