@@ -112,6 +112,11 @@ func main() {
 	router.HandleFunc("/api/v1/news-delete-image", controllers.NewsDeleteImage).Methods("DELETE")
 	router.HandleFunc("/api/v1/news-delete", controllers.NewsDelete).Methods("DELETE")
 
+	// Event
+	router.HandleFunc("/api/v1/event", controllers.EventList).Methods("GET")
+	router.HandleFunc("/api/v1/event-detail/{id}", controllers.NewsDetail).Methods("GET")
+	router.HandleFunc("/api/v1/event-store", controllers.EventStore).Methods("POST")
+
 	// Document
 	router.HandleFunc("/api/v1/document", controllers.DocumentList).Methods("GET")
 	router.HandleFunc("/api/v1/document-store", controllers.DocumentStore).Methods("POST")

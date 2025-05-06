@@ -14,3 +14,26 @@
 [INFO]: 2025-05-06 13:20:36 - Apply Job Badges success
 [INFO]: 2025-05-06 13:21:26 - Apply Job Badges success
 [INFO]: 2025-05-06 13:23:48 - Apply Job Badges success
+[INFO]: 2025-05-06 14:27:50 - Get Info Apply Job success
+[INFO]: 2025-05-06 14:28:06 - Get Info Apply Job success
+[ERROR]: 2025-05-06 16:57:12 - In Server: Error 1054: Unknown column 'aj.user_id' in 'on clause'
+[ERROR]: 2025-05-06 16:57:34 - In Server: Error 1054: Unknown column 'u.user_id' in 'on clause'
+[INFO]: 2025-05-06 16:57:42 - Get Admin List User success
+[INFO]: 2025-05-06 16:58:06 - Get Admin List User success
+[INFO]: 2025-05-06 16:58:59 - Get Admin List User success
+[INFO]: 2025-05-06 16:59:35 - Get Admin List User success
+[INFO]: 2025-05-06 17:00:00 - Get Admin List User success
+[INFO]: 2025-05-06 17:00:39 - Get Admin List User success
+[INFO]: 2025-05-06 17:01:15 - Get Admin List User success
+[ERROR]: 2025-05-06 17:24:51 - In Server: Missing auth token
+[ERROR]: 2025-05-06 17:24:56 - In Server: Error 1054: Unknown column 'n.user_id' in 'on clause'
+[ERROR]: 2025-05-06 17:25:12 - In Server: Error 1054: Unknown column 'n.user_id' in 'on clause'
+[INFO]: 2025-05-06 17:25:23 - News List success
+[ERROR]: 2025-05-06 17:26:16 - In Server: Missing auth token
+[INFO]: 2025-05-06 17:26:23 - Store Bannner success
+[INFO]: 2025-05-06 17:27:15 - Store Bannner success
+[INFO]: 2025-05-06 17:34:13 - Store Bannner success
+[INFO]: 2025-05-06 17:39:56 - Store Bannner success
+[INFO]: 2025-05-06 17:40:00 - News List success
+[INFO]: 2025-05-06 17:43:47 - News List success
+[INFO]: 2025-05-06 17:44:17 - News List success
