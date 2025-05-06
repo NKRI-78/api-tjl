@@ -282,20 +282,22 @@ func ApplyJob(aj *models.ApplyJob) (map[string]any, error) {
 func ApplyJobBadges(userId string) (map[string]any, error) {
 	var dataApplyJobBadges entities.ApplyJobBadges
 
-	queryApplyJobBadges := `SELECT COUNT(*) AS total FROM users u 
-	INNER JOIN apply_jobs aj ON aj.user_id = u.uid
-	WHERE aj.status = 2 AND aj.user_id = ?`
+	query := `
+		SELECT COUNT(*) AS total 
+		FROM users u 
+		INNER JOIN apply_jobs aj ON aj.user_id = u.uid
+		WHERE aj.status = 2 AND aj.user_id = ?
+	`
 
-	rowUserFcm := db.Debug().Raw(queryApplyJobBadges, userId).Row()
-
-	errUserFcmRow := rowUserFcm.Scan(&dataApplyJobBadges)
-
-	if errUserFcmRow != nil {
-		helper.Logger("error", "In Server: "+errUserFcmRow.Error())
+	row := db.Debug().Raw(query, userId).Row()
+	err := row.Scan(&dataApplyJobBadges.Total)
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, err
 	}
 
 	return map[string]any{
-		"data": dataApplyJobBadges,
+		"data": dataApplyJobBadges.Total,
 	}, nil
 }
 
