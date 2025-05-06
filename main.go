@@ -114,9 +114,13 @@ func main() {
 
 	// Event
 	router.HandleFunc("/api/v1/event", controllers.EventList).Methods("GET")
-	router.HandleFunc("/api/v1/event-detail/{id}", controllers.NewsDetail).Methods("GET")
+	router.HandleFunc("/api/v1/event-detail/{id}", controllers.EventDetail).Methods("GET")
 	router.HandleFunc("/api/v1/event-store", controllers.EventStore).Methods("POST")
 	router.HandleFunc("/api/v1/event-update", controllers.EventUpdate).Methods("PUT")
+	router.HandleFunc("/api/v1/event-store-image", controllers.EventStoreImage).Methods("POST")
+	router.HandleFunc("/api/v1/event-update-image", controllers.EventUpdateImage).Methods("PUT")
+	router.HandleFunc("/api/v1/event-delete-image", controllers.EventDeleteImage).Methods("DELETE")
+	router.HandleFunc("/api/v1/event-delete", controllers.EventDelete).Methods("DELETE")
 
 	// Document
 	router.HandleFunc("/api/v1/document", controllers.DocumentList).Methods("GET")

@@ -158,7 +158,7 @@ func EventUpdateImage(n *entities.EventUpdateImage) (map[string]any, error) {
 	return map[string]any{}, nil
 }
 
-func EventDeleteImage(n *entities.Event) (map[string]any, error) {
+func EventDeleteImage(n *entities.EventDelete) (map[string]any, error) {
 	query := `DELETE FROM event_medias WHERE id = ?`
 
 	err := db.Debug().Exec(query, n.Id).Error
@@ -236,7 +236,7 @@ func EventDetail(id string) (map[string]any, error) {
 	}, nil
 }
 
-func EventDelete(e *entities.Event) (map[string]any, error) {
+func EventDelete(e *entities.EventDelete) (map[string]any, error) {
 	query := `DELETE FROM events WHERE id = ?`
 
 	err := db.Debug().Exec(query, e.Id).Error

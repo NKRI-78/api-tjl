@@ -15,6 +15,10 @@ type News struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
+type NewsDelete struct {
+	Id string `json:"id"`
+}
+
 type NewsResponse struct {
 	Id        int         `json:"id"`
 	Title     string      `json:"title"`
