@@ -8,9 +8,9 @@ import (
 	"superapps/services"
 )
 
-func NewsStoreImage(w http.ResponseWriter, r *http.Request) {
+func EventStoreImage(w http.ResponseWriter, r *http.Request) {
 
-	data := &entities.NewsStoreImage{}
+	data := &entities.EventStoreImage{}
 
 	err := json.NewDecoder(r.Body).Decode(data)
 
@@ -20,12 +20,12 @@ func NewsStoreImage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	NewsId := data.NewsId
+	EventId := data.EventId
 	Path := data.Path
 
-	if NewsId == "" {
-		helper.Logger("error", "In Server: news_id is required")
-		helper.Response(w, 400, true, "news_id is required", map[string]any{})
+	if EventId == "" {
+		helper.Logger("error", "In Server: event_id is required")
+		helper.Response(w, 400, true, "event_id is required", map[string]any{})
 		return
 	}
 
@@ -35,16 +35,16 @@ func NewsStoreImage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data.NewsId = NewsId
+	data.EventId = EventId
 	data.Path = Path
 
-	result, err := services.NewsStoreImage(data)
+	result, err := services.EventStoreImage(data)
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]any{})
 		return
 	}
 
-	helper.Logger("info", "News Store Image success")
+	helper.Logger("info", "Event Store Image success")
 	helper.Response(w, http.StatusOK, false, "Successfully", result)
 }

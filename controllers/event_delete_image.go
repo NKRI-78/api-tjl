@@ -8,8 +8,8 @@ import (
 	service "superapps/services"
 )
 
-func NewsDeleteImage(w http.ResponseWriter, r *http.Request) {
-	data := &entities.News{}
+func EventDeleteImage(w http.ResponseWriter, r *http.Request) {
+	data := &entities.Event{}
 
 	err := json.NewDecoder(r.Body).Decode(data)
 
@@ -23,13 +23,13 @@ func NewsDeleteImage(w http.ResponseWriter, r *http.Request) {
 
 	data.Id = Id
 
-	result, err := service.NewsDeleteImage(data)
+	result, err := service.EventDeleteImage(data)
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]any{})
 		return
 	}
 
-	helper.Logger("info", "News Delete Image success")
+	helper.Logger("info", "Event Delete Image success")
 	helper.Response(w, http.StatusOK, false, "Successfully", result)
 }
