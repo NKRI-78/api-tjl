@@ -14,6 +14,7 @@ func InboxList(userId string) (map[string]any, error) {
 		FROM inboxes i 
 		INNER JOIN profiles p ON p.user_id = i.user_id
 		WHERE p.user_id = ?
+		ORDER BY i.created_at DESC
 	`
 
 	rows, err := db.Debug().Raw(query, userId).Rows()
