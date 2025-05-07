@@ -14,6 +14,7 @@ type CandidatePassesFormListQuery struct {
 	Airplane      string    `json:"airplane"`
 	Location      string    `json:"location"`
 	Destination   string    `json:"destination"`
+	Content       string    `json:"content"`
 	UserId        string    `json:"user_id"`
 	UserAvatar    string    `json:"avatar"`
 	UserFullname  string    `json:"fullname"`
@@ -22,15 +23,11 @@ type CandidatePassesFormListQuery struct {
 }
 
 type CandidatePassesFormListResult struct {
-	Id            int                     `json:"id"`
-	DateDeparture string                  `json:"date_departure"`
-	TimeDeparture string                  `json:"time_departure"`
-	Airplane      string                  `json:"airplane"`
-	Location      string                  `json:"location"`
-	Destination   string                  `json:"destination"`
-	User          CandidatePassesFormUser `json:"user"`
-	CreatedAt     time.Time               `json:"created_at"`
-	UpdatedAt     time.Time               `json:"updated_at"`
+	Id        int                     `json:"id"`
+	Content   string                  `json:"content"`
+	User      CandidatePassesFormUser `json:"user"`
+	CreatedAt time.Time               `json:"created_at"`
+	UpdatedAt time.Time               `json:"updated_at"`
 }
 
 type CandidatePassesFormUser struct {
