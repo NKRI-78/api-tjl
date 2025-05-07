@@ -144,6 +144,59 @@ func CandidatePassesFormList() (map[string]any, error) {
 	}, nil
 }
 
+func CandidateInfoDeparture(userId string) (map[string]any, error) {
+	var dataQuery entities.CandidatePassesFormListQuery
+	var data []entities.CandidatePassesFormListResult
+
+	query := `SELECT d.id, d.date_departure, d.time_departure, d.airplane, d.location, d.destination, d.created_at, d.updated_at,
+	 	p.fullname AS user_fullname, p.avatar AS user_avatar, p.user_id
+		FROM departures d 
+		INNER JOIN candidate_passes cp 
+		ON cp.departure_id = d.id
+		INNER JOIN profiles p ON p.user_id = cp.user_candidate_id
+		WHERE cp.user_candidate_id = ?
+	`
+	rows, err := db.Debug().Raw(query, userId).Rows()
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		errDepartureRows := db.ScanRows(rows, &dataQuery)
+
+		if errDepartureRows != nil {
+			helper.Logger("error", "In Server: "+errDepartureRows.Error())
+			return nil, errors.New(errDepartureRows.Error())
+		}
+
+		data = append(data, entities.CandidatePassesFormListResult{
+			Id:            dataQuery.Id,
+			DateDeparture: dataQuery.DateDeparture,
+			TimeDeparture: dataQuery.TimeDeparture,
+			Airplane:      dataQuery.Airplane,
+			Location:      dataQuery.Location,
+			Destination:   dataQuery.Destination,
+			User: entities.CandidatePassesFormUser{
+				Id:       dataQuery.UserId,
+				Avatar:   dataQuery.UserAvatar,
+				Fullname: dataQuery.UserFullname,
+			},
+			CreatedAt: dataQuery.CreatedAt,
+			UpdatedAt: dataQuery.UpdatedAt,
+		})
+	}
+
+	if data == nil {
+		data = []entities.CandidatePassesFormListResult{}
+	}
+
+	return map[string]any{
+		"data": data,
+	}, nil
+}
+
 func ListInfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 
 	var dataQuery entities.InfoApplyJobQuery
