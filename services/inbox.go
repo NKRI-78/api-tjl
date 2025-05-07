@@ -10,7 +10,7 @@ func InboxList(userId string) (map[string]any, error) {
 	inboxQuery := entities.InboxListQuery{}
 	var data []entities.InboxListResult
 
-	query := `SELECT i.uid AS id, i.title, i.caption, i.is_read, i.created_at, p.user_id, p.fullname AS user_fullname, p.avatar AS user_avatar
+	query := `SELECT i.uid AS id, i.title, i.caption, i.is_read, i.field1, i.field2, i.field3, i.field4, i.field5, i.type, i.created_at, p.user_id, p.fullname AS user_fullname, p.avatar AS user_avatar
 		FROM inboxes i 
 		INNER JOIN profiles p ON p.user_id = i.user_id
 		WHERE p.user_id = ?
@@ -36,6 +36,12 @@ func InboxList(userId string) (map[string]any, error) {
 			Title:   inboxQuery.Title,
 			Caption: inboxQuery.Caption,
 			IsRead:  inboxQuery.IsRead,
+			Field1:  inboxQuery.Field1,
+			Field2:  inboxQuery.Field2,
+			Field3:  inboxQuery.Field3,
+			Field4:  inboxQuery.Field4,
+			Field5:  inboxQuery.Field5,
+			Type:    inboxQuery.Type,
 			User: entities.InboxUser{
 				Id:       inboxQuery.UserId,
 				Fullname: inboxQuery.UserFullname,
@@ -57,7 +63,7 @@ func InboxList(userId string) (map[string]any, error) {
 func InboxDetail(userId, inboxId string) (map[string]any, error) {
 	inboxQuery := entities.InboxListQuery{}
 
-	query := `SELECT i.uid AS id, i.title, i.caption, i.is_read, i.created_at, p.user_id, p.fullname AS user_fullname, p.avatar AS user_avatar
+	query := `SELECT i.uid AS id, i.title, i.caption, i.is_read, i.field1, i.field2, i.field3, i.field4, i.field5, i.type, i.created_at, p.user_id, p.fullname AS user_fullname, p.avatar AS user_avatar
 		FROM inboxes i 
 		INNER JOIN profiles p ON p.user_id = i.user_id
 		WHERE i.uid = ? AND p.user_id = ?
@@ -70,6 +76,12 @@ func InboxDetail(userId, inboxId string) (map[string]any, error) {
 		&inboxQuery.Title,
 		&inboxQuery.Caption,
 		&inboxQuery.IsRead,
+		&inboxQuery.Field1,
+		&inboxQuery.Field2,
+		&inboxQuery.Field3,
+		&inboxQuery.Field4,
+		&inboxQuery.Field5,
+		&inboxQuery.Type,
 		&inboxQuery.CreatedAt,
 		&inboxQuery.UserId,
 		&inboxQuery.UserFullname,
@@ -90,6 +102,12 @@ func InboxDetail(userId, inboxId string) (map[string]any, error) {
 		Id:      inboxQuery.Id,
 		Title:   inboxQuery.Title,
 		Caption: inboxQuery.Caption,
+		Field1:  inboxQuery.Field1,
+		Field2:  inboxQuery.Field2,
+		Field3:  inboxQuery.Field3,
+		Field4:  inboxQuery.Field4,
+		Field5:  inboxQuery.Field5,
+		Type:    inboxQuery.Type,
 		IsRead:  true,
 		User: entities.InboxUser{
 			Id:       inboxQuery.UserId,
