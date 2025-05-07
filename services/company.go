@@ -16,6 +16,7 @@ func CompanyList() (map[string]any, error) {
 	query := `SELECT 
 	c.uid AS id, 
 	c.logo, c.name,
+	c.created_at,
 	p.name AS company_name
 	FROM companies c
 	INNER JOIN places p ON p.id = c.place_id
@@ -37,10 +38,11 @@ func CompanyList() (map[string]any, error) {
 		}
 
 		dataCompany = append(dataCompany, entities.CompanyList{
-			Id:     company.Id,
-			Logo:   company.Logo,
-			Name:   company.Name,
-			Origin: company.CompanyName,
+			Id:        company.Id,
+			Logo:      company.Logo,
+			Name:      company.Name,
+			Origin:    company.CompanyName,
+			CreatedAt: company.CreatedAt,
 		})
 	}
 
