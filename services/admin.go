@@ -88,7 +88,7 @@ func Summary(branchId string) (map[string]any, error) {
 		INNER JOIN user_branches ub ON ub.user_id = fb.user_id
 		INNER JOIN branchs b ON b.id = ub.branch_id
 	`
-	args = []interface{}{}
+	args = []any{}
 	if branchId != "" {
 		queryGender += " WHERE b.id = ?"
 		args = append(args, branchId)
