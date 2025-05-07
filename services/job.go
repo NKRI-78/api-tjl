@@ -456,6 +456,15 @@ func ApplyJob(aj *models.ApplyJob) (map[string]any, error) {
 	message := fmt.Sprintf("Silahkan menunggu untuk tahap selanjutnya [%s]", dataUserFcm.Fullname)
 	helper.SendFcm("Selamat Anda telah berhasil melamar", message, dataUserFcm.Token, "apply-job-detail", aj.Id)
 
+	// Insert Inbox
+	queryInsertInbox := `INSERT INTO inboxes (uid, title, caption, user_id) VALUES (?, ?, ?)`
+
+	errInsertInbox := db.Debug().Exec(queryInsertInbox, uuid.NewV4().String(), "Selamat Anda telah berhasil melamar", message, dataUserFcm.UserId).Error
+
+	if errInsertInbox != nil {
+		helper.Logger("error", "In Server: "+errInsertInbox.Error())
+	}
+
 	return map[string]any{
 		"data": aj.Id,
 	}, nil
@@ -564,6 +573,8 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 	helper.SendFcm(title, dataUserFcm.Fullname, dataUserFcm.Token, "apply-job-detail", uaj.ApplyJobId)
 
 	if uaj.IsOffline {
+
+		// Insert Job Offline
 		queryInsertApplyJobOffline := `INSERT INTO apply_job_offlines (apply_job_id, content) VALUES (?, ?)`
 
 		errInsertApplyJobOffline := db.Debug().Exec(queryInsertApplyJobOffline, uaj.ApplyJobId, uaj.Content).Error
@@ -587,9 +598,9 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 
 		message := fmt.Sprintf("Silahkan periksa Alamat E-mail [%s] Anda untuk info lebih lanjut", dataUserFcm.Email)
 
-		helper.SendFcm("[ INTERVIEW ]", message, dataUserFcm.Token, "apply-job-detail", uaj.ApplyJobId)
+		helper.SendFcm(status, message, dataUserFcm.Token, "apply-job-detail", uaj.ApplyJobId)
 
-		helper.SendEmail(dataUserFcm.Email, "TJL", "[ INTERVIEW ]", uaj.Content, "apply-job-offline")
+		helper.SendEmail(dataUserFcm.Email, "TJL", status, uaj.Content, "apply-job-offline")
 	}
 
 	// Perform the update
@@ -600,7 +611,7 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 		return nil, errors.New(err.Error())
 	}
 
-	// Insert into history
+	// Insert history
 	queryHistory := `INSERT INTO apply_job_histories
 	(uid, job_id, user_id, user_confirm_id, status, link, schedule)
 	VALUES (?, ?, ?, ?, ?, ?, ?)`
@@ -612,6 +623,15 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 	if errHistory != nil {
 		helper.Logger("error", "In Server: "+errHistory.Error())
 		return nil, errors.New(errHistory.Error())
+	}
+
+	// Insert Inbox
+	queryInsertInbox := `INSERT INTO inboxes (uid, title, caption, user_id) VALUES (?, ?, ?)`
+
+	errInsertInbox := db.Debug().Exec(queryInsertInbox, uuid.NewV4().String(), status, uaj.Content, uaj.UserId).Error
+
+	if errInsertInbox != nil {
+		helper.Logger("error", "In Server: "+errInsertInbox.Error())
 	}
 
 	return map[string]any{}, nil

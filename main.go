@@ -80,6 +80,11 @@ func main() {
 	router.HandleFunc("/api/v1/candidate-passes/info/departure", controllers.CandidateInfoDeparture).Methods("GET")
 	router.HandleFunc("/api/v1/candidate-passes/form", controllers.CandidatePassesForm).Methods("POST")
 
+	// Inbox
+	router.HandleFunc("/api/v1/inbox/list", controllers.InboxList).Methods("GET")
+	router.HandleFunc("/api/v1/inbox/detail/{id}", controllers.InboxDetail).Methods("GET")
+	router.HandleFunc("/api/v1/inbox/badge", controllers.InboxBadge).Methods("GET")
+
 	// Auth
 	router.Handle("/api/v1/login", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.Login))).Methods("POST")
 	router.Handle("/api/v1/register", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.Register))).Methods("POST")
@@ -183,7 +188,7 @@ func main() {
 	router.HandleFunc("/api/v1/job-categories", controllers.JobCategory).Methods("GET")
 	router.HandleFunc("/api/v1/job-places", controllers.JobPlace).Methods("GET")
 
-	// Jobs Category
+	// Job Category
 	router.HandleFunc("/api/v1/job-category-store", controllers.JobCategoryStore).Methods("POST")
 	router.HandleFunc("/api/v1/job-category-update", controllers.JobCategoryUpdate).Methods("PUT")
 	router.HandleFunc("/api/v1/job-category-delete", controllers.JobCategoryDelete).Methods("DELETE")
