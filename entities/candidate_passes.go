@@ -39,8 +39,8 @@ type CandidatePassesFormUser struct {
 	Fullname string `json:"fullname"`
 }
 
-
 type DepartureForm struct {
+	Content         string `json:"content"`
 	DateDeparture   string `json:"date_departure"`
 	TimeDeparture   string `json:"time_departure"`
 	Airplane        string `json:"airplane"`

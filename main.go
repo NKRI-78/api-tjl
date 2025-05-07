@@ -248,8 +248,8 @@ func main() {
 
 	// Media
 	router.HandleFunc("/api/v1/media/upload", controllers.Upload).Methods("POST")
-	router.HandleFunc("/api/v1/media/socmed/list", controllers.SocmedList).Methods("GET")
-	router.HandleFunc("/api/v1/media/socmed/store", controllers.SocmedStore).Methods("POST")
+	router.HandleFunc("/api/v1/media/client/list", controllers.ClientList).Methods("GET")
+	router.HandleFunc("/api/v1/media/client/store", controllers.ClientStore).Methods("POST")
 
 	// Email
 	router.HandleFunc("/api/v1/email/send", controllers.SendEmail).Methods("POST")

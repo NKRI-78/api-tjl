@@ -1674,9 +1674,9 @@ func JobCategoryStore(j *models.JobCategoryStore) (map[string]any, error) {
 }
 
 func CandidatePassesForm(dp *entities.DepartureForm) (map[string]any, error) {
-	queryDepartures := `INSERT INTO departures (date_departure, time_departure, airplane, location, destination) VALUES (?, ?, ?, ?, ?)`
+	queryDepartures := `INSERT INTO departures (content) VALUES (?)`
 
-	resultDepartures, _ := db.DB().Exec(queryDepartures, dp.DateDeparture, dp.TimeDeparture, dp.Airplane, dp.Location, dp.Destination)
+	resultDepartures, _ := db.DB().Exec(queryDepartures, dp.Content)
 
 	lastID, errDepartures := resultDepartures.LastInsertId()
 	if errDepartures != nil {
@@ -1695,9 +1695,9 @@ func CandidatePassesForm(dp *entities.DepartureForm) (map[string]any, error) {
 	}
 
 	// Insert Inbox
-	queryInbox := `INSERT INTO inboxes (uid, field1, field2, field3, field4, field5, user_id, type) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+	queryInbox := `INSERT INTO inboxes (uid, field1, user_id, type) VALUES (?, ?, ?, ?)`
 
-	errInbox := db.Debug().Exec(queryInbox, uuid.NewV4().String(), dp.DateDeparture, dp.TimeDeparture, dp.Airplane, dp.Location, dp.Destination, dp.UserCandidateId, "departure").Error
+	errInbox := db.Debug().Exec(queryInbox, uuid.NewV4().String(), dp.Content, dp.UserCandidateId, "departure").Error
 
 	if errInbox != nil {
 		helper.Logger("error", "In Server: "+errInbox.Error())
@@ -1705,11 +1705,12 @@ func CandidatePassesForm(dp *entities.DepartureForm) (map[string]any, error) {
 	}
 
 	return map[string]any{
-		"date_departure":    dp.DateDeparture,
-		"time_departure":    dp.TimeDeparture,
-		"airplane":          dp.Airplane,
-		"location":          dp.Location,
-		"destination":       dp.Destination,
+		// "date_departure":    dp.DateDeparture,
+		// "time_departure":    dp.TimeDeparture,
+		// "airplane":          dp.Airplane,
+		// "location":          dp.Location,
+		// "destination":       dp.Destination,
+		"content":           dp.Content,
 		"departure_id":      lastID,
 		"apply_job_id":      dp.ApplyJobId,
 		"user_candidate_id": dp.UserCandidateId,
