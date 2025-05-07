@@ -457,9 +457,9 @@ func ApplyJob(aj *models.ApplyJob) (map[string]any, error) {
 	helper.SendFcm("Selamat Anda telah berhasil melamar", message, dataUserFcm.Token, "apply-job-detail", aj.Id)
 
 	// Insert Inbox
-	queryInsertInbox := `INSERT INTO inboxes (uid, title, caption, user_id) VALUES (?, ?, ?)`
+	queryInsertInbox := `INSERT INTO inboxes (uid, title, caption, user_id, type) VALUES (?, ?, ?, ?, ?)`
 
-	errInsertInbox := db.Debug().Exec(queryInsertInbox, uuid.NewV4().String(), "Selamat Anda telah berhasil melamar", message, dataUserFcm.UserId).Error
+	errInsertInbox := db.Debug().Exec(queryInsertInbox, uuid.NewV4().String(), "Selamat Anda telah berhasil melamar", message, dataUserFcm.UserId, "broadcast").Error
 
 	if errInsertInbox != nil {
 		helper.Logger("error", "In Server: "+errInsertInbox.Error())
@@ -626,9 +626,9 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 	}
 
 	// Insert Inbox
-	queryInsertInbox := `INSERT INTO inboxes (uid, title, caption, user_id) VALUES (?, ?, ?)`
+	queryInsertInbox := `INSERT INTO inboxes (uid, title, caption, user_id, type) VALUES (?, ?, ?, ?, ?)`
 
-	errInsertInbox := db.Debug().Exec(queryInsertInbox, uuid.NewV4().String(), status, uaj.Content, uaj.UserId).Error
+	errInsertInbox := db.Debug().Exec(queryInsertInbox, uuid.NewV4().String(), status, uaj.Content, uaj.UserId, "broadcast").Error
 
 	if errInsertInbox != nil {
 		helper.Logger("error", "In Server: "+errInsertInbox.Error())
@@ -1684,6 +1684,7 @@ func CandidatePassesForm(dp *entities.DepartureForm) (map[string]any, error) {
 		return nil, errors.New(errDepartures.Error())
 	}
 
+	// Insert Candidate Passes
 	queryCandidatePasses := `INSERT INTO candidate_passes (departure_id, apply_job_id, user_candidate_id) VALUES (?, ?, ?)`
 
 	errCandidatePasses := db.Debug().Exec(queryCandidatePasses, lastID, dp.ApplyJobId, dp.UserCandidateId).Error
@@ -1691,6 +1692,16 @@ func CandidatePassesForm(dp *entities.DepartureForm) (map[string]any, error) {
 	if errCandidatePasses != nil {
 		helper.Logger("error", "In Server: "+errCandidatePasses.Error())
 		return nil, errors.New(errCandidatePasses.Error())
+	}
+
+	// Insert Inbox
+	queryInbox := `INSERT INTO inboxes (uid, field1, field2, field3, field4, field5, user_id, type) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+
+	errInbox := db.Debug().Exec(queryInbox, uuid.NewV4().String(), dp.DateDeparture, dp.TimeDeparture, dp.Airplane, dp.Location, dp.Destination, dp.UserCandidateId, "departure").Error
+
+	if errInbox != nil {
+		helper.Logger("error", "In Server: "+errInbox.Error())
+		return nil, errors.New(errInbox.Error())
 	}
 
 	return map[string]any{
