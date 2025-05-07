@@ -78,10 +78,9 @@ func InboxDetail(userId, inboxId string) (map[string]any, error) {
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
-		return nil, errors.New("Inbox not found")
+		return nil, errors.New("inbox not found")
 	}
 
-	// Mark the inbox as read
 	updateQuery := `UPDATE inboxes SET is_read = true WHERE uid = ? AND user_id = ?`
 	if err := db.Debug().Exec(updateQuery, inboxId, userId).Error; err != nil {
 		helper.Logger("error", "Failed to update is_read: "+err.Error())
@@ -91,7 +90,7 @@ func InboxDetail(userId, inboxId string) (map[string]any, error) {
 		Id:      inboxQuery.Id,
 		Title:   inboxQuery.Title,
 		Caption: inboxQuery.Caption,
-		IsRead:  true, // force it true since we just updated it
+		IsRead:  true,
 		User: entities.InboxUser{
 			Id:       inboxQuery.UserId,
 			Fullname: inboxQuery.UserFullname,
