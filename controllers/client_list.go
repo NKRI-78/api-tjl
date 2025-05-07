@@ -6,16 +6,16 @@ import (
 	"superapps/services"
 )
 
-func SocmedList(w http.ResponseWriter, r *http.Request) {
+func ClientList(w http.ResponseWriter, r *http.Request) {
 
-	result, err := services.SocmedList()
+	result, err := services.ClientList()
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]any{})
 		return
 	}
 
-	helper.Logger("info", "Socmed List success")
+	helper.Logger("info", "Client List success")
 	helper.Response(w, http.StatusOK, false, "Successfully",
 		result["data"],
 	)

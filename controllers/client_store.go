@@ -8,11 +8,11 @@ import (
 	"superapps/services"
 )
 
-func SocmedStore(w http.ResponseWriter, r *http.Request) {
+func ClientStore(w http.ResponseWriter, r *http.Request) {
 
-	socmedStore := &entities.SocialMediaStoreResponse{}
+	clientStore := &entities.ClientStoreResponse{}
 
-	data := &entities.SocialMediaStore{}
+	data := &entities.ClientStore{}
 
 	err := json.NewDecoder(r.Body).Decode(data)
 
@@ -44,7 +44,7 @@ func SocmedStore(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result, err := services.SocmedStore(data)
+	result, err := services.ClientStore(data)
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]any{})
@@ -53,11 +53,11 @@ func SocmedStore(w http.ResponseWriter, r *http.Request) {
 
 	Id := result["id"].(int64)
 
-	socmedStore.Id = Id
-	socmedStore.Icon = Icon
-	socmedStore.Link = Link
-	socmedStore.Name = Name
+	clientStore.Id = Id
+	clientStore.Icon = Icon
+	clientStore.Link = Link
+	clientStore.Name = Name
 
-	helper.Logger("info", "Social Media Store success")
-	helper.Response(w, http.StatusOK, false, "Successfully", socmedStore)
+	helper.Logger("info", "Client Store success")
+	helper.Response(w, http.StatusOK, false, "Successfully", clientStore)
 }

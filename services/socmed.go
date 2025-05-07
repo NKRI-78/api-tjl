@@ -6,8 +6,8 @@ import (
 	helper "superapps/helpers"
 )
 
-func SocmedStore(n *entities.SocialMediaStore) (map[string]any, error) {
-	query := `INSERT INTO medias (icon, link, name) VALUES (?, ?, ?)`
+func ClientStore(n *entities.ClientStore) (map[string]any, error) {
+	query := `INSERT INTO clients (icon, link, name) VALUES (?, ?, ?)`
 
 	sqlDB := db.DB()
 
@@ -25,12 +25,12 @@ func SocmedStore(n *entities.SocialMediaStore) (map[string]any, error) {
 	return map[string]any{"id": lastID}, nil
 }
 
-func SocmedList() (map[string]any, error) {
-	socmeds := []entities.SocialMediaList{}
+func ClientList() (map[string]any, error) {
+	clients := []entities.ClientList{}
 
-	query := `SELECT id, icon, link, name FROM medias`
+	query := `SELECT id, icon, link, name FROM clients`
 
-	err := db.Debug().Raw(query).Scan(&socmeds).Error
+	err := db.Debug().Raw(query).Scan(&clients).Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
@@ -38,6 +38,6 @@ func SocmedList() (map[string]any, error) {
 	}
 
 	return map[string]any{
-		"data": socmeds,
+		"data": clients,
 	}, nil
 }
