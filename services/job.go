@@ -96,7 +96,7 @@ func CandidatePassesFormList() (map[string]any, error) {
 	var dataQuery entities.CandidatePassesFormListQuery
 	var data []entities.CandidatePassesFormListResult
 
-	query := `SELECT d.id, d.date_departure, d.time_departure, d.airplane, d.location, d.destination, d.created_at, d.updated_at,
+	query := `SELECT d.id, d.date_departure, d.time_departure, d.airplane, d.content, d.location, d.destination, d.created_at, d.updated_at,
 	 	p.fullname AS user_fullname, p.avatar AS user_avatar, p.user_id
 		FROM departures d 
 		INNER JOIN candidate_passes cp 
@@ -119,12 +119,8 @@ func CandidatePassesFormList() (map[string]any, error) {
 		}
 
 		data = append(data, entities.CandidatePassesFormListResult{
-			Id:            dataQuery.Id,
-			DateDeparture: dataQuery.DateDeparture,
-			TimeDeparture: dataQuery.TimeDeparture,
-			Airplane:      dataQuery.Airplane,
-			Location:      dataQuery.Location,
-			Destination:   dataQuery.Destination,
+			Id:      dataQuery.Id,
+			Content: dataQuery.Content,
 			User: entities.CandidatePassesFormUser{
 				Id:       dataQuery.UserId,
 				Avatar:   dataQuery.UserAvatar,
@@ -172,12 +168,8 @@ func CandidateInfoDeparture(userId string) (map[string]any, error) {
 		}
 
 		data = append(data, entities.CandidatePassesFormListResult{
-			Id:            dataQuery.Id,
-			DateDeparture: dataQuery.DateDeparture,
-			TimeDeparture: dataQuery.TimeDeparture,
-			Airplane:      dataQuery.Airplane,
-			Location:      dataQuery.Location,
-			Destination:   dataQuery.Destination,
+			Id:      dataQuery.Id,
+			Content: dataQuery.Content,
 			User: entities.CandidatePassesFormUser{
 				Id:       dataQuery.UserId,
 				Avatar:   dataQuery.UserAvatar,
