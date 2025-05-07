@@ -15,6 +15,28 @@ type ApplyJobQuery struct {
 	UpdatedAt     time.Time `json:"updated_at"`
 }
 
+type InfoCandidateApplyJobQuery struct {
+	ApplyJobId      string    `json:"apply_job_id"`
+	ApplyUserId     string    `json:"apply_user_id"`
+	ApplyUserName   string    `json:"apply_user_name"`
+	ConfirmUserId   string    `json:"confirm_user_id"`
+	ConfirmUserName string    `json:"confirm_user_name"`
+	CompanyId       string    `json:"company_id"`
+	CompanyLogo     string    `json:"company_logo"`
+	CompanyName     string    `json:"company_name"`
+	Status          string    `json:"status"`
+	Link            string    `json:"link"`
+	JobAvatar       string    `json:"job_avatar"`
+	JobTitle        string    `json:"job_title"`
+	JobCategory     string    `json:"job_category"`
+	JobAuthor       string    `json:"job_author"`
+	DocId           int       `json:"doc_id"`
+	DocName         string    `json:"doc_name"`
+	DocPath         string    `json:"doc_path"`
+	Schedule        string    `json:"schedule"`
+	CreatedAt       time.Time `json:"created_at"`
+}
+
 type InfoApplyJobQuery struct {
 	ApplyJobId      string    `json:"apply_job_id"`
 	ApplyUserId     string    `json:"apply_user_id"`
@@ -48,6 +70,31 @@ type DocApplyQuery struct {
 }
 
 //
+
+type ResultCandidateInfoApplyJob struct {
+	Id          string      `json:"id"`
+	Status      string      `json:"status"`
+	CreatedAt   time.Time   `json:"created_at"`
+	FormFilled  bool        `json:"form_filled"`
+	Job         JobApply    `json:"job"`
+	Company     JobCompany  `json:"company"`
+	UserApply   UserApply   `json:"user_apply"`
+	UserConfirm UserConfirm `json:"user_confirm"`
+}
+
+type ResultCandidateInfoJobDetail struct {
+	Id          string      `json:"id"`
+	Status      string      `json:"status"`
+	CreatedAt   time.Time   `json:"created_at"`
+	Offline     bool        `json:"offline"`
+	Schedule    string      `json:"schedule"`
+	Link        string      `json:"link"`
+	Job         JobApply    `json:"job"`
+	Company     JobCompany  `json:"company"`
+	Doc         []DocApply  `json:"doc"`
+	UserApply   UserApply   `json:"user_apply"`
+	UserConfirm UserConfirm `json:"user_confirm"`
+}
 
 type ResultInfoApplyJob struct {
 	Id          string      `json:"id"`

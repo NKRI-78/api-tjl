@@ -17,7 +17,7 @@ import (
 func CandidatePassesList() (map[string]any, error) {
 
 	var dataQuery entities.InfoApplyJobQuery
-	var data []entities.ResultInfoApplyJob
+	var data []entities.ResultCandidateInfoApplyJob
 
 	query := `SELECT paa.user_id AS apply_user_id, paa.fullname AS apply_user_name, 
 		pac.user_id AS confirm_user_id, pac.fullname AS confirm_user_name,
@@ -56,10 +56,21 @@ func CandidatePassesList() (map[string]any, error) {
 			return nil, errors.New(errJobRows.Error())
 		}
 
-		data = append(data, entities.ResultInfoApplyJob{
-			Id:        dataQuery.ApplyJobId,
-			Status:    dataQuery.Status,
-			CreatedAt: dataQuery.CreatedAt,
+		var count int
+		row := db.Raw(`SELECT COUNT(*) FROM candidate_passes WHERE apply_job_id = ?`, dataQuery.ApplyJobId).Row()
+		errCount := row.Scan(&count)
+		if errCount != nil {
+			helper.Logger("error", "In Server (count query): "+errCount.Error())
+			return nil, errors.New(errCount.Error())
+		}
+
+		formFilled := count > 0
+
+		data = append(data, entities.ResultCandidateInfoApplyJob{
+			Id:         dataQuery.ApplyJobId,
+			Status:     dataQuery.Status,
+			CreatedAt:  dataQuery.CreatedAt,
+			FormFilled: formFilled,
 			Job: entities.JobApply{
 				JobTitle:    dataQuery.JobTitle,
 				JobCategory: dataQuery.JobCategory,
@@ -83,7 +94,7 @@ func CandidatePassesList() (map[string]any, error) {
 	}
 
 	if data == nil {
-		data = []entities.ResultInfoApplyJob{}
+		data = []entities.ResultCandidateInfoApplyJob{}
 	}
 
 	return map[string]any{
@@ -1666,6 +1677,9 @@ func JobCategoryStore(j *models.JobCategoryStore) (map[string]any, error) {
 }
 
 func CandidatePassesForm(dp *entities.DepartureForm) (map[string]any, error) {
+	var dataUserFcm entities.InitFcm
+
+	// Insert Departure
 	queryDepartures := `INSERT INTO departures (content) VALUES (?)`
 
 	resultDepartures, _ := db.DB().Exec(queryDepartures, dp.Content)
@@ -1696,12 +1710,26 @@ func CandidatePassesForm(dp *entities.DepartureForm) (map[string]any, error) {
 		return nil, errors.New(errInbox.Error())
 	}
 
+	// Fcm
+	queryUserFcm := `SELECT f.token, p.fullname FROM fcms f 
+	INNER JOIN profiles p ON p.user_id = f.user_id 
+	WHERE f.user_id = ?`
+
+	rowUserFcm := db.Debug().Raw(queryUserFcm, dp.UserCandidateId).Row()
+
+	errUserFcmRow := rowUserFcm.Scan(&dataUserFcm.Token, &dataUserFcm.Fullname)
+
+	if errUserFcmRow != nil {
+		if errors.Is(errUserFcmRow, sql.ErrNoRows) {
+			helper.Logger("info", "No FCM data found for user")
+		}
+
+		helper.Logger("error", "In Server: "+errUserFcmRow.Error())
+	}
+
+	helper.SendFcm("Jadwal Keberangkatan", dataUserFcm.Fullname, dataUserFcm.Token, "notifications", "-")
+
 	return map[string]any{
-		// "date_departure":    dp.DateDeparture,
-		// "time_departure":    dp.TimeDeparture,
-		// "airplane":          dp.Airplane,
-		// "location":          dp.Location,
-		// "destination":       dp.Destination,
 		"content":           dp.Content,
 		"departure_id":      lastID,
 		"apply_job_id":      dp.ApplyJobId,
