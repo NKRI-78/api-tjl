@@ -79,3 +79,12 @@
 [INFO]: 2025-05-07 14:56:03 - Fetch Candidate Passes Form List success
 [INFO]: 2025-05-07 14:56:04 - Fetch Candidate Passes Form List success
 [INFO]: 2025-05-07 14:56:20 - Fetch Candidate Passes Form List success
+[INFO]: 2025-05-07 16:07:29 - Candidate Passes Form success
+[INFO]: 2025-05-07 16:07:38 - Candidate Passes Form success
+[INFO]: 2025-05-07 16:11:23 - Candidate Passes Form success
+[INFO]: 2025-05-07 16:11:27 - Candidate Passes Form success
+[INFO]: 2025-05-07 17:06:25 - Fetch Candidate Passes Form List success
+[INFO]: 2025-05-07 17:06:58 - Fetch Candidate Passes List success
+[ERROR]: 2025-05-07 17:10:23 - In Server (count query): unsupported destination, should be slice or struct
+[ERROR]: 2025-05-07 17:10:24 - In Server (count query): unsupported destination, should be slice or struct
+[INFO]: 2025-05-07 17:10:58 - Fetch Candidate Passes List success
