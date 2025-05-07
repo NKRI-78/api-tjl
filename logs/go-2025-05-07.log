@@ -88,3 +88,4 @@
 [ERROR]: 2025-05-07 17:10:23 - In Server (count query): unsupported destination, should be slice or struct
 [ERROR]: 2025-05-07 17:10:24 - In Server (count query): unsupported destination, should be slice or struct
 [INFO]: 2025-05-07 17:10:58 - Fetch Candidate Passes List success
+[INFO]: 2025-05-07 17:20:07 - Candidate Passes Form success
