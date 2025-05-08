@@ -51,7 +51,7 @@ func ClientStore(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	Id := result["id"].(int64)
+	Id := result["data"].(int64)
 
 	clientStore.Id = Id
 	clientStore.Icon = Icon
