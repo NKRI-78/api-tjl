@@ -29,7 +29,7 @@ func EventList(page, limit, startDate string) (map[string]any, error) {
 	var countArgs []interface{}
 
 	if startDate != "" {
-		countQuery = `SELECT id FROM events WHERE start_date >= ?`
+		countQuery = `SELECT id FROM events WHERE start_date = ?`
 		countArgs = append(countArgs, startDate)
 	} else {
 		countQuery = `SELECT id FROM events`
@@ -70,7 +70,7 @@ func EventList(page, limit, startDate string) (map[string]any, error) {
 			FROM events e
 			INNER JOIN profiles p ON e.user_id = p.user_id
 			INNER JOIN users u ON u.uid = p.user_id
-			WHERE e.start_date >= ?
+			WHERE e.start_date = ?
 			LIMIT ?, ?`, startDate, offset, limit).Rows()
 	} else {
 		rows, errEvent = db.Debug().Raw(`
