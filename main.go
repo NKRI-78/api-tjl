@@ -80,6 +80,9 @@ func main() {
 	router.HandleFunc("/api/v1/candidate-passes/info/departure", controllers.CandidateInfoDeparture).Methods("GET")
 	router.HandleFunc("/api/v1/candidate-passes/form", controllers.CandidatePassesForm).Methods("POST")
 
+	// Candidate PDF
+	router.HandleFunc("/api/v1/view/pdf/departure", controllers.ViewPdfDeparture).Methods("GET")
+
 	// Inbox
 	router.HandleFunc("/api/v1/inbox/list", controllers.InboxList).Methods("GET")
 	router.HandleFunc("/api/v1/inbox/detail/{id}", controllers.InboxDetail).Methods("GET")
