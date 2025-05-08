@@ -26,7 +26,6 @@ func main() {
 	router.Use(middleware.CorsMiddleware)
 	router.Use(middleware.JwtAuthentication)
 
-	// Check if the directory exists, create if it doesn't
 	errMkidr := os.MkdirAll("public", os.ModePerm) // os.ModePerm ensures directory is created with the correct permissions
 	if errMkidr != nil {
 		log.Fatalf("Failed to create or access directory: %v", err)
@@ -81,7 +80,7 @@ func main() {
 	router.HandleFunc("/api/v1/candidate-passes/info/departure", controllers.CandidateInfoDeparture).Methods("GET")
 	router.HandleFunc("/api/v1/candidate-passes/form", controllers.CandidatePassesForm).Methods("POST")
 
-	// Candidate PDF
+	// View Candidate PDF Departure
 	router.HandleFunc("/api/v1/view/pdf/departure", controllers.ViewPdfDeparture).Methods("GET")
 
 	// Inbox
@@ -113,9 +112,6 @@ func main() {
 	router.HandleFunc("/api/v1/banner-store", controllers.BannerStore).Methods("POST")
 	router.HandleFunc("/api/v1/banner-update", controllers.BannerUpdate).Methods("PUT")
 	router.HandleFunc("/api/v1/banner-delete", controllers.BannerDelete).Methods("DELETE")
-
-	// Test Send E-mail
-	router.HandleFunc("/api/v1/email/send", controllers.SendEmail).Methods("POST")
 
 	// News
 	router.HandleFunc("/api/v1/news", controllers.NewsList).Methods("GET")
@@ -252,12 +248,17 @@ func main() {
 
 	// Media
 	router.HandleFunc("/api/v1/media/upload", controllers.Upload).Methods("POST")
+
+	// Client
 	router.HandleFunc("/api/v1/media/client/list", controllers.ClientList).Methods("GET")
 	router.HandleFunc("/api/v1/media/client/store", controllers.ClientStore).Methods("POST")
 	router.HandleFunc("/api/v1/media/client/update", controllers.ClientUpdate).Methods("PUT")
 	router.HandleFunc("/api/v1/media/client/delete", controllers.ClientDelete).Methods("DELETE")
 
 	// Email
+	router.HandleFunc("/api/v1/email/send", controllers.SendEmail).Methods("POST")
+
+	// Test Send E-mail
 	router.HandleFunc("/api/v1/email/send", controllers.SendEmail).Methods("POST")
 
 	portEnv := os.Getenv("PORT")

@@ -285,9 +285,17 @@ func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 	var data []entities.ResultInfoJobDetail
 	var dataDoc []entities.DocApply
 
-	query := `SELECT paa.user_id AS apply_user_id, paa.fullname AS apply_user_name, 
-		pac.user_id AS confirm_user_id, pac.fullname AS confirm_user_name,
-		js.name AS status, aj.created_at, aj.uid AS apply_job_id, aj.link, aj.schedule,
+	query := `
+	SELECT 
+		paa.user_id AS apply_user_id,
+		paa.fullname AS apply_user_name,
+		pac.user_id AS confirm_user_id,
+		pac.fullname AS confirm_user_name,
+		js.name AS status,
+		aj.created_at,
+		aj.uid AS apply_job_id,
+		aj.link,
+		aj.schedule,
 		j.title AS job_title,
 		jc.name AS job_category,
 		p.avatar AS job_avatar,
@@ -295,18 +303,19 @@ func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 		c.uid AS company_id,
 		c.logo AS company_logo,
 		c.name AS company_name
-		FROM apply_job_histories aj 
-		INNER JOIN jobs j ON j.uid = aj.job_id
-		INNER JOIN companies c ON c.uid = j.company_id 
-		INNER JOIN job_categories jc ON jc.uid = j.cat_id
-		INNER JOIN profiles p ON p.user_id = j.user_id
-		INNER JOIN job_statuses js ON js.id = aj.status
-		INNER JOIN profiles paa ON paa.user_id = aj.user_id
-		LEFT JOIN profiles pac ON pac.user_id = aj.user_confirm_id 
-		WHERE aj.uid = ?
-	`
-	rows, err := db.Debug().Raw(query, iaj.Id).Rows()
+	FROM apply_job_histories aj
+	INNER JOIN jobs j ON j.uid = aj.job_id
+	INNER JOIN companies c ON c.uid = j.company_id
+	INNER JOIN job_categories jc ON jc.uid = j.cat_id
+	INNER JOIN profiles p ON p.user_id = j.user_id
+	INNER JOIN job_statuses js ON js.id = aj.status
+	INNER JOIN profiles paa ON paa.user_id = aj.user_id
+	LEFT JOIN profiles pac ON pac.user_id = aj.user_confirm_id
+	WHERE aj.uid = ?
+	ORDER BY aj.created_at ASC
+`
 
+	rows, err := db.Debug().Raw(query, iaj.Id).Rows()
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
 	}
