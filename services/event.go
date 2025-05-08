@@ -278,9 +278,9 @@ func EventDelete(e *entities.EventDelete) (map[string]any, error) {
 }
 
 func EventUpdate(n *entities.EventUpdate) (map[string]any, error) {
-	query := `UPDATE events SET title = ?, caption = ? WHERE id = ?`
+	query := `UPDATE events SET title = ?, caption = ?, start_date = ?, end_date = ?, start_time = ?, end_time = ? WHERE id = ?`
 
-	err := db.Debug().Exec(query, n.Title, n.Caption, n.Id).Error
+	err := db.Debug().Exec(query, n.Title, n.Caption, n.StartDate, n.EndDate, n.StartTime, n.EndTime, n.Id).Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
