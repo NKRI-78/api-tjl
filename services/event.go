@@ -10,7 +10,7 @@ import (
 	helper "superapps/helpers"
 )
 
-func EventList(page, limit string) (map[string]any, error) {
+func EventList(page, limit, createdAt string) (map[string]any, error) {
 	url := os.Getenv("API_URL_PROD")
 
 	var allEvent []entities.AllEvent
@@ -24,14 +24,23 @@ func EventList(page, limit string) (map[string]any, error) {
 
 	var offset = strconv.Itoa((pageinteger - 1) * limitinteger)
 
-	errAllEvent := db.Debug().Raw(`SELECT id FROM events`).Scan(&allEvent).Error
+	// Count total events based on createdAt filter
+	var countQuery string
+	var countArgs []interface{}
 
+	if createdAt != "" {
+		countQuery = `SELECT id FROM events WHERE created_at >= ?`
+		countArgs = append(countArgs, createdAt)
+	} else {
+		countQuery = `SELECT id FROM events`
+	}
+
+	errAllEvent := db.Debug().Raw(countQuery, countArgs...).Scan(&allEvent).Error
 	if errAllEvent != nil {
 		helper.Logger("error", "In Server: "+errAllEvent.Error())
 	}
 
 	var resultTotal = len(allEvent)
-
 	var perPage = math.Ceil(float64(resultTotal) / float64(limitinteger))
 
 	var prevPage int
@@ -45,18 +54,38 @@ func EventList(page, limit string) (map[string]any, error) {
 
 	nextPage = pageinteger + 1
 
-	rows, errEvent := db.Debug().Raw(`
-	SELECT e.id, e.title, e.caption,
-	p.fullname AS user_name,
-	e.user_id, e.created_at,
-	e.start_time, 
-	e.end_time, 
-	e.start_date, 
-	e.end_date
-	FROM events e
-	INNER JOIN profiles p ON e.user_id = p.user_id
-	INNER JOIN users u ON u.uid = p.user_id
-	LIMIT ?, ?`, offset, limit).Rows()
+	// Main query with optional createdAt filter
+	var rows *sql.Rows
+	var errEvent error
+
+	if createdAt != "" {
+		rows, errEvent = db.Debug().Raw(`
+			SELECT e.id, e.title, e.caption,
+			p.fullname AS user_name,
+			e.user_id, e.created_at,
+			e.start_time, 
+			e.end_time, 
+			e.start_date, 
+			e.end_date
+			FROM events e
+			INNER JOIN profiles p ON e.user_id = p.user_id
+			INNER JOIN users u ON u.uid = p.user_id
+			WHERE e.created_at >= ?
+			LIMIT ?, ?`, createdAt, offset, limit).Rows()
+	} else {
+		rows, errEvent = db.Debug().Raw(`
+			SELECT e.id, e.title, e.caption,
+			p.fullname AS user_name,
+			e.user_id, e.created_at,
+			e.start_time, 
+			e.end_time, 
+			e.start_date, 
+			e.end_date
+			FROM events e
+			INNER JOIN profiles p ON e.user_id = p.user_id
+			INNER JOIN users u ON u.uid = p.user_id
+			LIMIT ?, ?`, offset, limit).Rows()
+	}
 
 	if errEvent != nil {
 		helper.Logger("error", "In Server: "+errEvent.Error())
@@ -65,14 +94,12 @@ func EventList(page, limit string) (map[string]any, error) {
 
 	for rows.Next() {
 		errEventRows := db.ScanRows(rows, &event)
-
 		if errEventRows != nil {
 			helper.Logger("error", "In Server: "+errEventRows.Error())
 			return nil, errors.New(errEventRows.Error())
 		}
 
-		// # ----- event media ----- # //
-
+		// Event Media
 		var dataEventMedia = make([]entities.EventMedia, 0)
 
 		rowsEventMedia, errEventMediaQuery := db.Debug().Raw(`SELECT id, path 
@@ -86,19 +113,14 @@ func EventList(page, limit string) (map[string]any, error) {
 
 		for rowsEventMedia.Next() {
 			errScanRows := db.ScanRows(rowsEventMedia, &eventMedia)
-
 			if errScanRows != nil {
 				helper.Logger("error", "In Server: "+errScanRows.Error())
 				return nil, errors.New(errScanRows.Error())
 			}
-
 			eventMediaAssign.Id = eventMedia.Id
 			eventMediaAssign.Path = eventMedia.Path
-
 			dataEventMedia = append(dataEventMedia, eventMediaAssign)
 		}
-
-		// # CLOSE ----- event media ----- # //
 
 		appendEventAssign = append(appendEventAssign, entities.EventResponse{
 			Id:        event.Id,
@@ -126,8 +148,8 @@ func EventList(page, limit string) (map[string]any, error) {
 		"per_page":     int(perPage),
 		"prev_page":    prevPage,
 		"next_page":    nextPage,
-		"next_url":     url + "/api/v1/event?page=" + nextUrl,
-		"prev_url":     url + "/api/v1/event?page=" + prevUrl,
+		"next_url":     url + "/api/v1/event?page=" + nextUrl + "&created_at=" + createdAt,
+		"prev_url":     url + "/api/v1/event?page=" + prevUrl + "&created_at=" + createdAt,
 		"data":         &appendEventAssign,
 	}, nil
 }

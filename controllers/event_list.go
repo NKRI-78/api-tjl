@@ -7,10 +7,11 @@ import (
 )
 
 func EventList(w http.ResponseWriter, r *http.Request) {
+	selectedDate := r.URL.Query().Get("selected_date")
 	page := r.URL.Query().Get("page")
 	limit := r.URL.Query().Get("limit")
 
-	result, err := services.EventList(page, limit)
+	result, err := services.EventList(page, limit, selectedDate)
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]any{})
