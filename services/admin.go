@@ -1,6 +1,7 @@
 package services
 
 import (
+	"database/sql"
 	"errors"
 	entities "superapps/entities"
 	helper "superapps/helpers"
@@ -224,5 +225,30 @@ func AdminListUser(branchId string) (map[string]any, error) {
 
 	return map[string]any{
 		"data": adminListUserData,
+	}, nil
+}
+
+func ViewPdfDeparture(userId string) (map[string]any, error) {
+	query := `SELECT d.content FROM departures d 
+	INNER JOIN candidate_passes cp 
+	ON cp.departure_id = d.id
+	WHERE cp.user_candidate_id = ?`
+
+	var content string
+
+	row := db.Debug().Raw(query, userId).Row()
+	err := row.Scan(&content)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return map[string]any{
+				"data": nil,
+			}, nil
+		}
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, err
+	}
+
+	return map[string]any{
+		"data": content,
 	}, nil
 }
