@@ -24,9 +24,13 @@ type EventDelete struct {
 }
 
 type EventUpdate struct {
-	Id      string `json:"id"`
-	Title   string `json:"title"`
-	Caption string `json:"caption"`
+	Id        string `json:"id"`
+	Title     string `json:"title"`
+	Caption   string `json:"caption"`
+	StartDate string `json:"start_date"`
+	EndDate   string `json:"end_date"`
+	StartTime string `json:"start_time"`
+	EndTime   string `json:"end_time"`
 }
 
 type EventResponse struct {
