@@ -320,7 +320,7 @@ func LoginAdmin(u *models.UserAdmin) (entities.AdminResponse, error) {
 
 	query := `SELECT u.uid AS user_id, b.id AS branch_id, u.enabled, u.password, p.fullname, p.avatar, ur.name AS role
 	FROM users u
-	INNER JOIN profiles p
+	INNER JOIN profiles p ON p.user_id = u.uid
 	LEFT JOIN user_branches ub ON ub.user_id = u.uid
 	LEFT JOIN branchs b ON b.id = ub.branch_id
 	INNER JOIN user_roles ur ON ur.id = u.role
