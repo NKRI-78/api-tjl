@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"log"
 	"math"
 	"os"
 	"strconv"
@@ -1081,7 +1082,12 @@ func JobList(userId, search, salary, country, position, page, limit string, isRe
 
 	nextPage = pageinteger + 1
 
-	query := `SELECT j.uid AS id, j.title, j.caption, j.salary, j.worker_count,
+	query := `SELECT 
+	j.uid AS id,
+	j.title,
+	j.caption,
+	j.salary,
+	j.worker_count,
 	jc.uid AS cat_id,
 	jc.logo AS cat_icon,
 	jc.name AS cat_name, 
@@ -1098,21 +1104,41 @@ func JobList(userId, search, salary, country, position, page, limit string, isRe
 	up.fullname AS user_name,
 	j.created_at,
 	j.salary,
-	(j.salary * p.kurs) AS salary_idr
+	(j.salary * p.kurs) AS salary_idr,
+	skills.skill_names
 	FROM jobs j
 	INNER JOIN job_categories jc ON jc.uid = j.cat_id
 	INNER JOIN companies c ON c.uid = j.company_id 
-	INNER JOIN job_skills js ON js.job_id = j.uid
-	INNER JOIN job_skill_categories jsc ON jsc.uid = js.cat_id
 	INNER JOIN places p ON p.id = j.place_id
 	INNER JOIN profiles up ON up.user_id = j.user_id
-	WHERE p.name LIKE '%` + country + `%'
-	AND jc.name LIKE '%` + position + `%'
-	AND (jc.name LIKE '%` + search + `%' OR c.name LIKE '%` + search + `%' OR p.name LIKE '%` + search + `%' OR jsc.name LIKE '%` + search + `%') 
+	LEFT JOIN (
+		SELECT js.job_id, GROUP_CONCAT(jsc.name) AS skill_names
+		FROM job_skills js
+		JOIN job_skill_categories jsc ON jsc.uid = js.cat_id
+		GROUP BY js.job_id
+	) skills ON skills.job_id = j.uid
+	WHERE p.name LIKE ?
+	AND jc.name LIKE ?
+	AND (
+		jc.name LIKE ? OR 
+		c.name LIKE ? OR 
+		p.name LIKE ? OR 
+		skills.skill_names LIKE ?
+	)
 	`
 
+	params := []interface{}{
+		"%" + country + "%",
+		"%" + position + "%",
+		"%" + search + "%",
+		"%" + search + "%",
+		"%" + search + "%",
+		"%" + search + "%",
+	}
+
 	if salary != "" {
-		query += ` AND (j.salary * p.kurs) >= '` + salary + `' `
+		query += ` AND (j.salary * p.kurs) >= ? `
+		params = append(params, salary)
 	}
 
 	if isRecommendation {
@@ -1120,15 +1146,12 @@ func JobList(userId, search, salary, country, position, page, limit string, isRe
 	}
 
 	query += ` LIMIT ?, ?`
+	params = append(params, offset, limit)
 
-	var rows *sql.Rows
-	var err error
-
-	rows, err = db.Debug().Raw(query, offset, limit).Rows()
-
+	// Execute with GORM
+	rows, err := db.Debug().Raw(query, params...).Rows()
 	if err != nil {
-		helper.Logger("error", "In Server: "+err.Error())
-		return nil, err
+		log.Println("Query Error:", err)
 	}
 	defer rows.Close()
 
