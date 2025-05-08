@@ -23,6 +23,7 @@ func main() {
 
 	router := mux.NewRouter()
 
+	router.Use(middleware.CorsMiddleware)
 	router.Use(middleware.JwtAuthentication)
 
 	// Check if the directory exists, create if it doesn't
