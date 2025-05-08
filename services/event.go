@@ -10,7 +10,7 @@ import (
 	helper "superapps/helpers"
 )
 
-func EventList(page, limit, createdAt string) (map[string]any, error) {
+func EventList(page, limit, startDate string) (map[string]any, error) {
 	url := os.Getenv("API_URL_PROD")
 
 	var allEvent []entities.AllEvent
@@ -28,9 +28,9 @@ func EventList(page, limit, createdAt string) (map[string]any, error) {
 	var countQuery string
 	var countArgs []interface{}
 
-	if createdAt != "" {
-		countQuery = `SELECT id FROM events WHERE created_at >= ?`
-		countArgs = append(countArgs, createdAt)
+	if startDate != "" {
+		countQuery = `SELECT id FROM events WHERE start_date >= ?`
+		countArgs = append(countArgs, startDate)
 	} else {
 		countQuery = `SELECT id FROM events`
 	}
@@ -58,7 +58,7 @@ func EventList(page, limit, createdAt string) (map[string]any, error) {
 	var rows *sql.Rows
 	var errEvent error
 
-	if createdAt != "" {
+	if startDate != "" {
 		rows, errEvent = db.Debug().Raw(`
 			SELECT e.id, e.title, e.caption,
 			p.fullname AS user_name,
@@ -70,8 +70,8 @@ func EventList(page, limit, createdAt string) (map[string]any, error) {
 			FROM events e
 			INNER JOIN profiles p ON e.user_id = p.user_id
 			INNER JOIN users u ON u.uid = p.user_id
-			WHERE e.created_at >= ?
-			LIMIT ?, ?`, createdAt, offset, limit).Rows()
+			WHERE e.start_date >= ?
+			LIMIT ?, ?`, startDate, offset, limit).Rows()
 	} else {
 		rows, errEvent = db.Debug().Raw(`
 			SELECT e.id, e.title, e.caption,
@@ -148,8 +148,8 @@ func EventList(page, limit, createdAt string) (map[string]any, error) {
 		"per_page":     int(perPage),
 		"prev_page":    prevPage,
 		"next_page":    nextPage,
-		"next_url":     url + "/api/v1/event?page=" + nextUrl + "&created_at=" + createdAt,
-		"prev_url":     url + "/api/v1/event?page=" + prevUrl + "&created_at=" + createdAt,
+		"next_url":     url + "/api/v1/event?page=" + nextUrl + "&start_date=" + startDate,
+		"prev_url":     url + "/api/v1/event?page=" + prevUrl + "&start_date=" + startDate,
 		"data":         &appendEventAssign,
 	}, nil
 }
