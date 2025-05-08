@@ -1,3 +1,8 @@
 [ERROR]: 2025-05-08 10:05:57 - In Server: sql: expected 8 arguments, got 2
 [ERROR]: 2025-05-08 10:05:59 - In Server: sql: expected 8 arguments, got 2
 [INFO]: 2025-05-08 10:07:17 - Job List success
+[ERROR]: 2025-05-08 11:25:57 - In Server: sql: expected 10 destination arguments in Scan, not 6
+[INFO]: 2025-05-08 11:27:00 - Event Detail success
+[INFO]: 2025-05-08 11:27:08 - Event Detail success
+[INFO]: 2025-05-08 11:27:33 - Event Detail success
+[INFO]: 2025-05-08 11:28:13 - Event Detail success

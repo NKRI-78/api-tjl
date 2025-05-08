@@ -180,13 +180,15 @@ func EventDetail(id string) (map[string]any, error) {
 	row := db.Debug().Raw(`
 		SELECT e.id, e.title, e.caption,
 		p.fullname AS user_name,
+		e.start_date, e.end_date,
+		e.start_time, e.end_time,
 		e.user_id, e.created_at
 		FROM events e
 		INNER JOIN profiles p ON e.user_id = p.user_id
 		INNER JOIN users u ON u.uid = p.user_id
 		WHERE e.id = ?`, id).Row()
 
-	err := row.Scan(&event.Id, &event.Title, &event.Caption, &event.UserName, &event.UserId, &event.CreatedAt)
+	err := row.Scan(&event.Id, &event.Title, &event.Caption, &event.UserName, &event.StartDate, &event.EndDate, &event.StartTime, &event.EndTime, &event.UserId, &event.CreatedAt)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return map[string]any{
@@ -222,6 +224,10 @@ func EventDetail(id string) (map[string]any, error) {
 	response := entities.EventResponse{
 		Id:        event.Id,
 		Title:     event.Title,
+		StartDate: event.StartDate,
+		EndDate:   event.EndDate,
+		StartTime: event.StartTime,
+		EndTime:   event.EndTime,
 		Caption:   event.Caption,
 		Media:     eventMediaList,
 		CreatedAt: event.CreatedAt,
