@@ -76,6 +76,7 @@ type ResultCandidateInfoApplyJob struct {
 	Status      string      `json:"status"`
 	CreatedAt   time.Time   `json:"created_at"`
 	FormFilled  bool        `json:"form_filled"`
+	DocFilled   bool        `json:"doc_filled"`
 	Job         JobApply    `json:"job"`
 	Company     JobCompany  `json:"company"`
 	UserApply   UserApply   `json:"user_apply"`

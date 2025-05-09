@@ -9,6 +9,7 @@ import (
 )
 
 func ViewPdfDeparture(w http.ResponseWriter, r *http.Request) {
+	applyJobId := r.URL.Query().Get("apply_job_id")
 
 	tokenHeader := r.Header.Get("Authorization")
 
@@ -18,7 +19,7 @@ func ViewPdfDeparture(w http.ResponseWriter, r *http.Request) {
 
 	userId, _ := claims["id"].(string)
 
-	result, err := services.ViewPdfDeparture(userId)
+	result, err := services.ViewPdfDeparture(userId, applyJobId)
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]any{})

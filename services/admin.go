@@ -228,15 +228,15 @@ func AdminListUser(branchId string) (map[string]any, error) {
 	}, nil
 }
 
-func ViewPdfDeparture(userId string) (map[string]any, error) {
+func ViewPdfDeparture(userId, applyJobId string) (map[string]any, error) {
 	query := `SELECT d.content FROM departures d 
 	INNER JOIN candidate_passes cp 
 	ON cp.departure_id = d.id
-	WHERE cp.user_candidate_id = ?`
+	WHERE cp.user_candidate_id = ? AND cp.apply_job_id = ?`
 
 	var content string
 
-	row := db.Debug().Raw(query, userId).Row()
+	row := db.Debug().Raw(query, userId, applyJobId).Row()
 	err := row.Scan(&content)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {

@@ -20,6 +20,8 @@ func CandidatePassesList() (map[string]any, error) {
 	var dataQuery entities.InfoApplyJobQuery
 	var data []entities.ResultCandidateInfoApplyJob
 
+	var candidateDoc entities.CandidateDocumentQuery
+
 	query := `SELECT paa.user_id AS apply_user_id, paa.fullname AS apply_user_name, 
 		pac.user_id AS confirm_user_id, pac.fullname AS confirm_user_name,
 		js.name AS status, aj.uid AS apply_job_id,
@@ -67,11 +69,43 @@ func CandidatePassesList() (map[string]any, error) {
 
 		formFilled := count > 0
 
+		dataCandidateDocument := make([]entities.CandidateDocument, 0)
+
+		queryCandidateDocument := `SELECT d.name AS document, ajd.path
+		FROM documents d
+		INNER JOIN apply_job_documents ajd ON ajd.doc_id = d.id
+		WHERE ajd.apply_job_id = ?
+		`
+
+		rowsCandidateDocument, errCandidateDocument := db.Debug().Raw(queryCandidateDocument, dataQuery.ApplyJobId).Rows()
+
+		if errCandidateDocument != nil {
+			helper.Logger("error", "In Server: "+errCandidateDocument.Error())
+		}
+		defer rowsCandidateDocument.Close()
+
+		for rowsCandidateDocument.Next() {
+			errCandidateDocumentRows := db.ScanRows(rowsCandidateDocument, &candidateDoc)
+
+			if errCandidateDocumentRows != nil {
+				helper.Logger("error", "In Server: "+errCandidateDocumentRows.Error())
+				return nil, errors.New(errCandidateDocumentRows.Error())
+			}
+
+			dataCandidateDocument = append(dataCandidateDocument, entities.CandidateDocument{
+				Document: candidateDoc.Document,
+				Path:     candidateDoc.Path,
+			})
+		}
+
+		docFilled := len(dataCandidateDocument) > 0
+
 		data = append(data, entities.ResultCandidateInfoApplyJob{
 			Id:         dataQuery.ApplyJobId,
 			Status:     dataQuery.Status,
 			CreatedAt:  dataQuery.CreatedAt,
 			FormFilled: formFilled,
+			DocFilled: docFilled,
 			Job: entities.JobApply{
 				JobTitle:    dataQuery.JobTitle,
 				JobCategory: dataQuery.JobCategory,
