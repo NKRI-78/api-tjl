@@ -235,11 +235,11 @@ func main() {
 	router.HandleFunc("/api/v1/update-form-language", controllers.UpdateFormLanguage).Methods("PUT")
 
 	// Forum
-	router.HandleFunc("/api/v1/forum-store", controllers.ForumStore).Methods("POST")
 	router.HandleFunc("/api/v1/comment-store", controllers.CommentStore).Methods("POST")
 	router.HandleFunc("/api/v1/comment-delete", controllers.CommentDelete).Methods("DELETE")
 	router.HandleFunc("/api/v1/reply-store", controllers.ReplyStore).Methods("POST")
 	router.HandleFunc("/api/v1/reply-delete", controllers.ReplyDelete).Methods("DELETE")
+	router.HandleFunc("/api/v1/forum-store", controllers.ForumStore).Methods("POST")
 	router.HandleFunc("/api/v1/forum-like", controllers.ForumLike).Methods("POST")
 	router.HandleFunc("/api/v1/forum-delete", controllers.ForumDelete).Methods("DELETE")
 	router.HandleFunc("/api/v1/forum-list", controllers.ForumList).Methods("GET")

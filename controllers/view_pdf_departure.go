@@ -11,6 +11,12 @@ import (
 func ViewPdfDeparture(w http.ResponseWriter, r *http.Request) {
 	applyJobId := r.URL.Query().Get("apply_job_id")
 
+	if applyJobId == "" {
+		helper.Logger("error", "In Server: apply_job_id query is required")
+		helper.Response(w, 400, true, "apply_job_id query is required", map[string]any{})
+		return
+	}
+
 	tokenHeader := r.Header.Get("Authorization")
 
 	token := helper.DecodeJwt(tokenHeader)
