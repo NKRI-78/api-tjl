@@ -1769,7 +1769,7 @@ func CandidatePassesForm(dp *entities.DepartureForm) (map[string]any, error) {
 	// Insert Inbox
 	queryInbox := `INSERT INTO inboxes (uid, field1, field2, user_id, type) VALUES (?, ?, ?, ?, ?)`
 
-	errInbox := db.Debug().Exec(queryInbox, uuid.NewV4().String(), dp.ApplyJobId, dp.Content, dp.UserCandidateId, "departure").Error
+	errInbox := db.Debug().Exec(queryInbox, uuid.NewV4().String(), dp.Content, dp.ApplyJobId, dp.UserCandidateId, "departure").Error
 
 	if errInbox != nil {
 		helper.Logger("error", "In Server: "+errInbox.Error())
