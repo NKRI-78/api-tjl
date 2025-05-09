@@ -255,9 +255,6 @@ func main() {
 	router.HandleFunc("/api/v1/media/client/update", controllers.ClientUpdate).Methods("PUT")
 	router.HandleFunc("/api/v1/media/client/delete", controllers.ClientDelete).Methods("DELETE")
 
-	// Email
-	router.HandleFunc("/api/v1/email/send", controllers.SendEmail).Methods("POST")
-
 	// Test Send E-mail
 	router.HandleFunc("/api/v1/email/send", controllers.SendEmail).Methods("POST")
 
