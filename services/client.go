@@ -31,19 +31,10 @@ func ClientUpdate(c *entities.ClientUpdate) (map[string]any, error) {
 
 	sqlDB := db.DB()
 
-	result, err := sqlDB.Exec(query, c.Icon, c.Link, c.Name, c.Id)
+	_, err := sqlDB.Exec(query, c.Icon, c.Link, c.Name, c.Id)
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
 		return nil, err
-	}
-
-	rowsAffected, err := result.RowsAffected()
-	if err != nil {
-		return nil, err
-	}
-
-	if rowsAffected == 0 {
-		return nil, fmt.Errorf("no client found with ID %d", c.Id)
 	}
 
 	return map[string]any{"data": "Ok"}, nil
