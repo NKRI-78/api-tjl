@@ -83,6 +83,9 @@ func main() {
 	// View Candidate PDF Departure
 	router.HandleFunc("/api/v1/view/pdf/departure", controllers.ViewPdfDeparture).Methods("GET")
 
+	// View Candidate PDF Apply Job Offline
+	router.HandleFunc("/api/v1/view/pdf/apply-job-offline", controllers.ViewPdfApplyJobOffline).Methods("GET")
+
 	// Inbox
 	router.HandleFunc("/api/v1/inbox/list", controllers.InboxList).Methods("GET")
 	router.HandleFunc("/api/v1/inbox/detail/{id}", controllers.InboxDetail).Methods("GET")

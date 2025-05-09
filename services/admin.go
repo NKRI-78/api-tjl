@@ -256,6 +256,29 @@ func ViewPdfDeparture(userId, applyJobId string) (map[string]any, error) {
 	}, nil
 }
 
+func ViewPdfApplyJobOffline(applyJobId string) (map[string]any, error) {
+	query := `SELECT content FROM apply_job_offlines 
+	WHERE apply_job_id = ?`
+
+	var content string
+
+	row := db.Debug().Raw(query, applyJobId).Row()
+	err := row.Scan(&content)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return map[string]any{
+				"data": nil,
+			}, nil
+		}
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, err
+	}
+
+	return map[string]any{
+		"data": content,
+	}, nil
+}
+
 // func ViewOfflinePdfDeparture(userId, applyJobId string) (map[string]any, error) {
 // 	query := `SELECT d.content FROM departures d
 // 	INNER JOIN candidate_passes cp
