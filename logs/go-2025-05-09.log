@@ -4,3 +4,11 @@
 [ERROR]: 2025-05-09 10:39:18 - In Server: apply_job_id query is required
 [INFO]: 2025-05-09 10:39:23 - Fetch Candidate Departure success
 [INFO]: 2025-05-09 10:39:47 - View PDF Departure success
+[INFO]: 2025-05-09 13:30:15 - View PDF Departure success
+[ERROR]: 2025-05-09 13:53:26 - In Server: Error 1054: Unknown column 'd.field2' in 'field list'
+[INFO]: 2025-05-09 13:53:35 - View PDF Departure success
+[INFO]: 2025-05-09 13:53:36 - View PDF Departure success
+[INFO]: 2025-05-09 13:53:44 - View PDF Departure success
+[INFO]: 2025-05-09 13:53:45 - View PDF Departure success
+[INFO]: 2025-05-09 13:54:33 - View PDF Departure success
+[INFO]: 2025-05-09 13:54:44 - View PDF Departure success
