@@ -248,6 +248,11 @@ func ViewPdfDeparture(userId, applyJobId string) (map[string]any, error) {
 		return nil, err
 	}
 
+	updateQuery := `UPDATE inboxes SET is_read = true WHERE field2 = ? AND user_id = ?`
+	if err := db.Debug().Exec(updateQuery, applyJobId, userId).Error; err != nil {
+		helper.Logger("error", "Failed to update is_read: "+err.Error())
+	}
+
 	return map[string]any{
 		"data": content,
 	}, nil
