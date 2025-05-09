@@ -159,12 +159,14 @@ func main() {
 
 	// Badges
 	router.HandleFunc("/api/v1/apply-job-badges", controllers.ApplyJobBadges).Methods("GET")
+	router.HandleFunc("/api/v1/admin/apply-job-badges", controllers.AdminApplyJobBadges).Methods("GET")
 
 	// Update Apply Job
 	router.HandleFunc("/api/v1/update/apply/job", controllers.UpdateApplyJob).Methods("PUT")
 
 	// List Apply Job
 	router.HandleFunc("/api/v1/list/apply/job", controllers.ListApplyJob).Methods("GET")
+	router.HandleFunc("/api/v1/list/apply/job/history", controllers.ListApplyJobHistory).Methods("GET")
 
 	// Info Apply Job
 	router.HandleFunc("/api/v1/info/apply/job/{id}", controllers.InfoApplyJob).Methods("GET")

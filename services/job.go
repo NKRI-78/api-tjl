@@ -312,6 +312,84 @@ func ListInfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 	}, nil
 }
 
+func ListApplyJobHistory(iaj *models.InfoApplyJob) (map[string]any, error) {
+
+	var dataQuery entities.InfoApplyJobQuery
+	var data []entities.ResultInfoApplyJob
+
+	query := `SELECT paa.user_id AS apply_user_id, paa.fullname AS apply_user_name, 
+		pac.user_id AS confirm_user_id, pac.fullname AS confirm_user_name,
+		js.name AS status, aj.uid AS apply_job_id,
+		j.title AS job_title,
+		jc.name AS job_category,
+		p.avatar AS job_avatar,
+		p.fullname AS job_author,
+		c.uid AS company_id,
+		c.logo AS company_logo,
+		c.name AS company_name,
+		aj.created_at
+		FROM apply_jobs aj 
+		INNER JOIN jobs j ON j.uid = aj.job_id
+		INNER JOIN companies c ON c.uid = j.company_id 
+		INNER JOIN job_categories jc ON jc.uid = j.cat_id
+		INNER JOIN profiles p ON p.user_id = j.user_id
+		INNER JOIN job_statuses js ON js.id = aj.status
+		INNER JOIN profiles paa ON paa.user_id = aj.user_id
+		LEFT JOIN profiles pac ON pac.user_id = aj.user_confirm_id 
+		WHERE aj.user_id = ? 
+		AND DATE(aj.created_at) > NOW()
+		ORDER BY aj.created_at DESC
+	`
+	rows, err := db.Debug().Raw(query, iaj.UserId).Rows()
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		errJobRows := db.ScanRows(rows, &dataQuery)
+
+		if errJobRows != nil {
+			helper.Logger("error", "In Server: "+errJobRows.Error())
+			return nil, errors.New(errJobRows.Error())
+		}
+
+		data = append(data, entities.ResultInfoApplyJob{
+			Id:        dataQuery.ApplyJobId,
+			Status:    dataQuery.Status,
+			CreatedAt: dataQuery.CreatedAt,
+			Job: entities.JobApply{
+				JobTitle:    dataQuery.JobTitle,
+				JobCategory: dataQuery.JobCategory,
+				JobAvatar:   dataQuery.JobAvatar,
+				JobAuthor:   dataQuery.JobAuthor,
+			},
+			Company: entities.JobCompany{
+				Id:   dataQuery.CompanyId,
+				Logo: dataQuery.CompanyLogo,
+				Name: dataQuery.CompanyName,
+			},
+			UserApply: entities.UserApply{
+				Id:   dataQuery.ApplyUserId,
+				Name: dataQuery.ApplyUserName,
+			},
+			UserConfirm: entities.UserConfirm{
+				Id:   helper.DefaultIfEmpty(dataQuery.ConfirmUserId, "-"),
+				Name: helper.DefaultIfEmpty(dataQuery.ConfirmUserName, "-"),
+			},
+		})
+	}
+
+	if data == nil {
+		data = []entities.ResultInfoApplyJob{}
+	}
+
+	return map[string]any{
+		"data": data,
+	}, nil
+}
+
 func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 
 	var dataQuery entities.InfoApplyJobQuery
@@ -536,6 +614,28 @@ func ApplyJobBadges(userId string) (map[string]any, error) {
 
 	return map[string]any{
 		"data": dataApplyJobBadges.Total,
+	}, nil
+}
+
+func AdminApplyJobBadges() (map[string]any, error) {
+	var dataAdminApplyJobBadges entities.AdminApplyJobBadges
+
+	query := `
+		SELECT COUNT(*) AS total 
+		FROM users u 
+		INNER JOIN apply_jobs aj ON aj.user_id = u.uid
+		WHERE aj.status = 1
+	`
+
+	row := db.Debug().Raw(query).Row()
+	err := row.Scan(&dataAdminApplyJobBadges.Total)
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, err
+	}
+
+	return map[string]any{
+		"data": dataAdminApplyJobBadges.Total,
 	}, nil
 }
 
