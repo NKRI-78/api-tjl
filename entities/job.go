@@ -173,28 +173,29 @@ type AssignDocumentApplyJob struct {
 }
 
 type JobListQuery struct {
-	Id            string    `json:"id"`
-	Title         string    `json:"title"`
-	Caption       string    `json:"caption"`
-	WorkerCount   int       `json:"worker_count"`
-	CatId         string    `json:"cat_id"`
-	CatIcon       string    `json:"cat_icon"`
-	CatName       string    `json:"cat_name"`
-	CompanyId     string    `json:"company_id"`
-	CompanyLogo   string    `json:"company_logo"`
-	CompanyName   string    `json:"company_name"`
-	PlaceId       int       `json:"place_id"`
-	PlaceName     string    `json:"place_name"`
-	PlaceCurrency string    `json:"place_currency"`
-	PlaceKurs     float64   `json:"place_kurs"`
-	PlaceInfo     string    `json:"place_info"`
-	PlaceSymbol   string    `json:"place_symbol"`
-	Salary        float64   `json:"salary"`
-	SalaryIDR     float64   `json:"salary_id"`
-	UserId        string    `json:"user_id"`
-	UserAvatar    string    `json:"user_avatar"`
-	UserName      string    `json:"user_name"`
-	CreatedAt     time.Time `json:"created_at"`
+	Id                string    `json:"id"`
+	Title             string    `json:"title"`
+	Caption           string    `json:"caption"`
+	WorkerCount       int       `json:"worker_count"`
+	CatId             string    `json:"cat_id"`
+	CatIcon           string    `json:"cat_icon"`
+	CatName           string    `json:"cat_name"`
+	CompanyId         string    `json:"company_id"`
+	CompanyLogo       string    `json:"company_logo"`
+	CompanyName       string    `json:"company_name"`
+	PlaceId           int       `json:"place_id"`
+	PlaceName         string    `json:"place_name"`
+	PlaceCurrency     string    `json:"place_currency"`
+	PlaceKurs         float64   `json:"place_kurs"`
+	PlaceInfo         string    `json:"place_info"`
+	PlaceSymbol       string    `json:"place_symbol"`
+	PlaceLanguageCode string    `json:"place_language_code"`
+	Salary            float64   `json:"salary"`
+	SalaryIDR         float64   `json:"salary_id"`
+	UserId            string    `json:"user_id"`
+	UserAvatar        string    `json:"user_avatar"`
+	UserName          string    `json:"user_name"`
+	CreatedAt         time.Time `json:"created_at"`
 }
 
 type AdminListApplyJobQuery struct {
@@ -501,10 +502,11 @@ type Job struct {
 }
 
 type JobPlace struct {
-	Id       int    `json:"id"`
-	Name     string `json:"name"`
-	Currency string `json:"currency"`
-	Symbol   string `json:"symbol"`
-	Kurs     int    `json:"kurs"`
-	Info     string `json:"info"`
+	Id           int    `json:"id"`
+	Name         string `json:"name"`
+	Currency     string `json:"currency"`
+	LanguageCode string `json:"language_code"`
+	Symbol       string `json:"symbol"`
+	Kurs         int    `json:"kurs"`
+	Info         string `json:"info"`
 }
