@@ -1,2 +1,6 @@
 [INFO]: 2025-05-09 10:32:51 - Fetch Candidate Departure success
 [INFO]: 2025-05-09 10:33:08 - Fetch Candidate Passes List success
+[ERROR]: 2025-05-09 10:39:09 - In Server: apply_job_id query is required
+[ERROR]: 2025-05-09 10:39:18 - In Server: apply_job_id query is required
+[INFO]: 2025-05-09 10:39:23 - Fetch Candidate Departure success
+[INFO]: 2025-05-09 10:39:47 - View PDF Departure success
