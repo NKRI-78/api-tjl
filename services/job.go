@@ -548,6 +548,7 @@ func ApplyJob(aj *models.ApplyJob) (map[string]any, error) {
 		return nil, errors.New("USER_ALREADY_APPLIED_JOB")
 	}
 
+	// Insert Apply Job
 	queryInsert := `INSERT INTO apply_jobs (uid, job_id, user_id) VALUES (?, ?, ?)`
 
 	errInsert := db.Debug().Exec(queryInsert, aj.Id, aj.JobId, aj.UserId).Error
@@ -557,6 +558,7 @@ func ApplyJob(aj *models.ApplyJob) (map[string]any, error) {
 		return nil, errors.New(errInsert.Error())
 	}
 
+	// Insert Apply Job History
 	queryHistory := `INSERT INTO apply_job_histories (uid, job_id, user_id) VALUES (?, ?, ?)`
 
 	errHistory := db.Debug().Exec(queryHistory, aj.Id, aj.JobId, aj.UserId).Error
