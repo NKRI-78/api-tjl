@@ -52,6 +52,7 @@ func NewsList(page, limit string) (map[string]any, error) {
 	FROM news n
 	INNER JOIN profiles p ON n.user_id = p.user_id
 	INNER JOIN users u ON u.uid = p.user_id
+	ORDER BY n.created_at DESC
 	LIMIT ?, ?`, offset, limit).Rows()
 
 	if errNews != nil {
