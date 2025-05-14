@@ -3,7 +3,7 @@ package services
 import (
 	"fmt"
 	"os"
-	helper "superapps/helpers"
+	helpers "superapps/helpers"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -13,11 +13,9 @@ import (
 var db *gorm.DB
 
 func init() {
-
-	env := godotenv.Load()
-
-	if env != nil {
-		helper.Logger("error", "Error getting env")
+	err := godotenv.Load()
+	if err != nil {
+		helpers.Logger("error", "Error getting env")
 	}
 
 	username := os.Getenv("DB_USER")
@@ -27,16 +25,22 @@ func init() {
 	dbPort := os.Getenv("DB_PORT")
 	dbDriver := os.Getenv("DB_DRIVER")
 
-	dbURI := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&collation=utf8mb4_0900_ai_ci&parseTime=True&loc=Local", username, password, dbHost, dbPort, dbName)
+	// URL-encoded timezone: Asia/Jakarta -> Asia%2FJakarta
+	dbURI := fmt.Sprintf(
+		"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&collation=utf8mb4_0900_ai_ci&parseTime=True&loc=Asia%%2FJakarta",
+		username, password, dbHost, dbPort, dbName,
+	)
 
 	conn, err := gorm.Open(dbDriver, dbURI)
-
 	if err != nil {
-		helper.Logger("error", "In Server: "+err.Error())
+		helpers.Logger("error", "In Server: "+err.Error())
 	}
 
+	// Set the global timezone (optional if already handled by DSN)
+	os.Setenv("TZ", "Asia/Jakarta")
+
 	db = conn
-	db.Debug().AutoMigrate()
+	db.Debug().AutoMigrate() // Add your models here if needed
 }
 
 func GetDB() *gorm.DB {
