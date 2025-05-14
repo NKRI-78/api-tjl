@@ -14,7 +14,7 @@ type ForumResponse struct {
 	LikeCount    int            `json:"like_count"`
 	ForumType    ForumType      `json:"type"`
 	User         ForumUser      `json:"user"`
-	CreatedAt    string         `json:"created_at"`
+	CreatedAt    time.Time      `json:"created_at"`
 }
 
 type Forum struct {

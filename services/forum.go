@@ -314,7 +314,7 @@ func ForumList(userId, search, page, limit string) (map[string]any, error) {
 				Email:    forum.Email,
 				Phone:    forum.Phone,
 			},
-			CreatedAt: helper.TimeAgo(forum.CreatedAt),
+			CreatedAt: forum.CreatedAt,
 		})
 	}
 
@@ -603,7 +603,7 @@ func ForumDetail(f *models.Forum) (map[string]any, error) {
 			Email:    forum[0].Email,
 			Phone:    forum[0].Phone,
 		},
-		CreatedAt: helper.TimeAgo(forum[0].CreatedAt),
+		CreatedAt: forum[0].CreatedAt,
 	})
 
 	return map[string]any{
@@ -721,7 +721,7 @@ func ForumStore(f *entities.ForumStore) (map[string]any, error) {
 			Email:    forumUser[0].Email,
 			Phone:    forumUser[0].Phone,
 		},
-		CreatedAt: helper.TimeAgo(time.Now()),
+		CreatedAt: time.Now(),
 	})
 
 	return map[string]any{
@@ -823,7 +823,7 @@ func CommentStore(c *entities.CommentStore) (map[string]any, error) {
 			Email:    forum[0].Email,
 			Phone:    forum[0].Phone,
 		},
-		CreatedAt: helper.TimeAgo(time.Now()),
+		CreatedAt: time.Now(),
 	})
 
 	return map[string]any{
@@ -953,7 +953,7 @@ func ReplyStore(r *entities.ReplyStore) (map[string]any, error) {
 			Email:    forum[0].Email,
 			Phone:    forum[0].Phone,
 		},
-		CreatedAt: helper.TimeAgo(time.Now()),
+		CreatedAt: time.Now(),
 	})
 
 	return map[string]any{
