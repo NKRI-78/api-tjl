@@ -817,7 +817,7 @@ func AdminListApplyJob(branchId string) (map[string]any, error) {
 	up.user_id,
 	up.avatar AS user_avatar,
 	up.fullname AS user_name,
-	j.created_at,
+	aj.created_at,
 	js.id AS job_status_id,
 	js.name AS job_status_name,
 	b.id AS branch_id,
@@ -1272,7 +1272,7 @@ func JobList(userId, search, salary, country, position, page, limit string, isRe
 	)
 	`
 
-	params := []interface{}{
+	params := []any{
 		"%" + country + "%",
 		"%" + position + "%",
 		"%" + search + "%",
