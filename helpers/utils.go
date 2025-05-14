@@ -112,7 +112,7 @@ func TimeAgo(t time.Time) string {
 
 	switch {
 	case duration < time.Minute:
-		return fmt.Sprintf("beberapa detik yang lalu", int(duration.Seconds()))
+		return fmt.Sprintf("Beberapa detik yang lalu")
 	case duration < time.Hour:
 		return fmt.Sprintf("%d menit yang lalu", int(duration.Minutes()))
 	case duration < 24*time.Hour:
