@@ -107,6 +107,27 @@ func SendEmail(to, app, subject, data, Type string) error {
 	return nil
 }
 
+func TimeAgo(t time.Time) string {
+	duration := time.Since(t)
+
+	switch {
+	case duration < time.Minute:
+		return fmt.Sprintf("%d detik yang lagi", int(duration.Seconds()))
+	case duration < time.Hour:
+		return fmt.Sprintf("%d menit yang lalu", int(duration.Minutes()))
+	case duration < 24*time.Hour:
+		return fmt.Sprintf("%d jam yang lalu", int(duration.Hours()))
+	case duration < 7*24*time.Hour:
+		return fmt.Sprintf("%d hari yang lalu", int(duration.Hours()/24))
+	case duration < 30*24*time.Hour:
+		return fmt.Sprintf("%d minggu yang lalu", int(duration.Hours()/(24*7)))
+	case duration < 365*24*time.Hour:
+		return fmt.Sprintf("%d bulan yang lalu", int(duration.Hours()/(24*30)))
+	default:
+		return fmt.Sprintf("%d tahun yanh lalu", int(duration.Hours()/(24*365)))
+	}
+}
+
 func SendFcm(title, message, token, BroadcastType, JobAppId string) error {
 
 	FcmData := &entities.SendFcmRequest{
