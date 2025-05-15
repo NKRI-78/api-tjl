@@ -721,6 +721,28 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 	title := fmt.Sprintf("Selamat lamaran Anda sudah dalam tahap [%s]", status)
 	helper.SendFcm(title, dataUserFcm.Fullname, dataUserFcm.Token, "apply-job-detail", uaj.ApplyJobId)
 
+	// Perform the update
+	query := `UPDATE apply_jobs SET user_confirm_id = ?, status = ? WHERE uid = ?`
+	err := db.Debug().Exec(query, uaj.UserConfirmId, uaj.Status, uaj.ApplyJobId).Error
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	// Insert history
+	queryHistory := `INSERT INTO apply_job_histories
+	(uid, job_id, user_id, user_confirm_id, status, link, schedule)
+	VALUES (?, ?, ?, ?, ?, ?, ?)`
+	errHistory := db.Debug().Exec(queryHistory,
+		dataQuery.Uid, dataQuery.JobId, dataQuery.UserId,
+		uaj.UserConfirmId, uaj.Status, uaj.Link, uaj.Schedule,
+	).Error
+
+	if errHistory != nil {
+		helper.Logger("error", "In Server: "+errHistory.Error())
+		return nil, errors.New(errHistory.Error())
+	}
+
 	if uaj.IsOffline {
 
 		// Insert Job Offline
@@ -742,36 +764,17 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 		errUserFcmRow := rowUserFcm.Scan(&dataUserFcm.Token, &dataUserFcm.Email, &dataUserFcm.Fullname)
 
 		if errUserFcmRow != nil {
+			if errors.Is(errUserFcmRow, sql.ErrNoRows) {
+				helper.Logger("info", "No FCM data found for user")
+			}
+
 			helper.Logger("error", "In Server: "+errUserFcmRow.Error())
 		}
-
 		message := fmt.Sprintf("Silahkan periksa Alamat E-mail [%s] Anda untuk info lebih lanjut", dataUserFcm.Email)
 
 		helper.SendFcm(status, message, dataUserFcm.Token, "apply-job-detail", uaj.ApplyJobId)
 
 		helper.SendEmail(dataUserFcm.Email, "TJL", status, uaj.Content, "apply-job-offline")
-	}
-
-	// Perform the update
-	query := `UPDATE apply_jobs SET user_confirm_id = ?, status = ? WHERE uid = ?`
-	err := db.Debug().Exec(query, uaj.UserConfirmId, uaj.Status, uaj.ApplyJobId).Error
-	if err != nil {
-		helper.Logger("error", "In Server: "+err.Error())
-		return nil, errors.New(err.Error())
-	}
-
-	// Insert history
-	queryHistory := `INSERT INTO apply_job_histories
-	(uid, job_id, user_id, user_confirm_id, status, link, schedule)
-	VALUES (?, ?, ?, ?, ?, ?, ?)`
-	errHistory := db.Debug().Exec(queryHistory,
-		dataQuery.Uid, dataQuery.JobId, dataQuery.UserId,
-		uaj.UserConfirmId, uaj.Status, uaj.Link, uaj.Schedule,
-	).Error
-
-	if errHistory != nil {
-		helper.Logger("error", "In Server: "+errHistory.Error())
-		return nil, errors.New(errHistory.Error())
 	}
 
 	// Insert Inbox
