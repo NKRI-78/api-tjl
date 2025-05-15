@@ -718,9 +718,6 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 		helper.Logger("error", "In Server: "+errUserFcmRow.Error())
 	}
 
-	title := fmt.Sprintf("Selamat lamaran Anda sudah dalam tahap [%s]", status)
-	helper.SendFcm(title, dataUserFcm.Fullname, dataUserFcm.Token, "apply-job-detail", uaj.ApplyJobId)
-
 	// Perform the update
 	query := `UPDATE apply_jobs SET user_confirm_id = ?, status = ? WHERE uid = ?`
 	err := db.Debug().Exec(query, uaj.UserConfirmId, uaj.Status, uaj.ApplyJobId).Error
@@ -742,6 +739,9 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 		helper.Logger("error", "In Server: "+errHistory.Error())
 		return nil, errors.New(errHistory.Error())
 	}
+
+	title := fmt.Sprintf("Selamat lamaran Anda sudah dalam tahap [%s]", status)
+	helper.SendFcm(title, dataUserFcm.Fullname, dataUserFcm.Token, "apply-job-detail", uaj.ApplyJobId)
 
 	if uaj.IsOffline {
 
