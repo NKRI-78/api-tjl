@@ -7,6 +7,46 @@ import (
 	helper "superapps/helpers"
 )
 
+func AdminCandidatePassesBadges() (map[string]any, error) {
+	var dataAdminCandidatePassesBadges entities.AdminCandidatePassesBadges
+
+	query := `
+		SELECT COUNT(*) as total FROM candidate_passes
+	`
+	row := db.Raw(query).Row()
+	errCount := row.Scan(&dataAdminCandidatePassesBadges.Total)
+	if errCount != nil {
+		helper.Logger("error", "In Server (count query): "+errCount.Error())
+		return nil, errors.New(errCount.Error())
+	}
+
+	return map[string]any{
+		"data": dataAdminCandidatePassesBadges.Total,
+	}, nil
+}
+
+func AdminApplyJobBadges() (map[string]any, error) {
+	var dataAdminApplyJobBadges entities.AdminApplyJobBadges
+
+	query := `
+		SELECT COUNT(*) AS total 
+		FROM users u 
+		INNER JOIN apply_jobs aj ON aj.user_id = u.uid
+		WHERE aj.status = 1
+	`
+
+	row := db.Debug().Raw(query).Row()
+	err := row.Scan(&dataAdminApplyJobBadges.Total)
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, err
+	}
+
+	return map[string]any{
+		"data": dataAdminApplyJobBadges.Total,
+	}, nil
+}
+
 func Summary(branchId string) (map[string]any, error) {
 	var dataChartSummary entities.ChartSummaryResponse
 

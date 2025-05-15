@@ -24,6 +24,8 @@ func CandidatePassesList() (map[string]any, error) {
 
 	query := `SELECT paa.user_id AS apply_user_id, paa.fullname AS apply_user_name, 
 		pac.user_id AS confirm_user_id, pac.fullname AS confirm_user_name,
+		ajo.content AS invitation_offline,
+		drs.content AS invitation_departure,
 		js.name AS status, aj.uid AS apply_job_id,
 		j.title AS job_title,
 		jc.name AS job_category,
@@ -40,6 +42,9 @@ func CandidatePassesList() (map[string]any, error) {
 		INNER JOIN profiles p ON p.user_id = j.user_id
 		INNER JOIN job_statuses js ON js.id = aj.status
 		INNER JOIN profiles paa ON paa.user_id = aj.user_id
+		LEFT JOIN candidate_passes cp ON cp.apply_job_id = aj.uid
+		LEFT JOIN apply_job_offlines ajo ON ajo.apply_job_id = aj.uid
+		LEFT JOIN departures drs ON drs.id = cp.departure_id
 		LEFT JOIN profiles pac ON pac.user_id = aj.user_confirm_id 
 		WHERE aj.status = ?
 		ORDER BY aj.created_at DESC
@@ -101,11 +106,13 @@ func CandidatePassesList() (map[string]any, error) {
 		docFilled := len(dataCandidateDocument) > 0
 
 		data = append(data, entities.ResultCandidateInfoApplyJob{
-			Id:         dataQuery.ApplyJobId,
-			Status:     dataQuery.Status,
-			CreatedAt:  dataQuery.CreatedAt,
-			FormFilled: formFilled,
-			DocFilled:  docFilled,
+			Id:                  dataQuery.ApplyJobId,
+			Status:              dataQuery.Status,
+			CreatedAt:           dataQuery.CreatedAt,
+			FormFilled:          formFilled,
+			DocFilled:           docFilled,
+			InvitationOffline:   helper.DefaultIfEmpty(dataQuery.InvitationOffline, "-"),
+			InvitationDeparture: helper.DefaultIfEmpty(dataQuery.InvitationDeparture, "-"),
 			Job: entities.JobApply{
 				JobTitle:    dataQuery.JobTitle,
 				JobCategory: dataQuery.JobCategory,
@@ -424,8 +431,7 @@ func InfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 	INNER JOIN profiles paa ON paa.user_id = aj.user_id
 	LEFT JOIN profiles pac ON pac.user_id = aj.user_confirm_id
 	WHERE aj.uid = ?
-	ORDER BY aj.created_at ASC
-`
+	ORDER BY aj.created_at ASC`
 
 	rows, err := db.Debug().Raw(query, iaj.Id).Rows()
 	if err != nil {
@@ -604,7 +610,7 @@ func ApplyJobBadges(userId string) (map[string]any, error) {
 		SELECT COUNT(*) AS total 
 		FROM users u 
 		INNER JOIN apply_jobs aj ON aj.user_id = u.uid
-		WHERE aj.status = 2 AND aj.user_id = ?
+		WHERE aj.user_id = ? AND aj.is_finish = 0
 	`
 
 	row := db.Debug().Raw(query, userId).Row()
@@ -616,28 +622,6 @@ func ApplyJobBadges(userId string) (map[string]any, error) {
 
 	return map[string]any{
 		"data": dataApplyJobBadges.Total,
-	}, nil
-}
-
-func AdminApplyJobBadges() (map[string]any, error) {
-	var dataAdminApplyJobBadges entities.AdminApplyJobBadges
-
-	query := `
-		SELECT COUNT(*) AS total 
-		FROM users u 
-		INNER JOIN apply_jobs aj ON aj.user_id = u.uid
-		WHERE aj.status = 1
-	`
-
-	row := db.Debug().Raw(query).Row()
-	err := row.Scan(&dataAdminApplyJobBadges.Total)
-	if err != nil {
-		helper.Logger("error", "In Server: "+err.Error())
-		return nil, err
-	}
-
-	return map[string]any{
-		"data": dataAdminApplyJobBadges.Total,
 	}, nil
 }
 
@@ -672,6 +656,7 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 	}
 
 	var status string
+	var isFinish int64 = 0
 
 	// Validate status transition rules
 	switch dataQuery.Status {
@@ -690,6 +675,7 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 			status = "ACCEPTED"
 		} else {
 			status = "DECLINED"
+			isFinish = 1
 		}
 	case 3: // ACCEPTED - no further updates
 		helper.Logger("error", "status [ACCEPTED] already passed")
@@ -719,8 +705,8 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 	}
 
 	// Perform the update
-	query := `UPDATE apply_jobs SET user_confirm_id = ?, status = ? WHERE uid = ?`
-	err := db.Debug().Exec(query, uaj.UserConfirmId, uaj.Status, uaj.ApplyJobId).Error
+	query := `UPDATE apply_jobs SET user_confirm_id = ?, status = ?, is_finish = ? WHERE uid = ?`
+	err := db.Debug().Exec(query, uaj.UserConfirmId, uaj.Status, isFinish, uaj.ApplyJobId).Error
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
 		return nil, errors.New(err.Error())
