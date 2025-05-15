@@ -177,10 +177,10 @@ func VerifyOtp(u *models.User) (map[string]any, error) {
 	}
 
 	// Cek expired OTP (lebih efisien dengan time.Since)
-	if time.Since(user.CreatedAt.UTC()) >= time.Minute {
-		helper.Logger("error", "In Server: Otp is expired")
-		return nil, errors.New("OTP_IS_EXPIRED")
-	}
+	// if time.Since(user.CreatedAt.UTC()) >= time.Minute {
+	// 	helper.Logger("error", "In Server: Otp is expired")
+	// 	return nil, errors.New("OTP_IS_EXPIRED")
+	// }
 
 	errUpdate := db.Debug().Exec(`
 		UPDATE users SET enabled = 1, email_active_date = NOW() 
