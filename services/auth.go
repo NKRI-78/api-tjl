@@ -125,7 +125,7 @@ func ForgotPassword(fp *entities.ForgotPassword) (map[string]any, error) {
 func UpdateEmail(ue *models.UpdateEmail) (map[string]any, error) {
 	users := []entities.CheckAccount{}
 
-	err := db.Debug().Raw(`SELECT email FROM users WHERE email = ? AND enabled = 1`, ue.OldEmail).Scan(&users).Error
+	err := db.Debug().Raw(`SELECT email FROM users WHERE email = ? AND enabled = 1`, ue.NewEmail).Scan(&users).Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
