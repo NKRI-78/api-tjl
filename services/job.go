@@ -1875,6 +1875,14 @@ func CandidatePassesForm(dp *entities.DepartureForm) (map[string]any, error) {
 		return nil, errors.New(errInbox.Error())
 	}
 
+	// Update Apply Jobs
+	queryUpdateApplyJobs := `UPDATE apply_jobs SET is_finish = ? WHERE uid = ?`
+	errUpdateApplyJobs := db.Debug().Exec(queryUpdateApplyJobs, 1, dp.ApplyJobId).Error
+	if errUpdateApplyJobs != nil {
+		helper.Logger("error", "In Server: "+errUpdateApplyJobs.Error())
+		return nil, errors.New(errUpdateApplyJobs.Error())
+	}
+
 	// Fcm
 	queryUserFcm := `SELECT f.token, p.fullname FROM fcms f 
 	INNER JOIN profiles p ON p.user_id = f.user_id 
