@@ -8,20 +8,31 @@ import (
 )
 
 func AdminCandidatePassesBadges() (map[string]any, error) {
-	var dataAdminCandidatePassesBadges entities.AdminCandidatePassesBadges
+	var badgeCount int
 
 	query := `
-		SELECT COUNT(*) as total FROM candidate_passes
+	SELECT COUNT(*) AS badge_count
+	FROM (
+		SELECT aj.uid
+		FROM apply_jobs aj
+		LEFT JOIN candidate_passes cp ON cp.apply_job_id = aj.uid
+		WHERE aj.status = ?
+		AND cp.apply_job_id IS NULL
+		AND EXISTS (
+			SELECT 1 FROM apply_job_documents ajd
+			WHERE ajd.apply_job_id = aj.uid
+		)
+	) AS filtered_jobs
 	`
-	row := db.Raw(query).Row()
-	errCount := row.Scan(&dataAdminCandidatePassesBadges.Total)
-	if errCount != nil {
-		helper.Logger("error", "In Server (count query): "+errCount.Error())
-		return nil, errors.New(errCount.Error())
+
+	err := db.Raw(query, "3").Row().Scan(&badgeCount)
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, err
 	}
 
 	return map[string]any{
-		"data": dataAdminCandidatePassesBadges.Total,
+		"data": badgeCount,
 	}, nil
 }
 
