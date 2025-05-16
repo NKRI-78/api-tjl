@@ -3,3 +3,8 @@
 [ERROR]: 2025-05-16 10:55:41 - In Server: Error 1054: Unknown column 'fulllname' in 'field list'
 [INFO]: 2025-05-16 10:56:09 - Register User Branch success
 [INFO]: 2025-05-16 10:57:05 - Register User Branch success
+[ERROR]: 2025-05-16 14:27:59 - In Server (count query): Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '*) as total FROM candidate_passes cp
+		INNER JOIN apply_job_documents ajd ON ajd' at line 1
+[INFO]: 2025-05-16 14:28:39 - Admin Candidate Job Passes Badges success
+[INFO]: 2025-05-16 14:32:09 - Admin Candidate Job Passes Badges success
+[INFO]: 2025-05-16 14:41:06 - Admin Candidate Job Passes Badges success
