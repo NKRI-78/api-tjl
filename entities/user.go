@@ -46,6 +46,14 @@ type RegisterUserBranch struct {
 	RoleId   string `json:"role_id"`
 }
 
+type UpdateUserBranch struct {
+	Fullname string `json:"fullname"`
+	Email    string `json:"email"`
+	Phone    string `json:"phone"`
+	Password string `json:"password"`
+	RoleId   string `json:"role_id"`
+}
+
 type Biodata struct {
 	Personal    ProfileFormBiodata     `json:"personal"`
 	Address     ProfileFormPlace       `json:"address"`

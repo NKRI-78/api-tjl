@@ -233,7 +233,7 @@ func ResendOtp(u *models.User) (map[string]any, error) {
 	otp := helper.CodeOtpSecure()
 
 	if elapsed >= 1*time.Minute {
-		errUpdateResendOtp := db.Debug().Exec(`UPDATE users SET otp = '` + otp + `', otp_date = NOW() WHERE email = '` + u.Val + `'`).Error
+		errUpdateResendOtp := db.Debug().Exec(`UPDATE users SET otp = '` + otp + `', created_at = NOW(), otp_date = NOW() WHERE email = '` + u.Val + `'`).Error
 
 		if errUpdateResendOtp != nil {
 			helper.Logger("error", "In Server: "+errUpdateResendOtp.Error())
