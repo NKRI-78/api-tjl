@@ -41,6 +41,8 @@ type InfoApplyJobQuery struct {
 	ApplyJobId          string    `json:"apply_job_id"`
 	ApplyUserId         string    `json:"apply_user_id"`
 	ApplyUserName       string    `json:"apply_user_name"`
+	ApplyUserEmail      string    `json:"apply_user_email"`
+	ApplyUserPhone      string    `json:"apply_user_phone"`
 	ConfirmUserId       string    `json:"confirm_user_id"`
 	ConfirmUserName     string    `json:"confirm_user_name"`
 	CompanyId           string    `json:"company_id"`
@@ -48,6 +50,7 @@ type InfoApplyJobQuery struct {
 	InvitationDeparture string    `json:"invitation_departure"`
 	CompanyLogo         string    `json:"company_logo"`
 	CompanyName         string    `json:"company_name"`
+	CountryName         string    `json:"country_name"`
 	Status              string    `json:"status"`
 	Link                string    `json:"link"`
 	JobAvatar           string    `json:"job_avatar"`
@@ -74,17 +77,17 @@ type DocApplyQuery struct {
 //
 
 type ResultCandidateInfoApplyJob struct {
-	Id                  string      `json:"id"`
-	Status              string      `json:"status"`
-	CreatedAt           time.Time   `json:"created_at"`
-	FormFilled          bool        `json:"form_filled"`
-	DocFilled           bool        `json:"doc_filled"`
-	InvitationOffline   string      `json:"invitation_offline"`
-	InvitationDeparture string      `json:"invitation_departure"`
-	Job                 JobApply    `json:"job"`
-	Company             JobCompany  `json:"company"`
-	UserApply           UserApply   `json:"user_apply"`
-	UserConfirm         UserConfirm `json:"user_confirm"`
+	Id                  string              `json:"id"`
+	Status              string              `json:"status"`
+	CreatedAt           time.Time           `json:"created_at"`
+	FormFilled          bool                `json:"form_filled"`
+	DocFilled           bool                `json:"doc_filled"`
+	InvitationOffline   string              `json:"invitation_offline"`
+	InvitationDeparture string              `json:"invitation_departure"`
+	Job                 JobApply            `json:"job"`
+	Company             JobCompanyCandidate `json:"company"`
+	UserApply           UserApply           `json:"user_apply"`
+	UserConfirm         UserConfirm         `json:"user_confirm"`
 }
 
 type ResultCandidateInfoJobDetail struct {
@@ -144,8 +147,17 @@ type UserConfirm struct {
 }
 
 type UserApply struct {
-	Id   string `json:"id"`
-	Name string `json:"fullname"`
+	Id    string `json:"id"`
+	Name  string `json:"fullname"`
+	Email string `json:"email"`
+	Phone string `json:"phone"`
+}
+
+type UserApplyCandidate struct {
+	Id    string `json:"id"`
+	Name  string `json:"fullname"`
+	Email string `json:"email"`
+	Phone string `json:"phone"`
 }
 
 type InfoApplyJob struct {
@@ -214,6 +226,7 @@ type AdminListApplyJobQuery struct {
 	CompanyId          string    `json:"company_id"`
 	CompanyLogo        string    `json:"company_logo"`
 	CompanyName        string    `json:"company_name"`
+	CountryName        string    `json:"country_name"`
 	JobStatusId        int       `json:"job_status_id"`
 	JobStatusName      string    `json:"job_status_name"`
 	PlaceId            int       `json:"place_id"`
@@ -223,6 +236,7 @@ type AdminListApplyJobQuery struct {
 	PlaceInfo          string    `json:"place_info"`
 	UserIdCandidate    string    `json:"user_id_candidate"`
 	UserNameCandidate  string    `json:"user_name_candidate"`
+	UserPhoneCandidate string    `json:"user_phone_candidate"`
 	UserId             string    `json:"user_id"`
 	UserAvatar         string    `json:"user_avatar_candidate"`
 	UserEmailCandidate string    `json:"user_email_candidate"`
@@ -317,6 +331,7 @@ type Candidate struct {
 	Avatar            string               `json:"avatar"`
 	Email             string               `json:"email"`
 	Name              string               `json:"name"`
+	Phone             string               `json:"phone"`
 	CandidateExercise []CandidateExercise  `json:"exercises"`
 	CandidateBiodata  []CandidateBiodata   `json:"biodatas"`
 	CandidateLanguage []CandidateLanguage  `json:"languages"`
@@ -413,9 +428,17 @@ type JobList struct {
 }
 
 type JobCompany struct {
-	Id   string `json:"id"`
-	Logo string `json:"logo"`
-	Name string `json:"name"`
+	Id      string `json:"id"`
+	Logo    string `json:"logo"`
+	Name    string `json:"name"`
+	Country string `json:"country"`
+}
+
+type JobCompanyCandidate struct {
+	Id      string `json:"id"`
+	Logo    string `json:"logo"`
+	Name    string `json:"name"`
+	Country string `json:"country"`
 }
 
 type JobStore struct {

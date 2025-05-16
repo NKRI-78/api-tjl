@@ -20,7 +20,6 @@ func UpdateUserBranch(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fullname := data.Fullname
-	email := data.Email
 	phone := data.Phone
 	password := data.Password
 	roleId := data.RoleId
@@ -31,23 +30,9 @@ func UpdateUserBranch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if email == "" {
-		helper.Logger("error", "In Server: email is required")
-		helper.Response(w, 400, true, "email is required", map[string]any{})
-		return
-	}
-
 	if phone == "" {
 		helper.Logger("error", "In Server: phone is required")
 		helper.Response(w, 400, true, "phone is required", map[string]any{})
-		return
-	}
-
-	validateEmail := helper.IsValidEmail(email)
-
-	if !validateEmail {
-		helper.Logger("error", "In Server: E-mail address is invalid")
-		helper.Response(w, 400, true, "email address is invalid", map[string]any{})
 		return
 	}
 

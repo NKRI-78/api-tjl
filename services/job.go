@@ -24,6 +24,8 @@ func CandidatePassesList() (map[string]any, error) {
 
 	query := `SELECT paa.user_id AS apply_user_id, paa.fullname AS apply_user_name, 
 		pac.user_id AS confirm_user_id, pac.fullname AS confirm_user_name,
+		u.phone AS apply_user_phone,
+		u.email AS apply_user_email,
 		ajo.content AS invitation_offline,
 		drs.content AS invitation_departure,
 		js.name AS status, aj.uid AS apply_job_id,
@@ -34,14 +36,17 @@ func CandidatePassesList() (map[string]any, error) {
 		c.uid AS company_id,
 		c.logo AS company_logo,
 		c.name AS company_name,
+		pl.name AS country_name,
 		aj.created_at
 		FROM apply_jobs aj 
 		INNER JOIN jobs j ON j.uid = aj.job_id
 		INNER JOIN companies c ON c.uid = j.company_id 
+		INNER JOIN places pl ON pl.id = c.place_id
 		INNER JOIN job_categories jc ON jc.uid = j.cat_id
 		INNER JOIN profiles p ON p.user_id = j.user_id
 		INNER JOIN job_statuses js ON js.id = aj.status
 		INNER JOIN profiles paa ON paa.user_id = aj.user_id
+		INNER JOIN users u ON u.uid = aj.user_id
 		LEFT JOIN candidate_passes cp ON cp.apply_job_id = aj.uid
 		LEFT JOIN apply_job_offlines ajo ON ajo.apply_job_id = aj.uid
 		LEFT JOIN departures drs ON drs.id = cp.departure_id
@@ -119,14 +124,17 @@ func CandidatePassesList() (map[string]any, error) {
 				JobAvatar:   dataQuery.JobAvatar,
 				JobAuthor:   dataQuery.JobAuthor,
 			},
-			Company: entities.JobCompany{
-				Id:   dataQuery.CompanyId,
-				Logo: dataQuery.CompanyLogo,
-				Name: dataQuery.CompanyName,
+			Company: entities.JobCompanyCandidate{
+				Id:      dataQuery.CompanyId,
+				Logo:    dataQuery.CompanyLogo,
+				Name:    dataQuery.CompanyName,
+				Country: dataQuery.CountryName,
 			},
 			UserApply: entities.UserApply{
-				Id:   dataQuery.ApplyUserId,
-				Name: dataQuery.ApplyUserName,
+				Id:    dataQuery.ApplyUserId,
+				Name:  dataQuery.ApplyUserName,
+				Email: dataQuery.ApplyUserEmail,
+				Phone: dataQuery.ApplyUserPhone,
 			},
 			UserConfirm: entities.UserConfirm{
 				Id:   helper.DefaultIfEmpty(dataQuery.ConfirmUserId, "-"),
@@ -249,6 +257,8 @@ func ListInfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 
 	query := `SELECT paa.user_id AS apply_user_id, paa.fullname AS apply_user_name, 
 		pac.user_id AS confirm_user_id, pac.fullname AS confirm_user_name,
+		u.phone AS apply_user_phone,
+		u.email AS apply_user_email,
 		js.name AS status, aj.uid AS apply_job_id,
 		j.title AS job_title,
 		jc.name AS job_category,
@@ -257,12 +267,14 @@ func ListInfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 		c.uid AS company_id,
 		c.logo AS company_logo,
 		c.name AS company_name,
+		pl.name AS country_name,
 		aj.created_at
 		FROM apply_jobs aj 
 		INNER JOIN jobs j ON j.uid = aj.job_id
 		INNER JOIN companies c ON c.uid = j.company_id 
 		INNER JOIN job_categories jc ON jc.uid = j.cat_id
 		INNER JOIN profiles p ON p.user_id = j.user_id
+		INNER JOIN places pl ON pl.id = c.place_id
 		INNER JOIN job_statuses js ON js.id = aj.status
 		INNER JOIN profiles paa ON paa.user_id = aj.user_id
 		LEFT JOIN profiles pac ON pac.user_id = aj.user_confirm_id 
@@ -295,13 +307,16 @@ func ListInfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 				JobAuthor:   dataQuery.JobAuthor,
 			},
 			Company: entities.JobCompany{
-				Id:   dataQuery.CompanyId,
-				Logo: dataQuery.CompanyLogo,
-				Name: dataQuery.CompanyName,
+				Id:      dataQuery.CompanyId,
+				Logo:    dataQuery.CompanyLogo,
+				Name:    dataQuery.CompanyName,
+				Country: dataQuery.CountryName,
 			},
 			UserApply: entities.UserApply{
-				Id:   dataQuery.ApplyUserId,
-				Name: dataQuery.ApplyUserName,
+				Id:    dataQuery.ApplyUserId,
+				Name:  dataQuery.ApplyUserName,
+				Email: dataQuery.ApplyUserEmail,
+				Phone: dataQuery.ApplyUserPhone,
 			},
 			UserConfirm: entities.UserConfirm{
 				Id:   helper.DefaultIfEmpty(dataQuery.ConfirmUserId, "-"),
@@ -795,6 +810,7 @@ func AdminListApplyJob(branchId string) (map[string]any, error) {
 	pc.fullname AS user_name_candidate,
 	pc.avatar AS user_avatar_candidate,
 	upc.email AS user_email_candidate,
+	upc.phone AS user_phone_candidate,
 	jc.uid as cat_id,
 	jc.name AS cat_name, 
 	p.id AS place_id,
@@ -805,6 +821,7 @@ func AdminListApplyJob(branchId string) (map[string]any, error) {
 	c.uid AS company_id,
 	c.logo AS company_logo,
 	c.name AS company_name,
+	p.name AS country_name,
 	up.user_id,
 	up.avatar AS user_avatar,
 	up.fullname AS user_name,
@@ -1131,15 +1148,17 @@ func AdminListApplyJob(branchId string) (map[string]any, error) {
 			SalaryIDR: salaryIdr,
 			Bookmark:  bookmark,
 			Company: entities.JobCompany{
-				Id:   job.CompanyId,
-				Logo: job.CompanyLogo,
-				Name: job.CompanyName,
+				Id:      job.CompanyId,
+				Logo:    job.CompanyLogo,
+				Name:    job.CompanyName,
+				Country: job.CountryName,
 			},
 			Candidate: entities.Candidate{
 				Id:                job.UserIdCandidate,
 				Email:             job.UserEmailCandidate,
 				Avatar:            job.UserAvatar,
 				Name:              job.UserNameCandidate,
+				Phone:             job.UserPhoneCandidate,
 				CandidateExercise: dataCandidateExercise,
 				CandidateBiodata:  dataCandidateBiodata,
 				CandidateLanguage: dataCandidateLanguage,
@@ -1331,9 +1350,10 @@ func JobList(userId, search, salary, country, position, page, limit string, isRe
 			Caption: job.Caption,
 			Skills:  jobSkillCategory,
 			Company: entities.JobCompany{
-				Id:   job.CompanyId,
-				Logo: job.CompanyLogo,
-				Name: job.CompanyName,
+				Id:      job.CompanyId,
+				Logo:    job.CompanyLogo,
+				Name:    job.CompanyName,
+				Country: job.PlaceName,
 			},
 			WorkerCount: job.WorkerCount,
 			Salary:      int(job.Salary),

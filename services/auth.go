@@ -98,22 +98,30 @@ func UpdateUserBranch(uub *entities.UpdateUserBranch) (map[string]any, error) {
 		return nil, err
 	}
 
-	// CHECK EMAIL
-	errCheckEmail := db.Debug().Raw(`SELECT email FROM users WHERE email = ? AND enabled = 1`, uub.Email).Scan(&users).Error
+	// CHECK EMAIL only if provided
+	if uub.Email != "" {
+		errCheckEmail := db.Debug().Raw(`SELECT email FROM users WHERE email = ? AND enabled = 1`, uub.Email).Scan(&users).Error
+		if errCheckEmail != nil {
+			helper.Logger("error", "In Server: "+errCheckEmail.Error())
+			return nil, errors.New(errCheckEmail.Error())
+		}
 
-	if errCheckEmail != nil {
-		helper.Logger("error", "In Server: "+errCheckEmail.Error())
-		return nil, errors.New(errCheckEmail.Error())
+		if len(users) == 1 {
+			return nil, errors.New("E-mail already exists")
+		}
 	}
 
-	isUserExist := len(users)
-
-	if isUserExist == 1 {
-		return nil, errors.New("E-mail already exist")
+	// UPDATE USER (with or without email depending on whether it's provided)
+	var errUpdateUser error
+	if uub.Email != "" {
+		errUpdateUser = db.Debug().Exec(`
+			UPDATE users SET password = ?, phone = ?, role = ?, email = ?, updated_at = NOW() 
+			WHERE uid = ?`, hashedPassword, uub.Phone, uub.RoleId, uub.Email, uub.Id).Error
+	} else {
+		errUpdateUser = db.Debug().Exec(`
+			UPDATE users SET password = ?, phone = ?, role = ?, updated_at = NOW() 
+			WHERE uid = ?`, hashedPassword, uub.Phone, uub.RoleId, uub.Id).Error
 	}
-
-	// UPDATE USER
-	errUpdateUser := db.Debug().Exec(`UPDATE users SET password = ?, phone = ?, role = ?, email = ?, updated_at = NOW() WHERE uid = ?`, hashedPassword, uub.Phone, uub.RoleId, uub.Email, uub.Id).Error
 
 	if errUpdateUser != nil {
 		helper.Logger("error", "In Server: "+errUpdateUser.Error())
