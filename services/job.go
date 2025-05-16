@@ -1279,6 +1279,8 @@ func JobList(userId, search, salary, country, position, page, limit string, isRe
 
 	if isRecommendation {
 		query += ` ORDER BY j.clicked_count DESC`
+	} else {
+		query += ` ORDER BY j.created_at DESC`
 	}
 
 	query += ` LIMIT ?, ?`

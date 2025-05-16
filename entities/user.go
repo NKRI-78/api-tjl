@@ -48,7 +48,6 @@ type RegisterUserBranch struct {
 
 type UpdateUserBranch struct {
 	Id       string `json:"id"`
-	Avatar   string `json:"avatar"`
 	Fullname string `json:"fullname"`
 	Email    string `json:"email"`
 	Phone    string `json:"phone"`

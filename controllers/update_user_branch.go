@@ -19,18 +19,11 @@ func UpdateUserBranch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	avatar := data.Avatar
 	fullname := data.Fullname
 	email := data.Email
 	phone := data.Phone
 	password := data.Password
 	roleId := data.RoleId
-
-	if avatar == "" {
-		helper.Logger("error", "In Server: avatar is required")
-		helper.Response(w, 400, true, "avatar is required", map[string]any{})
-		return
-	}
 
 	if fullname == "" {
 		helper.Logger("error", "In Server: fullname is required")

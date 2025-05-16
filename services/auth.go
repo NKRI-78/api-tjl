@@ -122,8 +122,8 @@ func UpdateUserBranch(uub *entities.UpdateUserBranch) (map[string]any, error) {
 
 	// UPDATE PROFILE
 	errUpdateProfile := db.Debug().Exec(`
-		UPDATE profiles SET updated_at = NOW(), fullname = ?, avatar = ?
-		WHERE user_id = ?`, uub.Fullname, uub.Avatar, uub.Id).Error
+		UPDATE profiles SET updated_at = NOW(), fullname = ?
+		WHERE user_id = ?`, uub.Fullname, uub.Id).Error
 
 	if errUpdateProfile != nil {
 		helper.Logger("error", "In Server: "+errUpdateProfile.Error())
