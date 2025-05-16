@@ -1,0 +1,5 @@
+[ERROR]: 2025-05-16 10:54:50 - In Server: Missing auth token
+[ERROR]: 2025-05-16 10:54:55 - In Server: Error 1054: Unknown column 'role_id' in 'field list'
+[ERROR]: 2025-05-16 10:55:41 - In Server: Error 1054: Unknown column 'fulllname' in 'field list'
+[INFO]: 2025-05-16 10:56:09 - Register User Branch success
+[INFO]: 2025-05-16 10:57:05 - Register User Branch success

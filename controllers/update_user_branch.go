@@ -9,7 +9,7 @@ import (
 )
 
 func UpdateUserBranch(w http.ResponseWriter, r *http.Request) {
-	data := &entities.RegisterUserBranch{}
+	data := &entities.UpdateUserBranch{}
 
 	err := json.NewDecoder(r.Body).Decode(data)
 
@@ -19,11 +19,18 @@ func UpdateUserBranch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	avatar := data.Avatar
 	fullname := data.Fullname
 	email := data.Email
+	phone := data.Phone
 	password := data.Password
-	branchId := data.BranchId
 	roleId := data.RoleId
+
+	if avatar == "" {
+		helper.Logger("error", "In Server: avatar is required")
+		helper.Response(w, 400, true, "avatar is required", map[string]any{})
+		return
+	}
 
 	if fullname == "" {
 		helper.Logger("error", "In Server: fullname is required")
@@ -34,6 +41,12 @@ func UpdateUserBranch(w http.ResponseWriter, r *http.Request) {
 	if email == "" {
 		helper.Logger("error", "In Server: email is required")
 		helper.Response(w, 400, true, "email is required", map[string]any{})
+		return
+	}
+
+	if phone == "" {
+		helper.Logger("error", "In Server: phone is required")
+		helper.Response(w, 400, true, "phone is required", map[string]any{})
 		return
 	}
 
@@ -51,19 +64,13 @@ func UpdateUserBranch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if branchId == "" {
-		helper.Logger("error", "In Server: branch_id is required")
-		helper.Response(w, 400, true, "branch_id is required", map[string]any{})
-		return
-	}
-
 	if roleId == "" {
 		helper.Logger("error", "In Server: role_id is required")
 		helper.Response(w, 400, true, "role_id is required", map[string]any{})
 		return
 	}
 
-	result, err := service.RegisterUserBranch(data)
+	result, err := service.UpdateUserBranch(data)
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]any{})
