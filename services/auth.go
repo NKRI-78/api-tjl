@@ -89,6 +89,50 @@ func RegisterUserBranch(rub *entities.RegisterUserBranch) (map[string]any, error
 	return map[string]any{}, nil
 }
 
+func UpdateUserBranch(uub *entities.UpdateUserBranch) (map[string]any, error) {
+	users := []entities.CheckAccount{}
+
+	hashedPassword, err := helper.Hash(uub.Password)
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, err
+	}
+
+	// CHECK EMAIL
+	errCheckEmail := db.Debug().Raw(`SELECT email FROM users WHERE email = ? AND enabled = 1`, uub.Email).Scan(&users).Error
+
+	if errCheckEmail != nil {
+		helper.Logger("error", "In Server: "+errCheckEmail.Error())
+		return nil, errors.New(errCheckEmail.Error())
+	}
+
+	isUserExist := len(users)
+
+	if isUserExist == 1 {
+		return nil, errors.New("E-mail already exist")
+	}
+
+	// UPDATE USER
+	errUpdateUser := db.Debug().Exec(`UPDATE users SET password = ?, phone = ?, role = ?, email = ?, updated_at = NOW() WHERE uid = ?`, hashedPassword, uub.Phone, uub.RoleId, uub.Email, uub.Id).Error
+
+	if errUpdateUser != nil {
+		helper.Logger("error", "In Server: "+errUpdateUser.Error())
+		return nil, errUpdateUser
+	}
+
+	// UPDATE PROFILE
+	errUpdateProfile := db.Debug().Exec(`
+		UPDATE profiles SET updated_at = NOW(), fullname = ?, avatar = ?
+		WHERE user_id = ?`, uub.Fullname, uub.Avatar, uub.Id).Error
+
+	if errUpdateProfile != nil {
+		helper.Logger("error", "In Server: "+errUpdateProfile.Error())
+		return nil, errUpdateProfile
+	}
+
+	return map[string]any{}, nil
+}
+
 func ForgotPassword(fp *entities.ForgotPassword) (map[string]any, error) {
 	users := []entities.ForgotPassword{}
 
