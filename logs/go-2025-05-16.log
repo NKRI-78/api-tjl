@@ -20,3 +20,18 @@
 [INFO]: 2025-05-16 17:02:47 - Fetch Admin Job List success
 [INFO]: 2025-05-16 17:03:06 - Job List success
 [INFO]: 2025-05-16 17:05:07 - Job List success
+[ERROR]: 2025-05-16 17:18:59 - In Server: Error 1054: Unknown column 'u.phone' in 'field list'
+[ERROR]: 2025-05-16 17:19:08 - In Server: Error 1054: Unknown column 'u.phone' in 'field list'
+[ERROR]: 2025-05-16 17:19:09 - In Server: Error 1054: Unknown column 'u.phone' in 'field list'
+[ERROR]: 2025-05-16 17:19:09 - In Server: Error 1054: Unknown column 'u.phone' in 'field list'
+[ERROR]: 2025-05-16 17:19:10 - In Server: Error 1054: Unknown column 'u.phone' in 'field list'
+[ERROR]: 2025-05-16 17:19:11 - In Server: Error 1054: Unknown column 'u.phone' in 'field list'
+[ERROR]: 2025-05-16 17:19:11 - In Server: Error 1054: Unknown column 'u.phone' in 'field list'
+[ERROR]: 2025-05-16 17:19:12 - In Server: Error 1054: Unknown column 'u.phone' in 'field list'
+[ERROR]: 2025-05-16 17:20:52 - In Server: Error 1054: Unknown column 'u.phone' in 'field list'
+[ERROR]: 2025-05-16 17:20:52 - In Server: Error 1054: Unknown column 'u.phone' in 'field list'
+[ERROR]: 2025-05-16 17:20:53 - In Server: Error 1054: Unknown column 'u.phone' in 'field list'
+[ERROR]: 2025-05-16 17:20:54 - In Server: Error 1054: Unknown column 'u.phone' in 'field list'
+[ERROR]: 2025-05-16 17:20:54 - In Server: Error 1054: Unknown column 'u.phone' in 'field list'
+[ERROR]: 2025-05-16 17:21:04 - In Server: Error 1054: Unknown column 'u.phone' in 'field list'
+[INFO]: 2025-05-16 17:21:28 - Get List Info Apply Job success

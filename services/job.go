@@ -277,6 +277,7 @@ func ListInfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 		INNER JOIN places pl ON pl.id = c.place_id
 		INNER JOIN job_statuses js ON js.id = aj.status
 		INNER JOIN profiles paa ON paa.user_id = aj.user_id
+		INNER JOIN users u ON u.uid = paa.user_id
 		LEFT JOIN profiles pac ON pac.user_id = aj.user_confirm_id 
 		WHERE aj.user_id = ?
 		ORDER BY aj.created_at DESC
