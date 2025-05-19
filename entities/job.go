@@ -105,13 +105,14 @@ type ResultCandidateInfoJobDetail struct {
 }
 
 type ResultInfoApplyJob struct {
-	Id          string      `json:"id"`
-	Status      string      `json:"status"`
-	CreatedAt   time.Time   `json:"created_at"`
-	Job         JobApply    `json:"job"`
-	Company     JobCompany  `json:"company"`
-	UserApply   UserApply   `json:"user_apply"`
-	UserConfirm UserConfirm `json:"user_confirm"`
+	Id             string      `json:"id"`
+	Status         string      `json:"status"`
+	CreatedAt      time.Time   `json:"created_at"`
+	Job            JobApply    `json:"job"`
+	ReadyDeparture bool        `json:"ready_departure"`
+	Company        JobCompany  `json:"company"`
+	UserApply      UserApply   `json:"user_apply"`
+	UserConfirm    UserConfirm `json:"user_confirm"`
 }
 
 type ResultInfoJobDetail struct {

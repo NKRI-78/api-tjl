@@ -1,0 +1,9 @@
+[INFO]: 2025-05-19 10:26:01 - Get List Info Apply Job success
+[ERROR]: 2025-05-19 10:39:11 - In Server: unsupported destination, should be slice or struct
+[ERROR]: 2025-05-19 10:40:25 - In Server: sql: no rows in result set
+[ERROR]: 2025-05-19 10:42:31 - In Server: sql: no rows in result set
+[ERROR]: 2025-05-19 10:42:31 - In Server: sql: no rows in result set
+[ERROR]: 2025-05-19 10:42:31 - In Server: sql: no rows in result set
+[ERROR]: 2025-05-19 10:42:31 - In Server: sql: no rows in result set
+[ERROR]: 2025-05-19 10:42:31 - In Server: sql: no rows in result set
+[INFO]: 2025-05-19 10:42:31 - Get List Info Apply Job success

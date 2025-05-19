@@ -297,10 +297,20 @@ func ListInfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 			return nil, errors.New(errJobRows.Error())
 		}
 
+		var candidateApplyJobId string
+		candidatePassQuery := `SELECT apply_job_id FROM candidate_passes WHERE apply_job_id = ? LIMIT 1`
+		errPass := db.Debug().Raw(candidatePassQuery, dataQuery.ApplyJobId).Row().Scan(&candidateApplyJobId)
+		if errPass != nil {
+			helper.Logger("error", "In Server: "+errPass.Error())
+		}
+
+		readyDeparture := candidateApplyJobId != ""
+
 		data = append(data, entities.ResultInfoApplyJob{
-			Id:        dataQuery.ApplyJobId,
-			Status:    dataQuery.Status,
-			CreatedAt: dataQuery.CreatedAt,
+			Id:             dataQuery.ApplyJobId,
+			Status:         dataQuery.Status,
+			CreatedAt:      dataQuery.CreatedAt,
+			ReadyDeparture: readyDeparture,
 			Job: entities.JobApply{
 				JobTitle:    dataQuery.JobTitle,
 				JobCategory: dataQuery.JobCategory,
@@ -336,11 +346,12 @@ func ListInfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 }
 
 func ListApplyJobHistory(iaj *models.InfoApplyJob) (map[string]any, error) {
-
 	var dataQuery entities.InfoApplyJobQuery
-	var data []entities.ResultInfoApplyJob
+	var results []entities.ResultInfoApplyJob
 
-	query := `SELECT paa.user_id AS apply_user_id, paa.fullname AS apply_user_name, 
+	query := `
+	SELECT 
+		paa.user_id AS apply_user_id, paa.fullname AS apply_user_name, 
 		pac.user_id AS confirm_user_id, pac.fullname AS confirm_user_name,
 		js.name AS status, aj.uid AS apply_job_id,
 		j.title AS job_title,
@@ -351,37 +362,47 @@ func ListApplyJobHistory(iaj *models.InfoApplyJob) (map[string]any, error) {
 		c.logo AS company_logo,
 		c.name AS company_name,
 		aj.created_at
-		FROM apply_jobs aj 
-		INNER JOIN jobs j ON j.uid = aj.job_id
-		INNER JOIN companies c ON c.uid = j.company_id 
-		INNER JOIN job_categories jc ON jc.uid = j.cat_id
-		INNER JOIN profiles p ON p.user_id = j.user_id
-		INNER JOIN job_statuses js ON js.id = aj.status
-		INNER JOIN profiles paa ON paa.user_id = aj.user_id
-		LEFT JOIN profiles pac ON pac.user_id = aj.user_confirm_id 
-		WHERE aj.user_id = ? 
-		AND DATE(aj.created_at) > NOW()
-		ORDER BY aj.created_at DESC
+	FROM apply_jobs aj 
+	INNER JOIN jobs j ON j.uid = aj.job_id
+	INNER JOIN companies c ON c.uid = j.company_id 
+	INNER JOIN job_categories jc ON jc.uid = j.cat_id
+	INNER JOIN profiles p ON p.user_id = j.user_id
+	INNER JOIN job_statuses js ON js.id = aj.status
+	INNER JOIN profiles paa ON paa.user_id = aj.user_id
+	LEFT JOIN profiles pac ON pac.user_id = aj.user_confirm_id 
+	WHERE aj.user_id = ? 
+	AND DATE(aj.created_at) > NOW()
+	ORDER BY aj.created_at DESC
 	`
-	rows, err := db.Debug().Raw(query, iaj.UserId).Rows()
 
+	rows, err := db.Debug().Raw(query, iaj.UserId).Rows()
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
+		return nil, err
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		errJobRows := db.ScanRows(rows, &dataQuery)
-
-		if errJobRows != nil {
-			helper.Logger("error", "In Server: "+errJobRows.Error())
-			return nil, errors.New(errJobRows.Error())
+		errScan := db.ScanRows(rows, &dataQuery)
+		if errScan != nil {
+			helper.Logger("error", "In Server: "+errScan.Error())
+			return nil, errScan
 		}
 
-		data = append(data, entities.ResultInfoApplyJob{
-			Id:        dataQuery.ApplyJobId,
-			Status:    dataQuery.Status,
-			CreatedAt: dataQuery.CreatedAt,
+		var candidateApplyJobId string
+		candidatePassQuery := `SELECT apply_job_id FROM candidate_passes WHERE apply_job_id = ? LIMIT 1`
+		errPass := db.Debug().Raw(candidatePassQuery, dataQuery.ApplyJobId).Row().Scan(&candidateApplyJobId)
+		if errPass != nil {
+			helper.Logger("error", "In Server: "+errPass.Error())
+		}
+
+		readyDeparture := candidateApplyJobId != ""
+
+		results = append(results, entities.ResultInfoApplyJob{
+			Id:             dataQuery.ApplyJobId,
+			Status:         dataQuery.Status,
+			CreatedAt:      dataQuery.CreatedAt,
+			ReadyDeparture: readyDeparture,
 			Job: entities.JobApply{
 				JobTitle:    dataQuery.JobTitle,
 				JobCategory: dataQuery.JobCategory,
@@ -404,12 +425,8 @@ func ListApplyJobHistory(iaj *models.InfoApplyJob) (map[string]any, error) {
 		})
 	}
 
-	if data == nil {
-		data = []entities.ResultInfoApplyJob{}
-	}
-
 	return map[string]any{
-		"data": data,
+		"data": results,
 	}, nil
 }
 
