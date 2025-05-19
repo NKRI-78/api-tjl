@@ -347,7 +347,7 @@ func ListInfoApplyJob(iaj *models.InfoApplyJob) (map[string]any, error) {
 
 func ListApplyJobHistory(iaj *models.InfoApplyJob) (map[string]any, error) {
 	var dataQuery entities.InfoApplyJobQuery
-	var results []entities.ResultInfoApplyJob
+	var data []entities.ResultInfoApplyJob
 
 	query := `
 	SELECT 
@@ -398,7 +398,7 @@ func ListApplyJobHistory(iaj *models.InfoApplyJob) (map[string]any, error) {
 
 		readyDeparture := candidateApplyJobId != ""
 
-		results = append(results, entities.ResultInfoApplyJob{
+		data = append(data, entities.ResultInfoApplyJob{
 			Id:             dataQuery.ApplyJobId,
 			Status:         dataQuery.Status,
 			CreatedAt:      dataQuery.CreatedAt,
@@ -425,8 +425,12 @@ func ListApplyJobHistory(iaj *models.InfoApplyJob) (map[string]any, error) {
 		})
 	}
 
+	if data == nil {
+		data = []entities.ResultInfoApplyJob{}
+	}
+
 	return map[string]any{
-		"data": results,
+		"data": data,
 	}, nil
 }
 
