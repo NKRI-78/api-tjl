@@ -10,7 +10,7 @@ import (
 func AdminCandidatePassesBadges(branchId string) (map[string]any, error) {
 	var badgeCount int
 
-	query := `
+	baseQuery := `
 	SELECT COUNT(*) AS badge_count
 	FROM (
 		SELECT aj.uid
@@ -19,16 +19,26 @@ func AdminCandidatePassesBadges(branchId string) (map[string]any, error) {
 		INNER JOIN user_branches ub ON ub.user_id = aj.user_id
 		INNER JOIN branchs b ON b.id = ub.branch_id
 		WHERE aj.status = ?
-		AND b.id = ?
 		AND cp.apply_job_id IS NULL
 		AND EXISTS (
 			SELECT 1 FROM apply_job_documents ajd
 			WHERE ajd.apply_job_id = aj.uid
 		)
-	) AS filtered_jobs
 	`
 
-	err := db.Raw(query, "3", branchId).Row().Scan(&badgeCount)
+	var args []any
+	args = append(args, "3")
+
+	// Conditionally add branch filter
+	if branchId != "" {
+		baseQuery += " AND b.id = ?"
+		args = append(args, branchId)
+	}
+
+	// Close the subquery
+	baseQuery += ") AS filtered_jobs"
+
+	err := db.Raw(baseQuery, args...).Row().Scan(&badgeCount)
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
 		return nil, err
@@ -42,17 +52,24 @@ func AdminCandidatePassesBadges(branchId string) (map[string]any, error) {
 func AdminApplyJobBadges(branchId string) (map[string]any, error) {
 	var dataAdminApplyJobBadges entities.AdminApplyJobBadges
 
-	query := `
+	baseQuery := `
 		SELECT COUNT(*) AS total 
 		FROM users u 
 		INNER JOIN apply_jobs aj ON aj.user_id = u.uid
 		INNER JOIN user_branches ub ON ub.user_id = u.uid
 		INNER JOIN branchs b ON b.id = ub.branch_id
 		WHERE aj.status = 1
-		AND b.id = ?
 	`
 
-	row := db.Debug().Raw(query, branchId).Row()
+	var args []any
+
+	// Conditionally add branch filter
+	if branchId != "" {
+		baseQuery += " AND b.id = ?"
+		args = append(args, branchId)
+	}
+
+	row := db.Debug().Raw(baseQuery, args...).Row()
 	err := row.Scan(&dataAdminApplyJobBadges.Total)
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
