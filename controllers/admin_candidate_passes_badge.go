@@ -18,9 +18,9 @@ func AdminCandidatePassesBadges(w http.ResponseWriter, r *http.Request) {
 
 	claims, _ := token.Claims.(jwt.MapClaims)
 
-	userId, _ := claims["id"].(string)
+	BranchId, _ := claims["branch_id"].(string)
 
-	result, err := services.AdminCandidatePassesBadges(userId)
+	result, err := services.AdminCandidatePassesBadges(BranchId)
 	if err != nil {
 		helper.Response(w, http.StatusBadRequest, true, err.Error(), nil)
 		return
