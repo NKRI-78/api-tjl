@@ -7,7 +7,7 @@ import (
 	helper "superapps/helpers"
 )
 
-func AdminCandidatePassesBadges() (map[string]any, error) {
+func AdminCandidatePassesBadges(userId string) (map[string]any, error) {
 	var badgeCount int
 
 	query := `

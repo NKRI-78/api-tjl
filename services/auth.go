@@ -111,15 +111,15 @@ func UpdateUserBranch(uub *entities.UpdateUserBranch) (map[string]any, error) {
 
 	// UPDATE USER (with or without email depending on whether it's provided)
 	var errUpdateUser error
-	// if uub.Email != "" {
-	// 	errUpdateUser = db.Debug().Exec(`
-	// 		UPDATE users SET password = ?, phone = ?, role = ?, updated_at = NOW()
-	// 		WHERE uid = ?`, hashedPassword, uub.Phone, uub.RoleId, uub.Id).Error
-	// } else {
-	errUpdateUser = db.Debug().Exec(`
+	if uub.Email != "" {
+		errUpdateUser = db.Debug().Exec(`
+			UPDATE users SET password = ?, phone = ?, role = ?, email = ?, updated_at = NOW() 
+			WHERE uid = ?`, hashedPassword, uub.Phone, uub.RoleId, uub.Email, uub.Id).Error
+	} else {
+		errUpdateUser = db.Debug().Exec(`
 			UPDATE users SET password = ?, phone = ?, role = ?, updated_at = NOW() 
 			WHERE uid = ?`, hashedPassword, uub.Phone, uub.RoleId, uub.Id).Error
-	// }
+	}
 
 	if errUpdateUser != nil {
 		helper.Logger("error", "In Server: "+errUpdateUser.Error())
