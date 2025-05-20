@@ -7,7 +7,7 @@ import (
 	helper "superapps/helpers"
 )
 
-func AdminCandidatePassesBadges(userId string) (map[string]any, error) {
+func AdminCandidatePassesBadges(branchId string) (map[string]any, error) {
 	var badgeCount int
 
 	query := `
@@ -16,7 +16,10 @@ func AdminCandidatePassesBadges(userId string) (map[string]any, error) {
 		SELECT aj.uid
 		FROM apply_jobs aj
 		LEFT JOIN candidate_passes cp ON cp.apply_job_id = aj.uid
+		INNER JOIN user_branches ub ON ub.user_id = aj.user_id
+		INNER JOIN branchs b ON b.id = ub.branch_id
 		WHERE aj.status = ?
+		AND b.id = ?
 		AND cp.apply_job_id IS NULL
 		AND EXISTS (
 			SELECT 1 FROM apply_job_documents ajd
@@ -25,7 +28,7 @@ func AdminCandidatePassesBadges(userId string) (map[string]any, error) {
 	) AS filtered_jobs
 	`
 
-	err := db.Raw(query, "3").Row().Scan(&badgeCount)
+	err := db.Raw(query, "3", branchId).Row().Scan(&badgeCount)
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
 		return nil, err
@@ -36,17 +39,20 @@ func AdminCandidatePassesBadges(userId string) (map[string]any, error) {
 	}, nil
 }
 
-func AdminApplyJobBadges() (map[string]any, error) {
+func AdminApplyJobBadges(branchId string) (map[string]any, error) {
 	var dataAdminApplyJobBadges entities.AdminApplyJobBadges
 
 	query := `
 		SELECT COUNT(*) AS total 
 		FROM users u 
 		INNER JOIN apply_jobs aj ON aj.user_id = u.uid
+		INNER JOIN user_branches ub ON ub.user_id = u.uid
+		INNER JOIN branchs b ON b.id = ub.branch_id
 		WHERE aj.status = 1
+		AND b.id = ?
 	`
 
-	row := db.Debug().Raw(query).Row()
+	row := db.Debug().Raw(query, branchId).Row()
 	err := row.Scan(&dataAdminApplyJobBadges.Total)
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
