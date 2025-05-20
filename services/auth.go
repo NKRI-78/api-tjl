@@ -88,7 +88,7 @@ func RegisterUserBranch(rub *entities.RegisterUserBranch) (map[string]any, error
 }
 
 func UpdateUserBranch(uub *entities.UpdateUserBranch) (map[string]any, error) {
-	users := []entities.CheckAccount{}
+	// users := []entities.CheckAccount{}
 
 	hashedPassword, err := helper.Hash(uub.Password)
 	if err != nil {
@@ -97,17 +97,17 @@ func UpdateUserBranch(uub *entities.UpdateUserBranch) (map[string]any, error) {
 	}
 
 	// CHECK EMAIL only if provided
-	if uub.Email != "" {
-		errCheckEmail := db.Debug().Raw(`SELECT email FROM users WHERE email = ? AND enabled = 1`, uub.Email).Scan(&users).Error
-		if errCheckEmail != nil {
-			helper.Logger("error", "In Server: "+errCheckEmail.Error())
-			return nil, errors.New(errCheckEmail.Error())
-		}
+	// if uub.Email != "" {
+	// errCheckEmail := db.Debug().Raw(`SELECT email FROM users WHERE email = ? AND enabled = 1`, uub.Email).Scan(&users).Error
+	// if errCheckEmail != nil {
+	// 	helper.Logger("error", "In Server: "+errCheckEmail.Error())
+	// 	return nil, errors.New(errCheckEmail.Error())
+	// }
 
-		if len(users) == 1 {
-			return nil, errors.New("E-mail already exists")
-		}
-	}
+	// if len(users) == 1 {
+	// 	return nil, errors.New("E-mail already exists")
+	// }
+	// }
 
 	// UPDATE USER (with or without email depending on whether it's provided)
 	var errUpdateUser error
