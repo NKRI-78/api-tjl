@@ -52,8 +52,6 @@ func RegisterUserBranch(rub *entities.RegisterUserBranch) (map[string]any, error
 		return nil, err
 	}
 
-	emailAndPass := rub.Email + "-" + rub.Password
-
 	// INSERT USER
 	queryInsertUser := `INSERT INTO users (uid, email, phone, password, role, enabled) VALUES (?, ?, ?, ?, ?, ?)`
 
@@ -84,7 +82,7 @@ func RegisterUserBranch(rub *entities.RegisterUserBranch) (map[string]any, error
 		return nil, errors.New(errInsertUserBranch.Error())
 	}
 
-	helper.SendEmail(rub.Email, "TJL", "Registrasi Berhasil", emailAndPass, "tjl-create-user-branch")
+	helper.SendEmail(rub.Email, "TJL", "Registrasi Berhasil", rub.Password, "tjl-create-user-branch")
 
 	return map[string]any{}, nil
 }
@@ -137,6 +135,8 @@ func UpdateUserBranch(uub *entities.UpdateUserBranch) (map[string]any, error) {
 		helper.Logger("error", "In Server: "+errUpdateProfile.Error())
 		return nil, errUpdateProfile
 	}
+
+	helper.SendEmail(uub.Email, "TJL", "Update Akun Berhasil", uub.Password, "tjl-update-user-branch")
 
 	return map[string]any{}, nil
 }
