@@ -5,12 +5,22 @@ import (
 	"superapps/entities"
 	helper "superapps/helpers"
 	"superapps/services"
+
+	"github.com/dgrijalva/jwt-go"
 )
 
 func AdminCandidatePassesBadges(w http.ResponseWriter, r *http.Request) {
 	var dataAdminApplyJobBadges entities.AdminApplyJobBadges
 
-	result, err := services.AdminCandidatePassesBadges()
+	tokenHeader := r.Header.Get("Authorization")
+
+	token := helper.DecodeJwt(tokenHeader)
+
+	claims, _ := token.Claims.(jwt.MapClaims)
+
+	userId, _ := claims["id"].(string)
+
+	result, err := services.AdminCandidatePassesBadges(userId)
 	if err != nil {
 		helper.Response(w, http.StatusBadRequest, true, err.Error(), nil)
 		return
