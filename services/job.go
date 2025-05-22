@@ -1356,6 +1356,8 @@ func JobList(userId, search, salary, country, position, page, limit string, isRe
 		bookmark := isJobFavouriteExist == 1
 
 		salaryIdr := helper.FormatIDR(job.Salary * job.PlaceKurs)
+		minSalaryIdr := helper.FormatIDR(job.MinSalary * job.PlaceKurs)
+		maxSalaryIdr := helper.FormatIDR(job.MaxSalary * job.PlaceKurs)
 
 		jobSkillsQuery := `SELECT jsc.uid AS id, jsc.name
 		FROM job_skills js 
@@ -1379,12 +1381,14 @@ func JobList(userId, search, salary, country, position, page, limit string, isRe
 				Name:    job.CompanyName,
 				Country: job.PlaceName,
 			},
-			WorkerCount: job.WorkerCount,
-			Salary:      int(job.Salary),
-			MinSalary:   int(job.MinSalary),
-			MaxSalary:   int(job.MaxSalary),
-			SalaryIDR:   salaryIdr,
-			Bookmark:    bookmark,
+			WorkerCount:  job.WorkerCount,
+			Salary:       int(job.Salary),
+			MinSalary:    int(job.MinSalary),
+			MaxSalary:    int(job.MaxSalary),
+			MinSalaryIDR: minSalaryIdr,
+			MaxSalaryIDR: maxSalaryIdr,
+			SalaryIDR:    salaryIdr,
+			Bookmark:     bookmark,
 			JobCategory: entities.JobCategory{
 				Id:   job.CatId,
 				Icon: job.CatIcon,
@@ -1492,6 +1496,8 @@ func JobDetail(j *models.Job) (map[string]any, error) {
 		bookmark := isJobFavouriteExist == 1
 
 		salaryIdr := helper.FormatIDR(job.Salary * job.PlaceKurs)
+		minSalaryIdr := helper.FormatIDR(job.MinSalary * job.PlaceKurs)
+		maxSalaryIdr := helper.FormatIDR(job.MaxSalary * job.PlaceKurs)
 
 		jobSkillsQuery := `SELECT jsc.uid AS id, jsc.name
 		FROM job_skills js 
@@ -1515,12 +1521,14 @@ func JobDetail(j *models.Job) (map[string]any, error) {
 				Name:    job.CompanyName,
 				Country: job.PlaceName,
 			},
-			WorkerCount: job.WorkerCount,
-			Salary:      int(job.Salary),
-			MinSalary:   int(job.MinSalary),
-			MaxSalary:   int(job.MaxSalary),
-			SalaryIDR:   salaryIdr,
-			Bookmark:    bookmark,
+			WorkerCount:  job.WorkerCount,
+			Salary:       int(job.Salary),
+			MinSalary:    int(job.MinSalary),
+			MaxSalary:    int(job.MaxSalary),
+			MinSalaryIDR: minSalaryIdr,
+			MaxSalaryIDR: maxSalaryIdr,
+			SalaryIDR:    salaryIdr,
+			Bookmark:     bookmark,
 			JobCategory: entities.JobCategory{
 				Id:   job.CatId,
 				Icon: job.CatIcon,

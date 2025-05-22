@@ -415,21 +415,23 @@ type JobStatus struct {
 }
 
 type JobList struct {
-	Id          string             `json:"id"`
-	Title       string             `json:"title"`
-	Caption     string             `json:"caption"`
-	WorkerCount int                `json:"worker_count"`
-	Salary      int                `json:"salary"`
-	MinSalary   int                `json:"min_salary"`
-	MaxSalary   int                `json:"max_salary"`
-	SalaryIDR   string             `json:"salary_idr"`
-	Bookmark    bool               `json:"bookmark"`
-	Created     string             `json:"created"`
-	Skills      []JobSkillCategory `json:"skills"`
-	Company     JobCompany         `json:"company"`
-	JobCategory JobCategory        `json:"category"`
-	JobPlace    JobPlace           `json:"place"`
-	Author      AuthorJobUser      `json:"author"`
+	Id           string             `json:"id"`
+	Title        string             `json:"title"`
+	Caption      string             `json:"caption"`
+	WorkerCount  int                `json:"worker_count"`
+	Salary       int                `json:"salary"`
+	MinSalary    int                `json:"min_salary"`
+	MaxSalary    int                `json:"max_salary"`
+	MinSalaryIDR string             `json:"min_salary_idr"`
+	MaxSalaryIDR string             `json:"max_salary_idr"`
+	SalaryIDR    string             `json:"salary_idr"`
+	Bookmark     bool               `json:"bookmark"`
+	Created      string             `json:"created"`
+	Skills       []JobSkillCategory `json:"skills"`
+	Company      JobCompany         `json:"company"`
+	JobCategory  JobCategory        `json:"category"`
+	JobPlace     JobPlace           `json:"place"`
+	Author       AuthorJobUser      `json:"author"`
 }
 
 type JobCompany struct {
