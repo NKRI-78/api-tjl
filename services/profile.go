@@ -11,6 +11,7 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 	profiles := []entities.Profile{}
 	education := entities.ProfileFormEducation{}
 	exercise := entities.ProfileFormExercise{}
+	exerciseMedia := entities.FormExerciseCertificate{}
 	work := entities.ProfileFormWorkQuery{}
 	language := entities.ProfileFormLanguage{}
 
@@ -104,9 +105,9 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 	var dataTraining = make([]entities.ProfileFormExercise, 0)
 
 	queryTraining := `SELECT id, name, institution, start_month, start_year, end_month, end_year, user_id 
-	FROM form_exercises WHERE user_id  = '` + profiles[0].Id + `'`
+	FROM form_exercises WHERE user_id  = ?`
 
-	rows, errTrainning := db.Debug().Raw(queryTraining).Scan(&exercise).Rows()
+	rows, errTrainning := db.Debug().Raw(queryTraining, profiles[0].Id).Scan(&exercise).Rows()
 
 	if errTrainning != nil {
 		helper.Logger("error", "In Server: "+errTrainning.Error())
@@ -123,7 +124,44 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 			return nil, errors.New(errScanRows.Error())
 		}
 
-		dataTraining = append(dataTraining, exercise)
+		queryFormExerciseMedia := `SELECT id, path
+		FROM form_exercise_medias WHERE exercise_id  = ?`
+
+		rowsFormExerciseMedia, errFormExerciseMedia := db.Debug().Raw(queryFormExerciseMedia, exercise.Id).Scan(&exerciseMedia).Rows()
+
+		if errFormExerciseMedia != nil {
+			helper.Logger("error", "In Server: "+errFormExerciseMedia.Error())
+			return nil, errors.New(errFormExerciseMedia.Error())
+		}
+
+		defer rowsFormExerciseMedia.Close()
+
+		var dataFormExerciseCertificate = make([]entities.FormExerciseCertificate, 0)
+
+		for rowsFormExerciseMedia.Next() {
+			errScanFormExerciseMedia := db.ScanRows(rowsFormExerciseMedia, &exerciseMedia)
+
+			if errScanFormExerciseMedia != nil {
+				helper.Logger("error", "In Server: "+errScanFormExerciseMedia.Error())
+				return nil, errors.New(errScanFormExerciseMedia.Error())
+			}
+
+			dataFormExerciseCertificate = append(dataFormExerciseCertificate, entities.FormExerciseCertificate{
+				Id:   exerciseMedia.Id,
+				Path: exerciseMedia.Path,
+			})
+		}
+
+		dataTraining = append(dataTraining, entities.ProfileFormExercise{
+			Id:           exercise.Id,
+			Name:         exercise.Name,
+			Institution:  exercise.Institution,
+			StartYear:    exercise.StartYear,
+			StartMonth:   exercise.StartMonth,
+			EndYear:      exercise.EndYear,
+			EndMonth:     exercise.EndMonth,
+			Certificates: dataFormExerciseCertificate,
+		})
 	}
 
 	// Work
@@ -157,6 +195,8 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 		} else {
 			isWork = false
 		}
+
+		var dataWork = make([]entities.ProfileFormWork, 0)
 
 		dataWork = append(dataWork, entities.ProfileFormWork{
 			Id:          work.Id,

@@ -1,0 +1,10 @@
+[ERROR]: 2025-05-22 10:58:43 - In Server: crypto/bcrypt: hashedPassword is not the hash of the given password
+[ERROR]: 2025-05-22 10:59:25 - In Server: crypto/bcrypt: hashedPassword is not the hash of the given password
+[ERROR]: 2025-05-22 10:59:52 - In Server: crypto/bcrypt: hashedPassword is not the hash of the given password
+[INFO]: 2025-05-22 11:00:41 - Login success
+[ERROR]: 2025-05-22 11:01:22 - In Server: Error 1452: Cannot add or update a child row: a foreign key constraint fails (`tjl`.`form_exercises`, CONSTRAINT `form_exercises_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE)
+[INFO]: 2025-05-22 11:01:46 - Form Exercise success
+[INFO]: 2025-05-22 11:07:26 - Form Exercise success
+[INFO]: 2025-05-22 11:11:10 - Form Exercise success
+[INFO]: 2025-05-22 11:39:21 - Update Form Exercise success
+[INFO]: 2025-05-22 11:39:36 - Update Form Exercise success

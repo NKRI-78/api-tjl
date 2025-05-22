@@ -218,13 +218,19 @@ type ProfileFormEducation struct {
 }
 
 type ProfileFormExercise struct {
-	Id          int    `json:"id"`
-	Name        string `json:"name"`
-	Institution string `json:"institution"`
-	StartYear   string `json:"start_year"`
-	EndYear     string `json:"end_year"`
-	StartMonth  string `json:"start_month"`
-	EndMonth    string `json:"end_month"`
+	Id           int                       `json:"id"`
+	Name         string                    `json:"name"`
+	Institution  string                    `json:"institution"`
+	StartYear    string                    `json:"start_year"`
+	EndYear      string                    `json:"end_year"`
+	StartMonth   string                    `json:"start_month"`
+	EndMonth     string                    `json:"end_month"`
+	Certificates []FormExerciseCertificate `json:"certificates"`
+}
+
+type FormExerciseCertificate struct {
+	Id   int    `json:"id"`
+	Path string `json:"path"`
 }
 
 type ProfileFormWorkQuery struct {
