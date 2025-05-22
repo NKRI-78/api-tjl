@@ -208,6 +208,8 @@ type JobListQuery struct {
 	PlaceSymbol       string    `json:"place_symbol"`
 	PlaceLanguageCode string    `json:"place_language_code"`
 	Salary            float64   `json:"salary"`
+	MinSalary         float64   `json:"min_salary"`
+	MaxSalary         float64   `json:"max_salary"`
 	SalaryIDR         float64   `json:"salary_id"`
 	UserId            string    `json:"user_id"`
 	UserAvatar        string    `json:"user_avatar"`
@@ -418,6 +420,8 @@ type JobList struct {
 	Caption     string             `json:"caption"`
 	WorkerCount int                `json:"worker_count"`
 	Salary      int                `json:"salary"`
+	MinSalary   int                `json:"min_salary"`
+	MaxSalary   int                `json:"max_salary"`
 	SalaryIDR   string             `json:"salary_idr"`
 	Bookmark    bool               `json:"bookmark"`
 	Created     string             `json:"created"`
@@ -448,6 +452,8 @@ type JobStore struct {
 	Skills      []string `json:"skills"`
 	Caption     string   `json:"caption"`
 	Salary      string   `json:"salary"`
+	MinSalary   string   `json:"min_salary"`
+	MaxSalary   string   `json:"max_salary"`
 	WorkerCount int      `json:"worker_count"`
 	CompanyId   string   `json:"company_id"`
 	CatId       string   `json:"cat_id"`
@@ -462,6 +468,8 @@ type JobUpdate struct {
 	Skills      []string `json:"skills"`
 	Caption     string   `json:"caption"`
 	Salary      string   `json:"salary"`
+	MinSalary   string   `json:"min_salary"`
+	MaxSalary   string   `json:"max_salary"`
 	WorkerCount int      `json:"worker_count"`
 	CompanyId   string   `json:"company_id"`
 	CatId       string   `json:"cat_id"`
