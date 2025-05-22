@@ -1359,7 +1359,6 @@ func JobList(userId, search, salary, country, position, page, limit string, isRe
 	query += ` LIMIT ?, ?`
 	params = append(params, offset, limit)
 
-	// Execute with GORM
 	rows, err := db.Debug().Raw(query, params...).Rows()
 	if err != nil {
 		log.Println("Query Error:", err)
