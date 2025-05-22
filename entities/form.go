@@ -45,14 +45,16 @@ type FormEducation struct {
 }
 
 type FormExercise struct {
-	Id          string `json:"id"`
-	Name        string `json:"name"`
-	Institution string `json:"institution"`
-	StartMonth  string `json:"start_month"`
-	StartYear   string `json:"start_year"`
-	EndMonth    string `json:"end_month"`
-	EndYear     string `json:"end_year"`
-	UserId      string `json:"user_id"`
+	Id                  string   `json:"id"`
+	Name                string   `json:"name"`
+	Institution         string   `json:"institution"`
+	StartMonth          string   `json:"start_month"`
+	StartYear           string   `json:"start_year"`
+	EndMonth            string   `json:"end_month"`
+	EndYear             string   `json:"end_year"`
+	CertificateIDeletes []string `json:"certificate_id_deletes"`
+	Certificates        []string `json:"certificates"`
+	UserId              string   `json:"user_id"`
 }
 
 type FormWork struct {

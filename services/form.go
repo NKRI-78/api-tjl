@@ -68,11 +68,28 @@ func FormExercise(f *models.FormExercise) (map[string]any, error) {
 	query := `INSERT INTO form_exercises (name, institution, start_year, start_month, end_year, end_month, user_id) 
 	VALUES (?, ?, ?, ?, ?, ?, ?)`
 
-	err := db.Debug().Exec(query, f.Name, f.Institution, f.StartYear, f.StartMonth, f.EndYear, f.EndMonth, f.UserId).Error
+	result, err := db.DB().Exec(query, f.Name, f.Institution, f.StartYear, f.StartMonth, f.EndYear, f.EndMonth, f.UserId)
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
 		return nil, errors.New(err.Error())
+	}
+
+	lastID, err := result.LastInsertId()
+	if err != nil {
+		return nil, err
+	}
+
+	queryExerciseMedia := `INSERT INTO form_exercise_medias (exercise_id, path) 
+	VALUES (?, ?)`
+
+	for _, v := range f.Certificates {
+		errExerciseMedia := db.Debug().Exec(queryExerciseMedia, lastID, v).Error
+
+		if errExerciseMedia != nil {
+			helper.Logger("error", "In Server: "+errExerciseMedia.Error())
+			return nil, errors.New(errExerciseMedia.Error())
+		}
 	}
 
 	return map[string]any{}, nil
@@ -194,6 +211,29 @@ func UpdateFormExercise(f *models.FormExercise) (map[string]any, error) {
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
 		return nil, errors.New(err.Error())
+	}
+
+	queryInsertExerciseMedia := `INSERT INTO form_exercise_medias (exercise_id, path) 
+	VALUES (?, ?)`
+
+	for _, v := range f.Certificates {
+		errExerciseMedia := db.Debug().Exec(queryInsertExerciseMedia, f.Id, v).Error
+
+		if errExerciseMedia != nil {
+			helper.Logger("error", "In Server: "+errExerciseMedia.Error())
+			return nil, errors.New(errExerciseMedia.Error())
+		}
+	}
+
+	queryDeleteExerciseMedia := `DELETE FROM form_exercise_medias WHERE id = ?`
+
+	for _, v := range f.CertificateIDeletes {
+		errExerciseMedia := db.Debug().Exec(queryDeleteExerciseMedia, v).Error
+
+		if errExerciseMedia != nil {
+			helper.Logger("error", "In Server: "+errExerciseMedia.Error())
+			return nil, errors.New(errExerciseMedia.Error())
+		}
 	}
 
 	return map[string]any{}, nil
