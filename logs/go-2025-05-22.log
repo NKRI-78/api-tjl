@@ -8,3 +8,11 @@
 [INFO]: 2025-05-22 11:11:10 - Form Exercise success
 [INFO]: 2025-05-22 11:39:21 - Update Form Exercise success
 [INFO]: 2025-05-22 11:39:36 - Update Form Exercise success
+[ERROR]: 2025-05-22 13:59:08 - In Server: Error 1452: Cannot add or update a child row: a foreign key constraint fails (`tjl`.`jobs`, CONSTRAINT `jobs_ibfk_4` FOREIGN KEY (`company_id`) REFERENCES `companies` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE)
+[ERROR]: 2025-05-22 13:59:15 - In Server: Error 1452: Cannot add or update a child row: a foreign key constraint fails (`tjl`.`jobs`, CONSTRAINT `jobs_ibfk_4` FOREIGN KEY (`company_id`) REFERENCES `companies` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE)
+[INFO]: 2025-05-22 14:00:02 - Store Job success
+[ERROR]: 2025-05-22 14:02:21 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', max_salary, worker_count = ?, company_id = ?, place_id = ?, cat_id = ?, place_' at line 1
+[INFO]: 2025-05-22 14:02:44 - Update Job success
+[INFO]: 2025-05-22 14:02:58 - Update Job success
+[INFO]: 2025-05-22 14:08:27 - Job Detail success
+[INFO]: 2025-05-22 14:11:11 - Job List success

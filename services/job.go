@@ -1262,6 +1262,8 @@ func JobList(userId, search, salary, country, position, page, limit string, isRe
 	j.title,
 	j.caption,
 	j.salary,
+	j.min_salary,
+	j.max_salary,
 	j.worker_count,
 	jc.uid AS cat_id,
 	jc.logo AS cat_icon,
@@ -1379,6 +1381,8 @@ func JobList(userId, search, salary, country, position, page, limit string, isRe
 			},
 			WorkerCount: job.WorkerCount,
 			Salary:      int(job.Salary),
+			MinSalary:   int(job.MinSalary),
+			MaxSalary:   int(job.MaxSalary),
 			SalaryIDR:   salaryIdr,
 			Bookmark:    bookmark,
 			JobCategory: entities.JobCategory{
@@ -1427,7 +1431,7 @@ func JobDetail(j *models.Job) (map[string]any, error) {
 	var dataJob = make([]entities.JobList, 0)
 
 	query := `
-		SELECT j.uid AS id, j.title, j.caption, j.salary, j.worker_count,
+		SELECT j.uid AS id, j.title, j.caption, j.salary, j.min_salary, j.max_salary, j.worker_count,
 		jc.uid as cat_id,
 		jc.name AS cat_name, 
 		p.id AS place_id,
@@ -1506,16 +1510,20 @@ func JobDetail(j *models.Job) (map[string]any, error) {
 			Caption: job.Caption,
 			Skills:  jobSkillCategory,
 			Company: entities.JobCompany{
-				Id:   job.CompanyId,
-				Logo: job.CompanyLogo,
-				Name: job.CompanyName,
+				Id:      job.CompanyId,
+				Logo:    job.CompanyLogo,
+				Name:    job.CompanyName,
+				Country: job.PlaceName,
 			},
 			WorkerCount: job.WorkerCount,
 			Salary:      int(job.Salary),
+			MinSalary:   int(job.MinSalary),
+			MaxSalary:   int(job.MaxSalary),
 			SalaryIDR:   salaryIdr,
 			Bookmark:    bookmark,
 			JobCategory: entities.JobCategory{
 				Id:   job.CatId,
+				Icon: job.CatIcon,
 				Name: job.CatName,
 			},
 			JobPlace: entities.JobPlace{
@@ -1614,10 +1622,10 @@ func JobStore(j *models.JobStore) (map[string]any, error) {
 		return nil, errors.New("PLACE_NOT_FOUND")
 	}
 
-	query := `INSERT INTO jobs (uid, title, caption, salary, worker_count, cat_id, company_id, place_id, user_id, is_draft)
-	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+	query := `INSERT INTO jobs (uid, title, caption, salary, min_salary, max_salary, worker_count, cat_id, company_id, place_id, user_id, is_draft)
+	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 
-	err := db.Debug().Exec(query, j.Id, j.Title, j.Caption, j.Salary, j.WorkerCount, j.CatId, j.CompanyId, j.PlaceId, j.UserId, j.IsDraft).Error
+	err := db.Debug().Exec(query, j.Id, j.Title, j.Caption, j.Salary, j.MinSalary, j.MaxSalary, j.WorkerCount, j.CatId, j.CompanyId, j.PlaceId, j.UserId, j.IsDraft).Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
@@ -1685,10 +1693,10 @@ func JobUpdate(j *models.JobUpdate) (map[string]any, error) {
 		return nil, errors.New("PLACE_NOT_FOUND")
 	}
 
-	query := `UPDATE jobs SET title = ?, caption = ?, salary = ?, worker_count = ?, company_id = ?, place_id = ?, cat_id = ?, place_id = ?, is_draft = ?
+	query := `UPDATE jobs SET title = ?, caption = ?, salary = ?, min_salary = ?, max_salary = ?, worker_count = ?, company_id = ?, place_id = ?, cat_id = ?, place_id = ?, is_draft = ?
 	WHERE uid = ?`
 
-	err := db.Debug().Exec(query, j.Title, j.Caption, j.Salary, j.WorkerCount, j.CompanyId, j.PlaceId, j.CatId, j.PlaceId, j.IsDraft, j.Id).Error
+	err := db.Debug().Exec(query, j.Title, j.Caption, j.Salary, j.MinSalary, j.MaxSalary, j.WorkerCount, j.CompanyId, j.PlaceId, j.CatId, j.PlaceId, j.IsDraft, j.Id).Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())

@@ -28,7 +28,6 @@ func JobStore(w http.ResponseWriter, r *http.Request) {
 	WorkerCount := data.WorkerCount
 	CompanyId := data.CompanyId
 
-
 	if Title == "" {
 		helper.Logger("error", "In Server: title is required")
 		helper.Response(w, 400, true, "title is required", map[string]any{})
