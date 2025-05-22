@@ -823,6 +823,8 @@ func AdminListApplyJob(branchId string) (map[string]any, error) {
 	var candidateDoc entities.CandidateDocumentQuery
 	var candidateEdu entities.CandidateEducationQuery
 
+	var exerciseMedia entities.FormExerciseCertificate
+
 	var jobFavourite []entities.JobFavourite
 
 	var dataJob = make([]entities.AdminListApplyJob, 0)
@@ -917,7 +919,7 @@ func AdminListApplyJob(branchId string) (map[string]any, error) {
 
 		dataCandidateExercise := make([]entities.CandidateExercise, 0)
 
-		queryCandidateExercise := `SELECT name, institution, start_month, start_year, end_month, end_year 
+		queryCandidateExercise := `SELECT id, name, institution, start_month, start_year, end_month, end_year 
 		FROM form_exercises WHERE user_id = ?`
 
 		rowsCandidateExercise, errCandidateExercise := db.Debug().Raw(queryCandidateExercise, job.UserIdCandidate).Rows()
@@ -935,13 +937,41 @@ func AdminListApplyJob(branchId string) (map[string]any, error) {
 				return nil, errors.New(errCandidateExerciseRows.Error())
 			}
 
+			queryFormExerciseMedia := `SELECT id, path FROM form_exercise_medias WHERE exercise_id  = ?`
+
+			rowsFormExerciseMedia, errFormExerciseMedia := db.Debug().Raw(queryFormExerciseMedia, candidateExercise.Id).Scan(&exerciseMedia).Rows()
+
+			if errFormExerciseMedia != nil {
+				helper.Logger("error", "In Server: "+errFormExerciseMedia.Error())
+				return nil, errors.New(errFormExerciseMedia.Error())
+			}
+
+			defer rowsFormExerciseMedia.Close()
+
+			var dataFormExerciseCertificate = make([]entities.CandidateExerciseCertificates, 0)
+
+			for rowsFormExerciseMedia.Next() {
+				errScanFormExerciseMedia := db.ScanRows(rowsFormExerciseMedia, &exerciseMedia)
+
+				if errScanFormExerciseMedia != nil {
+					helper.Logger("error", "In Server: "+errScanFormExerciseMedia.Error())
+					return nil, errors.New(errScanFormExerciseMedia.Error())
+				}
+
+				dataFormExerciseCertificate = append(dataFormExerciseCertificate, entities.CandidateExerciseCertificates{
+					Id:   exerciseMedia.Id,
+					Path: exerciseMedia.Path,
+				})
+			}
+
 			dataCandidateExercise = append(dataCandidateExercise, entities.CandidateExercise{
-				Name:        candidateExercise.Name,
-				Institution: candidateExercise.Institution,
-				StartMonth:  candidateExercise.StartMonth,
-				StartYear:   candidateExercise.StartYear,
-				EndMonth:    candidateExercise.EndMonth,
-				EndYear:     candidateExercise.EndYear,
+				Name:         candidateExercise.Name,
+				Institution:  candidateExercise.Institution,
+				StartMonth:   candidateExercise.StartMonth,
+				StartYear:    candidateExercise.StartYear,
+				EndMonth:     candidateExercise.EndMonth,
+				EndYear:      candidateExercise.EndYear,
+				Certificates: dataFormExerciseCertificate,
 			})
 		}
 

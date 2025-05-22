@@ -248,6 +248,7 @@ type AdminListApplyJobQuery struct {
 }
 
 type CandidateExerciseQuery struct {
+	Id          int    `json:"id"`
 	Name        string `json:"name"`
 	Institution string `json:"institution"`
 	StartMonth  int    `json:"start_month"`
@@ -345,12 +346,18 @@ type Candidate struct {
 }
 
 type CandidateExercise struct {
-	Name        string `json:"name"`
-	Institution string `json:"institution"`
-	StartMonth  int    `json:"start_month"`
-	StartYear   int    `json:"start_year"`
-	EndMonth    int    `json:"end_month"`
-	EndYear     int    `json:"end_year"`
+	Name         string                          `json:"name"`
+	Institution  string                          `json:"institution"`
+	StartMonth   int                             `json:"start_month"`
+	StartYear    int                             `json:"start_year"`
+	EndMonth     int                             `json:"end_month"`
+	EndYear      int                             `json:"end_year"`
+	Certificates []CandidateExerciseCertificates `json:"certificates"`
+}
+
+type CandidateExerciseCertificates struct {
+	Id   int    `json:"id"`
+	Path string `json:"path"`
 }
 
 type CandidateBiodata struct {
