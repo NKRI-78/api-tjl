@@ -1,3 +1,24 @@
 [INFO]: 2025-05-23 13:35:16 - Job List success
 [INFO]: 2025-05-23 13:36:34 - Job List success
 [INFO]: 2025-05-23 13:37:31 - Job Detail success
+[ERROR]: 2025-05-23 14:32:24 - In Server: Missing auth token
+[INFO]: 2025-05-23 14:32:28 - Fetch Type Job List success
+[ERROR]: 2025-05-23 14:32:56 - In Server: Missing auth token
+[ERROR]: 2025-05-23 14:33:04 - In Server: EOF
+[INFO]: 2025-05-23 14:33:40 - Type Job Store success
+[INFO]: 2025-05-23 14:33:44 - Fetch Type Job List success
+[INFO]: 2025-05-23 14:34:11 - Fetch Type Job List success
+[ERROR]: 2025-05-23 14:34:15 - In Server: Missing auth token
+[INFO]: 2025-05-23 14:34:20 - Type Job Delete success
+[INFO]: 2025-05-23 14:34:23 - Fetch Type Job List success
+[INFO]: 2025-05-23 14:34:47 - Fetch Type Job List success
+[INFO]: 2025-05-23 14:34:50 - Type Job Store success
+[INFO]: 2025-05-23 14:34:53 - Fetch Type Job List success
+[ERROR]: 2025-05-23 14:35:07 - In Server: Missing auth token
+[INFO]: 2025-05-23 14:35:11 - Update Type Job success
+[INFO]: 2025-05-23 14:35:14 - Fetch Type Job List success
+[INFO]: 2025-05-23 14:35:23 - Type Job Delete success
+[INFO]: 2025-05-23 14:40:02 - Store Job Category success
+[INFO]: 2025-05-23 14:40:21 - Store Job Category success
+[INFO]: 2025-05-23 14:40:41 - Store Job Category success
+[INFO]: 2025-05-23 14:40:57 - Update Job Category success

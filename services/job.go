@@ -1922,9 +1922,9 @@ func JobCategoryStore(j *models.JobCategoryStore) (map[string]any, error) {
 
 	j.Id = uuid.NewV4().String()
 
-	query := `INSERT INTO job_categories (uid, logo, name) VALUES (?, ?, ?)`
+	query := `INSERT INTO job_categories (uid, logo, name, type) VALUES (?, ?, ?, ?)`
 
-	err := db.Debug().Exec(query, j.Id, j.Icon, j.Name).Error
+	err := db.Debug().Exec(query, j.Id, j.Icon, j.Name, j.Type).Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
@@ -2005,9 +2005,9 @@ func CandidatePassesForm(dp *entities.DepartureForm) (map[string]any, error) {
 
 func JobCategoryUpdate(j *models.JobCategoryUpdate) (map[string]any, error) {
 
-	query := `UPDATE job_categories SET name = ?, logo = ? WHERE uid = ?`
+	query := `UPDATE job_categories SET name = ?, logo = ?, type = ? WHERE uid = ?`
 
-	err := db.Debug().Exec(query, j.Name, j.Icon, j.Id).Error
+	err := db.Debug().Exec(query, j.Name, j.Icon, j.Type, j.Id).Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
@@ -2061,6 +2061,62 @@ func JobDelete(j *models.Job) (map[string]any, error) {
 	if errDeleteJob != nil {
 		helper.Logger("error", "In Server: "+errDeleteJob.Error())
 		return nil, errors.New(errDeleteJob.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
+func TypeJobList() (map[string]any, error) {
+	var typeJob []entities.TypeJob
+
+	query := `SELECT id, name FROM type_jobs`
+
+	err := db.Debug().Raw(query).Scan(&typeJob).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{
+		"data": typeJob,
+	}, nil
+}
+
+func TypeJobStore(tjs *entities.TypeJobStore) (map[string]any, error) {
+	query := `INSERT INTO type_jobs (name) VALUES (?)`
+
+	err := db.Debug().Exec(query, tjs.Name).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
+func TypeJobUpdate(tju *entities.TypeJobUpdate) (map[string]any, error) {
+	query := `UPDATE type_jobs SET name = ? WHERE id = ?`
+
+	err := db.Debug().Exec(query, tju.Name, tju.Id).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
+func TypeJobDelete(tjd *entities.TypeJobDelete) (map[string]any, error) {
+	query := `DELETE FROM type_jobs WHERE id = ?`
+
+	err := db.Debug().Exec(query, tjd.Id).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
 	}
 
 	return map[string]any{}, nil
