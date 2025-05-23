@@ -1298,6 +1298,7 @@ func JobList(userId, search, salary, country, position, page, limit string, isRe
 	jc.uid AS cat_id,
 	jc.logo AS cat_icon,
 	jc.name AS cat_name, 
+	tj.name AS cat_type,
 	p.id AS place_id,
 	p.name AS place_name,
 	p.currency AS place_currency,
@@ -1317,6 +1318,7 @@ func JobList(userId, search, salary, country, position, page, limit string, isRe
 	skills.skill_names
 	FROM jobs j
 	INNER JOIN job_categories jc ON jc.uid = j.cat_id
+	INNER JOIN type_jobs tj ON tj.id = jc.type
 	INNER JOIN companies c ON c.uid = j.company_id 
 	INNER JOIN places p ON p.id = j.place_id
 	INNER JOIN profiles up ON up.user_id = j.user_id
@@ -1422,6 +1424,7 @@ func JobList(userId, search, salary, country, position, page, limit string, isRe
 				Id:   job.CatId,
 				Icon: job.CatIcon,
 				Name: job.CatName,
+				Type: job.CatType,
 			},
 			JobPlace: entities.JobPlace{
 				Id:           job.PlaceId,
@@ -1467,6 +1470,7 @@ func JobDetail(j *models.Job) (map[string]any, error) {
 		SELECT j.uid AS id, j.title, j.caption, j.salary, j.min_salary, j.max_salary, j.worker_count,
 		jc.uid as cat_id,
 		jc.name AS cat_name, 
+		tj.name AS cat_type,
 		p.id AS place_id,
 		p.name AS place_name,
 		p.currency AS place_currency,
@@ -1483,6 +1487,7 @@ func JobDetail(j *models.Job) (map[string]any, error) {
 		j.created_at
 		FROM jobs j
 		INNER JOIN job_categories jc ON jc.uid = j.cat_id
+		INNER JOIN type_jobs tj ON tj.id = jc.type
 		INNER JOIN companies c ON c.uid = j.company_id 
 		INNER JOIN places p ON p.id = j.place_id
 		INNER JOIN profiles up ON up.user_id = j.user_id
@@ -1562,6 +1567,7 @@ func JobDetail(j *models.Job) (map[string]any, error) {
 				Id:   job.CatId,
 				Icon: job.CatIcon,
 				Name: job.CatName,
+				Type: job.CatType,
 			},
 			JobPlace: entities.JobPlace{
 				Id:           job.PlaceId,
