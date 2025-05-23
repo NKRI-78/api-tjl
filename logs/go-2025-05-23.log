@@ -22,3 +22,9 @@
 [INFO]: 2025-05-23 14:40:21 - Store Job Category success
 [INFO]: 2025-05-23 14:40:41 - Store Job Category success
 [INFO]: 2025-05-23 14:40:57 - Update Job Category success
+[ERROR]: 2025-05-23 14:51:43 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'INNER JOIN type jobs tj 
+	FROM job_categories jc' at line 2
+[ERROR]: 2025-05-23 14:52:30 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'tj ON tj.id = jc.type' at line 3
+[ERROR]: 2025-05-23 14:52:31 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'tj ON tj.id = jc.type' at line 3
+[ERROR]: 2025-05-23 14:52:48 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'tj ON tj.id = jc.type' at line 3
+[INFO]: 2025-05-23 14:52:50 - Fetch Job Category success

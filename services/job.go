@@ -2034,7 +2034,10 @@ func JobCategoryDelete(j *models.JobCategoryDelete) (map[string]any, error) {
 func JobCategory() (map[string]any, error) {
 	categories := []entities.JobCategory{}
 
-	query := `SELECT uid AS id, logo AS icon, name FROM job_categories`
+	query := `SELECT jc.uid AS id, jc.logo AS icon, jc.name, tj.name AS type
+	FROM job_categories jc
+	INNER JOIN type_jobs tj ON tj.id = jc.type 
+	`
 
 	err := db.Debug().Raw(query).Scan(&categories).Error
 
@@ -2046,7 +2049,7 @@ func JobCategory() (map[string]any, error) {
 	isCategoryExist := len(categories)
 
 	if isCategoryExist == 0 {
-		return nil, errors.New("job not found")
+		return nil, errors.New("job cateogry not found")
 	}
 
 	return map[string]any{
