@@ -140,6 +140,8 @@ func main() {
 	// Document
 	router.HandleFunc("/api/v1/document", controllers.DocumentList).Methods("GET")
 	router.HandleFunc("/api/v1/document-store", controllers.DocumentStore).Methods("POST")
+	router.HandleFunc("/api/v1/get-document-additional/{type}", controllers.GetDocumentAdditional).Methods("GET")
+	router.HandleFunc("/api/v1/documment-additional-store", controllers.DocumentAdditionalStore).Methods("POST")
 
 	// Profile
 	router.HandleFunc("/api/v1/profile", controllers.Profile).Methods("GET")

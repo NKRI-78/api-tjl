@@ -28,3 +28,14 @@
 [ERROR]: 2025-05-23 14:52:31 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'tj ON tj.id = jc.type' at line 3
 [ERROR]: 2025-05-23 14:52:48 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'tj ON tj.id = jc.type' at line 3
 [INFO]: 2025-05-23 14:52:50 - Fetch Job Category success
+[ERROR]: 2025-05-23 16:29:42 - In Server: Missing auth token
+[ERROR]: 2025-05-23 16:29:46 - In Server: EOF
+[INFO]: 2025-05-23 16:45:54 - Get Document Additional success
+[INFO]: 2025-05-23 16:45:58 - Get Document Additional success
+[ERROR]: 2025-05-23 16:46:49 - In Server: Token is invalid
+[INFO]: 2025-05-23 16:46:58 - Get List Info Apply Job success
+[INFO]: 2025-05-23 16:47:38 - Fetch Admin Job List success
+[ERROR]: 2025-05-23 16:47:53 - In Server: sql: Scan error on column index 5, name "end_month": converting driver.Value type []uint8 ("Desember") to a int: invalid syntax
+[INFO]: 2025-05-23 16:50:09 - Fetch Admin Job List success
+[ERROR]: 2025-05-23 16:55:42 - In Server: Missing auth token
+[INFO]: 2025-05-23 16:55:47 - Store Bannner success
