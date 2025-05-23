@@ -54,11 +54,28 @@ func FormEducation(f *models.FormEducation) (map[string]any, error) {
 	(education_level, major, school_or_college, start_year, start_month, end_year, end_month, user_id) 
 	VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
 
-	err := db.Debug().Exec(query, f.EducationLevel, f.Major, f.SchoolOrCollege, f.StartYear, f.StartMonth, f.EndYear, f.EndMonth, f.UserId).Error
+	result, err := db.DB().Exec(query, f.EducationLevel, f.Major, f.SchoolOrCollege, f.StartYear, f.StartMonth, f.EndYear, f.EndMonth, f.UserId)
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
 		return nil, errors.New(err.Error())
+	}
+
+	lastID, err := result.LastInsertId()
+	if err != nil {
+		return nil, err
+	}
+
+	queryEducationMedia := `INSERT INTO form_education_medias (education_id, path) 
+	VALUES (?, ?)`
+
+	for _, v := range f.Certificates {
+		errExerciseMedia := db.Debug().Exec(queryEducationMedia, lastID, v).Error
+
+		if errExerciseMedia != nil {
+			helper.Logger("error", "In Server: "+errExerciseMedia.Error())
+			return nil, errors.New(errExerciseMedia.Error())
+		}
 	}
 
 	return map[string]any{}, nil
@@ -272,6 +289,29 @@ func UpdateFormEducation(f *models.FormEducation) (map[string]any, error) {
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
 		return nil, errors.New(err.Error())
+	}
+
+	queryInsertEducationMedia := `INSERT INTO form_education_medias (education_id, path) 
+	VALUES (?, ?)`
+
+	for _, v := range f.Certificates {
+		errEducationMedia := db.Debug().Exec(queryInsertEducationMedia, f.Id, v).Error
+
+		if errEducationMedia != nil {
+			helper.Logger("error", "In Server: "+errEducationMedia.Error())
+			return nil, errors.New(errEducationMedia.Error())
+		}
+	}
+
+	queryDeleteEducationMedia := `DELETE FROM form_education_medias WHERE id = ?`
+
+	for _, v := range f.CertificateIDeletes {
+		errEducationMedia := db.Debug().Exec(queryDeleteEducationMedia, v).Error
+
+		if errEducationMedia != nil {
+			helper.Logger("error", "In Server: "+errEducationMedia.Error())
+			return nil, errors.New(errEducationMedia.Error())
+		}
 	}
 
 	return map[string]any{}, nil

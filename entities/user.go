@@ -207,14 +207,15 @@ type ProfileSubdistrictPlaceData struct {
 }
 
 type ProfileFormEducation struct {
-	Id              int    `json:"id"`
-	EducationLevel  string `json:"education_level"`
-	Major           string `json:"major"`
-	SchoolOrCollege string `json:"school_or_college"`
-	StartYear       string `json:"start_year"`
-	EndYear         string `json:"end_year"`
-	StartMonth      string `json:"start_month"`
-	EndMonth        string `json:"end_month"`
+	Id              int                   `json:"id"`
+	EducationLevel  string                `json:"education_level"`
+	Major           string                `json:"major"`
+	SchoolOrCollege string                `json:"school_or_college"`
+	StartYear       string                `json:"start_year"`
+	EndYear         string                `json:"end_year"`
+	StartMonth      string                `json:"start_month"`
+	EndMonth        string                `json:"end_month"`
+	Letters         []FormEducationLetter `json:"letters"`
 }
 
 type ProfileFormExercise struct {
@@ -229,6 +230,11 @@ type ProfileFormExercise struct {
 }
 
 type FormExerciseCertificate struct {
+	Id   int    `json:"id"`
+	Path string `json:"path"`
+}
+
+type FormEducationLetter struct {
 	Id   int    `json:"id"`
 	Path string `json:"path"`
 }
