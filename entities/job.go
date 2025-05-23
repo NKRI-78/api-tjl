@@ -530,6 +530,7 @@ type JobCategoryStore struct {
 	Id   string `json:"id"`
 	Icon string `json:"icon"`
 	Name string `json:"name"`
+	Type string `json:"type"`
 }
 
 type JobCategoryDelete struct {
@@ -540,6 +541,7 @@ type JobCategoryUpdate struct {
 	Id   string `json:"id"`
 	Icon string `json:"icon"`
 	Name string `json:"name"`
+	Type string `json:"type"`
 }
 
 type Job struct {
@@ -556,4 +558,22 @@ type JobPlace struct {
 	Symbol       string `json:"symbol"`
 	Kurs         int    `json:"kurs"`
 	Info         string `json:"info"`
+}
+
+type TypeJob struct {
+	Id   int    `json:"id"`
+	Name string `json:"name"`
+}
+
+type TypeJobStore struct {
+	Name string `json:"name"`
+}
+
+type TypeJobUpdate struct {
+	Id   string `json:"id"`
+	Name string `json:"name"`
+}
+
+type TypeJobDelete struct {
+	Id string `json:"id"`
 }

@@ -201,6 +201,12 @@ func main() {
 	router.HandleFunc("/api/v1/job-category-delete", controllers.JobCategoryDelete).Methods("DELETE")
 	router.HandleFunc("/api/v1/job-category-count", controllers.JobCategoryCount).Methods("GET")
 
+	// Type Jobs
+	router.HandleFunc("/api/v1/type-job-list", controllers.TypeJobList).Methods("GET")
+	router.HandleFunc("/api/v1/type-job-store", controllers.TypeJobStore).Methods("POST")
+	router.HandleFunc("/api/v1/type-job-delete", controllers.TypeJobDelete).Methods("DELETE")
+	router.HandleFunc("/api/v1/type-job-update", controllers.TypeJobUpdate).Methods("PUT")
+
 	// Role
 	router.HandleFunc("/api/v1/role/list", controllers.RoleList).Methods("GET")
 
