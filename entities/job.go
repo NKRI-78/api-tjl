@@ -197,6 +197,7 @@ type JobListQuery struct {
 	CatId             string    `json:"cat_id"`
 	CatIcon           string    `json:"cat_icon"`
 	CatName           string    `json:"cat_name"`
+	CatType           string    `json:"cat_type"`
 	CompanyId         string    `json:"company_id"`
 	CompanyLogo       string    `json:"company_logo"`
 	CompanyName       string    `json:"company_name"`
@@ -522,6 +523,7 @@ type JobCategory struct {
 	Id   string `json:"id"`
 	Icon string `json:"icon"`
 	Name string `json:"name"`
+	Type string `json:"type"`
 }
 
 type JobCategoryStore struct {
