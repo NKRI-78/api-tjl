@@ -242,7 +242,6 @@ func EventDetail(id string) (map[string]any, error) {
 		eventMediaList = append(eventMediaList, eventMediaAssign)
 	}
 
-	// Prepare response
 	response := entities.EventResponse{
 		Id:        event.Id,
 		Title:     event.Title,

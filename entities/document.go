@@ -16,3 +16,23 @@ type DocumentStore struct {
 	UserId string `json:"user_id"`
 	Type   int    `json:"type"`
 }
+
+type GetDocumentAdditional struct {
+	Id     int    `json:"id"`
+	UserId string `json:"user_id"`
+	Path   string `json:"path"`
+	Type   string `json:"type"`
+}
+
+type GetDocumentAdditionalResponse struct {
+	Id   int    `json:"id"`
+	Type string `json:"type"`
+	Path string `json:"path"`
+}
+
+type DocumentAdditionalStore struct {
+	Id     int    `json:"id"`
+	Path   string `json:"path"`
+	UserId string `json:"user_id"`
+	Type   string `json:"type"`
+}
