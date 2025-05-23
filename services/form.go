@@ -69,7 +69,7 @@ func FormEducation(f *models.FormEducation) (map[string]any, error) {
 	queryEducationMedia := `INSERT INTO form_education_medias (education_id, path) 
 	VALUES (?, ?)`
 
-	for _, v := range f.Certificates {
+	for _, v := range f.Letter {
 		errExerciseMedia := db.Debug().Exec(queryEducationMedia, lastID, v).Error
 
 		if errExerciseMedia != nil {
@@ -294,7 +294,7 @@ func UpdateFormEducation(f *models.FormEducation) (map[string]any, error) {
 	queryInsertEducationMedia := `INSERT INTO form_education_medias (education_id, path) 
 	VALUES (?, ?)`
 
-	for _, v := range f.Certificates {
+	for _, v := range f.Letter {
 		errEducationMedia := db.Debug().Exec(queryInsertEducationMedia, f.Id, v).Error
 
 		if errEducationMedia != nil {
@@ -305,7 +305,7 @@ func UpdateFormEducation(f *models.FormEducation) (map[string]any, error) {
 
 	queryDeleteEducationMedia := `DELETE FROM form_education_medias WHERE id = ?`
 
-	for _, v := range f.CertificateIDeletes {
+	for _, v := range f.LetterIDeletes {
 		errEducationMedia := db.Debug().Exec(queryDeleteEducationMedia, v).Error
 
 		if errEducationMedia != nil {
