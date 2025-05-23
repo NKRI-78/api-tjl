@@ -11,6 +11,7 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 	profiles := []entities.Profile{}
 	education := entities.ProfileFormEducation{}
 	exercise := entities.ProfileFormExercise{}
+	educationMedia := entities.FormExerciseCertificate{}
 	exerciseMedia := entities.FormExerciseCertificate{}
 	work := entities.ProfileFormWorkQuery{}
 	language := entities.ProfileFormLanguage{}
@@ -97,7 +98,43 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 			return nil, errors.New(errScanRows.Error())
 		}
 
-		dataEdu = append(dataEdu, education)
+		queryFormEducationMedia := `SELECT id, path
+		FROM form_exercise_medias WHERE exercise_id  = ?`
+
+		rowsFormEducationMedia, errFormExerciseMedia := db.Debug().Raw(queryFormEducationMedia, education.Id).Scan(&educationMedia).Rows()
+
+		if errFormExerciseMedia != nil {
+			helper.Logger("error", "In Server: "+errFormExerciseMedia.Error())
+			return nil, errors.New(errFormExerciseMedia.Error())
+		}
+
+		var dataFormEducationLetter = make([]entities.FormEducationLetter, 0)
+
+		for rowsFormEducationMedia.Next() {
+			errScanFormEducationMedia := db.ScanRows(rowsFormEducationMedia, &exerciseMedia)
+
+			if errScanFormEducationMedia != nil {
+				helper.Logger("error", "In Server: "+errScanFormEducationMedia.Error())
+				return nil, errors.New(errScanFormEducationMedia.Error())
+			}
+
+			dataFormEducationLetter = append(dataFormEducationLetter, entities.FormEducationLetter{
+				Id:   educationMedia.Id,
+				Path: educationMedia.Path,
+			})
+		}
+
+		dataEdu = append(dataEdu, entities.ProfileFormEducation{
+			Id:              education.Id,
+			EducationLevel:  education.EducationLevel,
+			Major:           education.Major,
+			SchoolOrCollege: education.SchoolOrCollege,
+			StartYear:       education.StartYear,
+			EndYear:         education.EndYear,
+			StartMonth:      education.StartMonth,
+			EndMonth:        education.EndMonth,
+			Letters:         dataFormEducationLetter,
+		})
 	}
 
 	// Trainning

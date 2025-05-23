@@ -32,16 +32,18 @@ type FormPlace struct {
 }
 
 type FormEducation struct {
-	Id              string `json:"id"`
-	EducationLevel  string `json:"education_level"`
-	Major           string `json:"major"`
-	SchoolOrCollege string `json:"school_or_college"`
-	StartMonth      string `json:"start_month"`
-	StartYear       string `json:"start_year"`
-	EndMonth        string `json:"end_month"`
-	EndYear         string `json:"end_year"`
-	DetailAddress   string `json:"detail_address"`
-	UserId          string `json:"user_id"`
+	Id                  string   `json:"id"`
+	EducationLevel      string   `json:"education_level"`
+	Major               string   `json:"major"`
+	SchoolOrCollege     string   `json:"school_or_college"`
+	StartMonth          string   `json:"start_month"`
+	StartYear           string   `json:"start_year"`
+	EndMonth            string   `json:"end_month"`
+	EndYear             string   `json:"end_year"`
+	DetailAddress       string   `json:"detail_address"`
+	CertificateIDeletes []string `json:"certificate_id_deletes"`
+	Certificates        []string `json:"certificates"`
+	UserId              string   `json:"user_id"`
 }
 
 type FormExercise struct {
