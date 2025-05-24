@@ -96,3 +96,20 @@ func DocumentAdditionalStore(d *models.DocumentAdditionalStore) (map[string]any,
 
 	return map[string]any{}, nil
 }
+
+func DocumentAdditionalUpdate(d *models.DocumentAdditionalUpdate) (map[string]any, error) {
+
+	doc := entities.DocumentAdditionalUpdate{}
+
+	doc.Path = d.Path
+	doc.Type = d.Type
+
+	errInsertAdditionalDoc := db.Debug().Exec(`UPDATE user_document_additionals SET path = ?, type = ? WHERE user_id = ?`, doc.Path, doc.Type, d.UserId).Error
+
+	if errInsertAdditionalDoc != nil {
+		helper.Logger("error", "In Server: "+errInsertAdditionalDoc.Error())
+		return nil, errors.New(errInsertAdditionalDoc.Error())
+	}
+
+	return map[string]any{}, nil
+}

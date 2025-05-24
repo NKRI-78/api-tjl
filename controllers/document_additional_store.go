@@ -50,6 +50,6 @@ func DocumentAdditionalStore(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	helper.Logger("info", "Store Bannner success")
+	helper.Logger("info", "Document Additional Store success")
 	helper.Response(w, http.StatusOK, false, "Successfully", result)
 }
