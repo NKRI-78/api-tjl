@@ -62,7 +62,7 @@ func GetDocumentAdditional(userId, typeParam string) (map[string]any, error) {
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return map[string]any{
-				"data": nil,
+				"data": map[string]any{},
 			}, nil
 		}
 		helper.Logger("error", "In Server: "+err.Error())
@@ -81,20 +81,35 @@ func GetDocumentAdditional(userId, typeParam string) (map[string]any, error) {
 }
 
 func DocumentAdditionalStore(d *models.DocumentAdditionalStore) (map[string]any, error) {
-	doc := entities.DocumentAdditionalStore{}
+	var count int64
+	err := db.Debug().Raw(`
+		SELECT COUNT(*)
+		FROM user_document_additionals
+		WHERE user_id = ? AND type = ?`, d.UserId, d.Type).Scan(&count).Error
 
-	doc.Path = d.Path
-	doc.UserId = d.UserId
-	doc.Type = d.Type
-
-	errInsertAdditionalDoc := db.Debug().Exec(`INSERT INTO user_document_additionals (user_id, path, type) VALUES (?, ?, ?)`, doc.UserId, doc.Path, doc.Type).Error
-
-	if errInsertAdditionalDoc != nil {
-		helper.Logger("error", "In Server: "+errInsertAdditionalDoc.Error())
-		return nil, errors.New(errInsertAdditionalDoc.Error())
+	if err != nil {
+		helper.Logger("error", "Check Existence Failed: "+err.Error())
+		return nil, errors.New("failed to check existing document")
 	}
 
-	return map[string]any{}, nil
+	if count > 0 {
+		return map[string]any{
+			"data": "DOCUMENT_ALREADY_EXIST",
+		}, nil
+	}
+
+	err = db.Debug().Exec(`
+		INSERT INTO user_document_additionals (user_id, path, type)
+		VALUES (?, ?, ?)`, d.UserId, d.Path, d.Type).Error
+
+	if err != nil {
+		helper.Logger("error", "Insert Failed: "+err.Error())
+		return nil, errors.New("failed to store document")
+	}
+
+	return map[string]any{
+		"data": "Document stored successfully",
+	}, nil
 }
 
 func DocumentAdditionalUpdate(d *models.DocumentAdditionalUpdate) (map[string]any, error) {
@@ -109,6 +124,22 @@ func DocumentAdditionalUpdate(d *models.DocumentAdditionalUpdate) (map[string]an
 	if errInsertAdditionalDoc != nil {
 		helper.Logger("error", "In Server: "+errInsertAdditionalDoc.Error())
 		return nil, errors.New(errInsertAdditionalDoc.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
+func DocumentAdditionalDelete(d *models.DocumentAdditionalDelete) (map[string]any, error) {
+
+	doc := entities.DocumentAdditionalDelete{}
+
+	doc.Id = d.Id
+
+	errDeleteAdditionalDoc := db.Debug().Exec(`DELETE FROM user_document_additionals WHERE id = ?`, doc.Id).Error
+
+	if errDeleteAdditionalDoc != nil {
+		helper.Logger("error", "In Server: "+errDeleteAdditionalDoc.Error())
+		return nil, errors.New(errDeleteAdditionalDoc.Error())
 	}
 
 	return map[string]any{}, nil
