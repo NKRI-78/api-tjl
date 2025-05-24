@@ -36,3 +36,10 @@ type DocumentAdditionalStore struct {
 	UserId string `json:"user_id"`
 	Type   string `json:"type"`
 }
+
+type DocumentAdditionalUpdate struct {
+	Id     int    `json:"id"`
+	Path   string `json:"path"`
+	UserId string `json:"user_id"`
+	Type   string `json:"type"`
+}
