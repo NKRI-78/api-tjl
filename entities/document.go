@@ -43,3 +43,7 @@ type DocumentAdditionalUpdate struct {
 	UserId string `json:"user_id"`
 	Type   string `json:"type"`
 }
+
+type DocumentAdditionalDelete struct {
+	Id string `json:"id"`
+}

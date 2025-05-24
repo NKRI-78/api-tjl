@@ -51,5 +51,5 @@ func DocumentAdditionalStore(w http.ResponseWriter, r *http.Request) {
 	}
 
 	helper.Logger("info", "Document Additional Store success")
-	helper.Response(w, http.StatusOK, false, "Successfully", result)
+	helper.Response(w, http.StatusOK, false, "Successfully", result["data"])
 }
