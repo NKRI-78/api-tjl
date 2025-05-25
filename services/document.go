@@ -81,26 +81,37 @@ func GetDocumentAdditional(userId, typeParam string) (map[string]any, error) {
 }
 
 func DocumentAdditionalStore(d *models.DocumentAdditionalStore) (map[string]any, error) {
+	// Check if the document already exists
 	var count int64
-	err := db.Debug().Raw(`
+
+	row := db.
+		Debug().
+		Raw(`
 		SELECT COUNT(*)
 		FROM user_document_additionals
-		WHERE user_id = ? AND type = ?`, d.UserId, d.Type).Scan(&count).Error
+		WHERE user_id = ? AND type = ?`, d.UserId, d.Type).
+		Row()
 
+	err := row.Scan(&count)
 	if err != nil {
 		helper.Logger("error", "Check Existence Failed: "+err.Error())
 		return nil, errors.New("failed to check existing document")
 	}
 
+	// If exists, return early
 	if count > 0 {
 		return map[string]any{
 			"data": "DOCUMENT_ALREADY_EXIST",
 		}, nil
 	}
 
-	err = db.Debug().Exec(`
+	// Proceed with insert
+	err = db.
+		Debug().
+		Exec(`
 		INSERT INTO user_document_additionals (user_id, path, type)
-		VALUES (?, ?, ?)`, d.UserId, d.Path, d.Type).Error
+		VALUES (?, ?, ?)`, d.UserId, d.Path, d.Type).
+		Error
 
 	if err != nil {
 		helper.Logger("error", "Insert Failed: "+err.Error())
@@ -110,6 +121,7 @@ func DocumentAdditionalStore(d *models.DocumentAdditionalStore) (map[string]any,
 	return map[string]any{
 		"data": "Document stored successfully",
 	}, nil
+
 }
 
 func DocumentAdditionalUpdate(d *models.DocumentAdditionalUpdate) (map[string]any, error) {
