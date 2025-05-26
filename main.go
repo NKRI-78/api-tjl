@@ -75,6 +75,9 @@ func main() {
 	router.HandleFunc("/api/v1/admin/register-user-branch", controllers.RegisterUserBranch).Methods("POST")
 	router.HandleFunc("/api/v1/admin/update-user-branch", controllers.UpdateUserBranch).Methods("PUT")
 
+	// Import User Create
+	router.HandleFunc("/api/v1/import/user/create", controllers.ImportUserCreate).Methods("POST")
+
 	// List Candidate Passes
 	router.HandleFunc("/api/v1/candidate-passes/list", controllers.CandidatePassesList).Methods("GET")
 	router.HandleFunc("/api/v1/candidate-passes/form/list", controllers.CandidatePassesFormList).Methods("GET")

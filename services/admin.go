@@ -353,6 +353,84 @@ func ViewPdfApplyJobOffline(applyJobId string) (map[string]any, error) {
 	}, nil
 }
 
+func ImportUserCreate(ius *entities.ImportUserStore) (map[string]any, error) {
+	// INSERT USER
+	queryInsertUser := `INSERT INTO users (uid, email, phone, password, enabled) 
+	VALUES (?, ?, ?, ?, 1)`
+
+	errInsertUser := db.Debug().Exec(queryInsertUser, ius.UserId, ius.Email, ius.Phone, ius.Password).Error
+
+	if errInsertUser != nil {
+		helper.Logger("error", "In Server: "+errInsertUser.Error())
+		return nil, errors.New(errInsertUser.Error())
+	}
+
+	// INSERT PROFILE
+	queryInsertProfile := `INSERT INTO profiles(fullname, user_id) 
+	VALUES (?, ?)`
+
+	errInsertProfile := db.Debug().Exec(queryInsertProfile, ius.Fullname, ius.UserId).Error
+
+	if errInsertProfile != nil {
+		helper.Logger("error", "In Server: "+errInsertProfile.Error())
+		return nil, errors.New(errInsertProfile.Error())
+	}
+
+	// INSERT FORM BIODATA
+	queryInsertBiodata := `INSERT INTO form_biodatas (birthdate, gender, weight, height, status, religion, place, user_id) 
+	VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+
+	errInsertFormBiodata := db.Debug().Exec(queryInsertBiodata, ius.Birthdate, ius.Gender, ius.Weight, ius.Height, ius.MaritalStatus, ius.Religion, ius.Place, ius.UserId).Error
+
+	if errInsertFormBiodata != nil {
+		helper.Logger("error", "In Server: "+errInsertFormBiodata.Error())
+		return nil, errors.New(errInsertFormBiodata.Error())
+	}
+
+	// INSERT FORM EDUCATION
+	queryInsertFormEducation := `INSERT INTO form_educations (education_level, major, school_or_college, start_month, start_year, end_month, end_year, user_id) 
+	VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+
+	errInsertForumEducation := db.Debug().Exec(queryInsertFormEducation, ius.EducationLevel, ius.Major, ius.SchoolOrCollege, ius.StartMonthEducation, ius.StartYearEducation, ius.EndMonthEducation, ius.EndYearEducation, ius.UserId).Error
+
+	if errInsertForumEducation != nil {
+		return nil, errors.New(errInsertForumEducation.Error())
+	}
+
+	// INSERT FORM EXERCISE
+	queryInsertFormExercise := `INSERT INTO form_exercises (name, institution, start_month, start_year, end_month, end_year, user_id) 
+	VALUES (?, ?, ?, ?, ?, ?, ?)`
+
+	errInsertFormExercise := db.Debug().Exec(queryInsertFormExercise, ius.NameInstitution, ius.Institution, ius.StartMonthExercise, ius.StartYearExercise, ius.EndMonthExercise, ius.EndYearExercise, ius.UserId).Error
+
+	if errInsertFormExercise != nil {
+		return nil, errors.New(errInsertFormExercise.Error())
+	}
+
+	// INSERT FORM WORK
+	queryInsertFormWork := `INSERT INTO form_works (position, institution, work, country, city, start_month, start_year, end_month, end_year, is_work, user_id)
+	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+
+	errInsertFormWork := db.Debug().Exec(queryInsertFormWork, ius.PositionWork, ius.InstitutionWork, ius.Work, ius.CountryWork, ius.CityWork, ius.StartMonthWork, ius.StartYearWork, ius.EndMonthWork, ius.EndYearWork, 0, ius.UserId).Error
+
+	if errInsertFormWork != nil {
+		return nil, errors.New(errInsertFormWork.Error())
+	}
+
+	// INSERT FORM LANGUAGE
+	queryInsertFormLanguage := `INSERT INTO form_languages (level, language, user_id) 
+	VALUES (?, ?, ?)`
+
+	errInsertFormLanguage := db.Debug().Exec(queryInsertFormLanguage, ius.Level, ius.Language, ius.UserId).Error
+
+	if errInsertFormLanguage != nil {
+		return nil, errors.New(errInsertFormLanguage.Error())
+	}
+
+	return map[string]any{}, nil
+
+}
+
 // func ViewOfflinePdfDeparture(userId, applyJobId string) (map[string]any, error) {
 // 	query := `SELECT d.content FROM departures d
 // 	INNER JOIN candidate_passes cp
