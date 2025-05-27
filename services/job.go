@@ -831,6 +831,9 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 func AdminListApplyJob(branchId string) (map[string]any, error) {
 
 	var job entities.AdminListApplyJobQuery
+
+	var additionalDoc entities.AdditionalDoc
+
 	var candidateExercise entities.CandidateExerciseQuery
 	var candidateBiodata entities.CandidateBiodataQuery
 	var candidateLanguage entities.CandidateLanguageQuery
@@ -1208,6 +1211,36 @@ func AdminListApplyJob(branchId string) (map[string]any, error) {
 
 		// End Candidate Education
 
+		// Additionaldoc
+
+		dataAdditionalDoc := make([]entities.AdditionalDoc, 0)
+
+		queryAdditionalDoc := `SELECT path, type  
+		FROM user_document_additionals WHERE user_id = ?`
+
+		rowsAdditionalDoc, errAdditionalDoc := db.Debug().Raw(queryAdditionalDoc, job.UserIdCandidate).Rows()
+
+		if errAdditionalDoc != nil {
+			helper.Logger("error", "In Server: "+errAdditionalDoc.Error())
+		}
+		defer rowsAdditionalDoc.Close()
+
+		for rowsAdditionalDoc.Next() {
+			errCandidateEducationRows := db.ScanRows(rowsAdditionalDoc, &additionalDoc)
+
+			if errCandidateEducationRows != nil {
+				helper.Logger("error", "In Server: "+errCandidateEducationRows.Error())
+				return nil, errors.New(errCandidateEducationRows.Error())
+			}
+
+			dataAdditionalDoc = append(dataAdditionalDoc, entities.AdditionalDoc{
+				Path: additionalDoc.Path,
+				Type: additionalDoc.Type,
+			})
+		}
+
+		// End Additional Doc
+
 		dataJob = append(dataJob, entities.AdminListApplyJob{
 			Id:        job.Id,
 			Title:     job.Title,
@@ -1227,6 +1260,7 @@ func AdminListApplyJob(branchId string) (map[string]any, error) {
 				Avatar:            job.UserAvatar,
 				Name:              job.UserNameCandidate,
 				Phone:             job.UserPhoneCandidate,
+				AdditionalDoc:     dataAdditionalDoc,
 				CandidateExercise: dataCandidateExercise,
 				CandidateBiodata:  dataCandidateBiodata,
 				CandidateLanguage: dataCandidateLanguage,
