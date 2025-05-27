@@ -355,10 +355,10 @@ func ViewPdfApplyJobOffline(applyJobId string) (map[string]any, error) {
 
 func ImportUserCreate(ius *entities.ImportUserStore) (map[string]any, error) {
 	// INSERT USER
-	queryInsertUser := `INSERT INTO users (uid, email, phone, password, enabled) 
+	queryInsertUser := `INSERT INTO users (uid, email, phone, password, enabled, via) 
 	VALUES (?, ?, ?, ?, 1)`
 
-	errInsertUser := db.Debug().Exec(queryInsertUser, ius.UserId, ius.Email, ius.Phone, ius.Password).Error
+	errInsertUser := db.Debug().Exec(queryInsertUser, ius.UserId, ius.Email, ius.Phone, ius.Password, "auto").Error
 
 	if errInsertUser != nil {
 		helper.Logger("error", "In Server: "+errInsertUser.Error())
