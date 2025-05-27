@@ -328,6 +328,11 @@ type CandidateDocumentQuery struct {
 	Path     string `json:"path"`
 }
 
+type AdditionalDocQuery struct {
+	Path string `json:"path"`
+	Type string `json:"type"`
+}
+
 type AdminListApplyJob struct {
 	Id          string        `json:"id"`
 	Title       string        `json:"title"`
@@ -363,6 +368,12 @@ type Candidate struct {
 	CandidatePlace    []CandidatePlace     `json:"places"`
 	CandidateEdu      []CandidateEducation `json:"educations"`
 	CandidateDoc      []CandidateDocument  `json:"documents"`
+	AdditionalDoc     []AdditionalDoc      `json:"additional_doc"`
+}
+
+type AdditionalDoc struct {
+	Path string `json:"path"`
+	Type string `json:"type"`
 }
 
 type CandidateExercise struct {
