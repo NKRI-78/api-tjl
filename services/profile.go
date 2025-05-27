@@ -206,9 +206,9 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 	var dataWork = make([]entities.ProfileFormWork, 0)
 
 	queryWork := `SELECT id, work, position, institution, is_work, country, city, start_month, start_year, end_month, end_year, user_id 
-	FROM form_works WHERE user_id  = '` + profiles[0].Id + `'`
+	FROM form_works WHERE user_id  = ?`
 
-	rows, errWork := db.Debug().Raw(queryWork).Scan(&work).Rows()
+	rows, errWork := db.Debug().Raw(queryWork, profiles[0].Id).Scan(&work).Rows()
 
 	if errWork != nil {
 		helper.Logger("error", "In Server: "+errWork.Error())
@@ -232,8 +232,6 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 		} else {
 			isWork = false
 		}
-
-		var dataWork = make([]entities.ProfileFormWork, 0)
 
 		dataWork = append(dataWork, entities.ProfileFormWork{
 			Id:          work.Id,
