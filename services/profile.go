@@ -41,8 +41,8 @@ func GetProfile(p *models.Profile) (map[string]interface{}, error) {
 	FROM profiles p 
 	INNER JOIN users u ON u.uid = p.user_id
 	INNER JOIN user_roles ur ON ur.id = u.role
-	INNER JOIN user_pick_jobs upj ON upj.user_id = u.uid
-	INNER JOIN job_categories jc ON jc.uid = upj.job_id
+	INNER JOIN user_pick_category_jobs upj ON upj.user_id = u.uid
+	INNER JOIN job_categories jc ON jc.uid = upj.job_cat_id
 	LEFT JOIN form_biodatas fb ON fb.user_id = p.user_id
 	LEFT JOIN form_places fp ON fp.user_id = p.user_id
 	LEFT JOIN provinces pro ON pro.id = fp.province_id

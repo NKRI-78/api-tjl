@@ -486,7 +486,7 @@ func Register(u *models.User) (map[string]any, error) {
 		return nil, errors.New(errInsertProfile.Error())
 	}
 
-	errInsertUserJobPick := db.Debug().Exec(`INSERT INTO user_pick_jobs (user_id, job_id) VALUES ('` + user.Id + `', '` + user.JobId + `')`).Error
+	errInsertUserJobPick := db.Debug().Exec(`INSERT INTO user_pick_category_jobs (user_id, job_cat_id) VALUES ('` + user.Id + `', '` + user.JobId + `')`).Error
 
 	if errInsertUserJobPick != nil {
 		helper.Logger("error", "In Server: "+errInsertUserJobPick.Error())

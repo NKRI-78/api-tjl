@@ -10,6 +10,8 @@ type ApplyJobQuery entities.ApplyJobQuery
 type CheckApplyJobQuery entities.CheckApplyJobQuery
 
 type ApplyJob entities.ApplyJob
+type AssignBranch entities.AssignBranch
+type AssignAddress entities.AssignAddress
 type AssignDocumentApplyJob entities.AssignDocumentApplyJob
 type ResultInfoApplyJob entities.ResultInfoApplyJob
 type InfoApplyJob entities.InfoApplyJob
