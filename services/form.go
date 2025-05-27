@@ -3,6 +3,7 @@ package services
 import (
 	"errors"
 
+	"superapps/entities"
 	helper "superapps/helpers"
 	"superapps/models"
 )
@@ -20,6 +21,20 @@ func FormBiodata(f *models.FormBiodata) (map[string]any, error) {
 		status = VALUES(status)`
 
 	err := db.Debug().Exec(query, f.Place, f.Birthdate, f.Gender, f.Height, f.Weight, f.Religion, f.Status, f.UserId).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}
+
+func AssignAddress(aa *entities.AssignAddress) (map[string]any, error) {
+	query := `INSERT INTO form_places (province_id, city_id, district_id, subdistrict_id, detail_address, user_id)
+	VALUES (?, ?, ?, ?, ?, ?)`
+
+	err := db.Debug().Exec(query, aa.ProvinceId, aa.CityId, aa.DistrictId, aa.Subdistrict, aa.DetailAddress, aa.UserId).Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())

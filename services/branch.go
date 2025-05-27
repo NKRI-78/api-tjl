@@ -24,3 +24,17 @@ func Branch() (map[string]any, error) {
 		"data": branches,
 	}, nil
 }
+
+func AssignBranch(ab *entities.AssignBranch) (map[string]any, error) {
+
+	query := `INSERT INTO user_branches(branch_id, user_id) VALUES(?, ?)`
+
+	err := db.Debug().Exec(query, ab.BranchId, ab.UserId).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	return map[string]any{}, nil
+}

@@ -1,0 +1,9 @@
+[ERROR]: 2025-05-27 10:59:57 - In Server: branch_id is required
+[INFO]: 2025-05-27 11:01:40 - Assign Branch success
+[ERROR]: 2025-05-27 11:07:33 - In Server: Missing auth token
+[ERROR]: 2025-05-27 11:07:37 - In Server: user_id is required
+[ERROR]: 2025-05-27 11:08:46 - In Server: Error 1062: Duplicate entry '6c495caa-1eaa-4e1a-8f01-2871b741bd0a' for key 'form_places.form_places_unique'
+[INFO]: 2025-05-27 11:09:12 - Assign Address success
+[ERROR]: 2025-05-27 11:21:11 - In Server: Missing auth token
+[INFO]: 2025-05-27 11:21:15 - Assign Address success
+[INFO]: 2025-05-27 11:21:32 - Assign Address success

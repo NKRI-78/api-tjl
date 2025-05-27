@@ -189,6 +189,25 @@ type AssignDocumentApplyJob struct {
 	Path       string `json:"path"`
 }
 
+type AssignBranch struct {
+	BranchId string `json:"branch_id"`
+	UserId   string `json:"user_id"`
+}
+
+type AssignAddress struct {
+	ProvinceId    string `json:"province_id"`
+	CityId        string `json:"city_id"`
+	DistrictId    string `json:"district_id"`
+	Subdistrict   string `json:"subdistrict_id"`
+	DetailAddress string `json:"detail_address"`
+	UserId        string `json:"user_id"`
+}
+
+type AssignApplyJob struct {
+	JobId  string `json:"job_id"`
+	UserId string `json:"user_id"`
+}
+
 type JobListQuery struct {
 	Id                string    `json:"id"`
 	Title             string    `json:"title"`

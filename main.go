@@ -162,8 +162,11 @@ func main() {
 	// Apply Job
 	router.HandleFunc("/api/v1/apply/job", controllers.ApplyJob).Methods("POST")
 
-	// Assign Document Apply Job
+	// Assign
 	router.HandleFunc("/api/v1/assign/document/apply/job", controllers.AssignDocumentApplyJob).Methods("POST")
+	router.HandleFunc("/api/v1/assign/branch", controllers.AssignBranch).Methods("POST")
+	router.HandleFunc("/api/v1/assign/address", controllers.AssignAddress).Methods("POST")
+	router.HandleFunc("/api/v1/assign/apply-job", controllers.AssignApplyJob).Methods("POST")
 
 	// Badges
 	router.HandleFunc("/api/v1/apply-job-badges", controllers.ApplyJobBadges).Methods("GET")
