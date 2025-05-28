@@ -306,6 +306,10 @@ func AdminListUser(Type, branchId string) (map[string]any, error) {
 		})
 	}
 
+	if adminListUserData == nil {
+		adminListUserData = []entities.AdminListUserResponse{}
+	}
+
 	return map[string]any{
 		"data": adminListUserData,
 	}, nil
