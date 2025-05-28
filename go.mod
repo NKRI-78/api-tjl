@@ -15,7 +15,12 @@ require (
 )
 
 require (
+	github.com/bregydoc/gtranslate v0.0.0-20200913051839-1bd07f6c1fc5 // indirect
 	github.com/go-sql-driver/mysql v1.5.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/robertkrimen/otto v0.5.1 // indirect
+	github.com/stretchr/testify v1.8.1 // indirect
 	golang.org/x/sys v0.15.0 // indirect
+	golang.org/x/text v0.14.0 // indirect
+	gopkg.in/sourcemap.v1 v1.0.5 // indirect
 )
