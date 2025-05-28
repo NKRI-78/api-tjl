@@ -105,7 +105,7 @@ func main() {
 	router.Handle("/api/v1/login-admin", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.LoginAdmin))).Methods("POST")
 
 	// Admin User
-	router.HandleFunc("/api/v1/admin/list/user", controllers.AdminListUser).Methods("GET")
+	router.HandleFunc("/api/v1/admin/list/user/{type}", controllers.AdminListUser).Methods("GET")
 	router.HandleFunc("/api/v1/admin/delete/user", controllers.DeleteUser).Methods("DELETE")
 
 	// Chart Admin

@@ -225,7 +225,7 @@ func Summary(branchId string) (map[string]any, error) {
 	}, nil
 }
 
-func AdminListUser(branchId string) (map[string]any, error) {
+func AdminListUser(Type, branchId string) (map[string]any, error) {
 	var adminListUserData []entities.AdminListUserResponse
 
 	queryUsers := `SELECT p.user_id AS id, u.email, u.phone, p.avatar, p.fullname, ur.name AS role, u.created_at
@@ -233,14 +233,25 @@ func AdminListUser(branchId string) (map[string]any, error) {
 		INNER JOIN profiles p ON p.user_id = u.uid
 		INNER JOIN user_roles ur ON ur.id = u.role
 		INNER JOIN user_branches ub ON ub.user_id = u.uid
-		INNER JOIN branchs b ON b.id = ub.branch_id
-	`
+		INNER JOIN branchs b ON b.id = ub.branch_id`
 
 	var args []any
+	whereClause := ""
+
 	if branchId != "" {
-		queryUsers += " WHERE b.id = ?"
+		whereClause += " WHERE b.id = ?"
 		args = append(args, branchId)
 	}
+
+	if Type != "" && Type != "manual" {
+		if whereClause == "" {
+			whereClause += " WHERE u.via = 'auto'"
+		} else {
+			whereClause += " AND u.via = 'auto'"
+		}
+	}
+
+	queryUsers += whereClause
 
 	rows, err := db.Debug().Raw(queryUsers, args...).Rows()
 	if err != nil {
@@ -275,14 +286,12 @@ func AdminListUser(branchId string) (map[string]any, error) {
 			return nil, errors.New(errUserBranch.Error())
 		}
 
-		var branch entities.AdminListUserBranch
+		branch := entities.AdminListUserBranch{
+			Id:   0,
+			Name: "-",
+		}
 		if len(adminListUserBranchData) > 0 {
 			branch = adminListUserBranchData[0]
-		} else {
-			branch = entities.AdminListUserBranch{
-				Id:   0,
-				Name: "-",
-			}
 		}
 
 		adminListUserData = append(adminListUserData, entities.AdminListUserResponse{
