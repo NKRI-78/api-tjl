@@ -1257,7 +1257,7 @@ func AdminListApplyJob(branchId string) (map[string]any, error) {
 			Candidate: entities.Candidate{
 				Id:                job.UserIdCandidate,
 				Email:             job.UserEmailCandidate,
-				Avatar:            job.UserAvatar,
+				Avatar:            job.UserAvatarCandidate,
 				Name:              job.UserNameCandidate,
 				Phone:             job.UserPhoneCandidate,
 				AdditionalDoc:     dataAdditionalDoc,
