@@ -12,7 +12,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func DeleteUser(d *entities.DeleteUser) (map[string]any, error) {
+func DeleteUser(d *entities.UserDelete) (map[string]any, error) {
 
 	query := `DELETE FROM users WHERE uid = ?`
 
@@ -256,9 +256,9 @@ func ResendOtp(u *models.User) (map[string]any, error) {
 
 	users := []entities.UserOtp{}
 	query := `SELECT enabled, otp_date FROM users
-	WHERE (email = '` + u.Val + `' OR phone = '` + u.Val + `')`
+	WHERE (email = ? OR phone = ?)`
 
-	err := db.Debug().Raw(query).Scan(&users).Error
+	err := db.Debug().Raw(query, u.Val, u.Val).Scan(&users).Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
@@ -285,7 +285,10 @@ func ResendOtp(u *models.User) (map[string]any, error) {
 	otp := helper.CodeOtpSecure()
 
 	if elapsed >= 1*time.Minute {
-		errUpdateResendOtp := db.Debug().Exec(`UPDATE users SET otp = '` + otp + `', created_at = NOW(), otp_date = NOW() WHERE email = '` + u.Val + `'`).Error
+
+		queryUpdate := `UPDATE users SET otp = ?, created_at = NOW(), otp_date = NOW() WHERE email = ?`
+
+		errUpdateResendOtp := db.Debug().Exec(queryUpdate, otp, u.Val).Error
 
 		if errUpdateResendOtp != nil {
 			helper.Logger("error", "In Server: "+errUpdateResendOtp.Error())
@@ -308,9 +311,9 @@ func Login(u *models.User) (map[string]any, error) {
 	user := entities.User{}
 
 	users := []entities.UserLogin{}
-	query := `SELECT uid, enabled, password FROM users WHERE email = '` + u.Val + `' OR phone = '` + u.Val + `'`
+	query := `SELECT uid, enabled, password FROM users WHERE email = ? OR phone = ?`
 
-	err := db.Debug().Raw(query).Scan(&users).Error
+	err := db.Debug().Raw(query, u.Val, u.Val).Scan(&users).Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
@@ -329,8 +332,11 @@ func Login(u *models.User) (map[string]any, error) {
 	user.Id = users[0].Uid
 
 	if emailActive == 0 {
-		err := db.Debug().Exec(`UPDATE users SET otp = '` + otp + `', otp_date = NOW()
-		WHERE email = '` + u.Val + `' OR phone = '` + u.Val + `'`).Error
+
+		query := `UPDATE users SET otp = ?, otp_date = NOW()
+		WHERE email = ? OR phone = ?`
+
+		err := db.Debug().Exec(query, otp, u.Val, u.Val).Error
 
 		if err != nil {
 			helper.Logger("error", "In Server: "+err.Error())
@@ -376,10 +382,10 @@ func LoginAdmin(u *models.UserAdmin) (entities.AdminResponse, error) {
 	LEFT JOIN user_branches ub ON ub.user_id = u.uid
 	LEFT JOIN branchs b ON b.id = ub.branch_id
 	INNER JOIN user_roles ur ON ur.id = u.role
-	WHERE u.email = '` + u.Val + `' OR u.phone = '` + u.Val + `' 
+	WHERE u.email = ? OR u.phone = ?
 	LIMIT 1`
 
-	err := db.Debug().Raw(query).Scan(&users).Error
+	err := db.Debug().Raw(query, u.Val, u.Val).Scan(&users).Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
@@ -443,7 +449,9 @@ func Register(u *models.User) (map[string]any, error) {
 	users := []entities.CheckAccount{}
 	jobs := []entities.CheckJobs{}
 
-	errCheckAccount := db.Debug().Raw(`SELECT email FROM users WHERE email = '` + u.Email + `'`).Scan(&users).Error
+	queryCheckAccount := `SELECT email FROM users WHERE email = ?`
+
+	errCheckAccount := db.Debug().Raw(queryCheckAccount, u.Email).Scan(&users).Error
 
 	if errCheckAccount != nil {
 		helper.Logger("error", "In Server: "+errCheckAccount.Error())

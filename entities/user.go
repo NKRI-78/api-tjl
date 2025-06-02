@@ -72,7 +72,7 @@ type CheckJobs struct {
 	JobId string `json:"job_id"`
 }
 
-type DeleteUser struct {
+type UserDelete struct {
 	Id string `json:"id"`
 }
 
