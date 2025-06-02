@@ -458,7 +458,9 @@ func Register(u *models.User) (map[string]any, error) {
 		return nil, errors.New(errCheckAccount.Error())
 	}
 
-	errCheckJobs := db.Debug().Raw(`SELECT uid FROM job_categories WHERE uid = '` + u.JobId + `'`).Scan(&jobs).Error
+	queryCheckJobs := `SELECT uid FROM job_categories WHERE uid = ?`
+
+	errCheckJobs := db.Debug().Raw(queryCheckJobs, u.JobId).Scan(&jobs).Error
 
 	if errCheckJobs != nil {
 		helper.Logger("error", "In Server: "+errCheckJobs.Error())
@@ -479,29 +481,37 @@ func Register(u *models.User) (map[string]any, error) {
 		return nil, errors.New("JOB_NOT_FOUND")
 	}
 
-	errInsertUser := db.Debug().Exec(`INSERT INTO users (uid, email, phone, password, otp) 
-	VALUES ('` + user.Id + `', '` + user.Email + `', '` + user.Phone + `', '` + user.Password + `', '` + otp + `')`).Error
+	queryInsertUser := `INSERT INTO users (uid, email, phone, password, otp) 
+	VALUES (?, ?, ?, ?, ?)`
+
+	errInsertUser := db.Debug().Exec(queryInsertUser, user.Id, user.Email, user.Phone, user.Password, user.Otp).Error
 
 	if errInsertUser != nil {
 		helper.Logger("error", "In Server: "+errInsertUser.Error())
 		return nil, errors.New(errInsertUser.Error())
 	}
 
-	errInsertProfile := db.Debug().Exec(`INSERT INTO profiles (user_id, fullname, avatar) VALUES ('` + user.Id + `', '` + user.Fullname + `', '` + user.Avatar + `')`).Error
+	queryInsertProfile := `INSERT INTO profiles (user_id, fullname, avatar) VALUES (?, ?, ?)`
+
+	errInsertProfile := db.Debug().Exec(queryInsertProfile, user.Id, user.Fullname, user.Avatar).Error
 
 	if errInsertProfile != nil {
 		helper.Logger("error", "In Server: "+errInsertProfile.Error())
 		return nil, errors.New(errInsertProfile.Error())
 	}
 
-	errInsertUserJobPick := db.Debug().Exec(`INSERT INTO user_pick_category_jobs (user_id, job_cat_id) VALUES ('` + user.Id + `', '` + user.JobId + `')`).Error
+	queryInsertUserJobPick := `INSERT INTO user_pick_category_jobs (user_id, job_cat_id) VALUES (?, ?)`
+
+	errInsertUserJobPick := db.Debug().Exec(queryInsertUserJobPick, user.Id, user.JobId).Error
 
 	if errInsertUserJobPick != nil {
 		helper.Logger("error", "In Server: "+errInsertUserJobPick.Error())
 		return nil, errors.New(errInsertUserJobPick.Error())
 	}
 
-	errInsertUserBranch := db.Debug().Exec(`INSERT INTO user_branches (user_id, branch_id) VALUES ('` + user.Id + `', '` + user.BranchId + `')`).Error
+	queryInsertUserBranch := `INSERT INTO user_branches (user_id, branch_id) VALUES (?, ?)`
+
+	errInsertUserBranch := db.Debug().Exec(queryInsertUserBranch, user.Id, user.BranchId).Error
 
 	if errInsertUserBranch != nil {
 		helper.Logger("error", "In Server: "+errInsertUserBranch.Error())
