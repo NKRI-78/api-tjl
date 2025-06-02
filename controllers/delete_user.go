@@ -10,7 +10,7 @@ import (
 
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
 
-	data := &entities.DeleteUser{}
+	data := &entities.UserDelete{}
 
 	err := json.NewDecoder(r.Body).Decode(data)
 
