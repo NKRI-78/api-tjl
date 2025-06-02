@@ -26,3 +26,4 @@ type JobCategoryDelete entities.JobCategoryDelete
 type JobStore entities.JobStore
 type JobUpdate entities.JobUpdate
 type JobPlace entities.JobPlace
+type CheckJob entities.CheckJobs
