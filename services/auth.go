@@ -446,6 +446,8 @@ func Register(u *models.User) (map[string]any, error) {
 
 	otp := helper.CodeOtpSecure()
 
+	user.Otp = otp
+
 	users := []entities.CheckAccount{}
 	jobs := []entities.CheckJobs{}
 
