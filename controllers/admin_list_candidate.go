@@ -4,30 +4,17 @@ import (
 	"net/http"
 	helper "superapps/helpers"
 	"superapps/services"
-
-	"github.com/dgrijalva/jwt-go"
-	"github.com/gorilla/mux"
 )
 
-func AdminListCandidate(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	Type := vars["type"]
+func AdminListCandidateImport(w http.ResponseWriter, r *http.Request) {
 
-	tokenHeader := r.Header.Get("Authorization")
-
-	token := helper.DecodeJwt(tokenHeader)
-
-	claims, _ := token.Claims.(jwt.MapClaims)
-
-	BranchId, _ := claims["branch_id"].(string)
-
-	result, err := services.AdminListUser(Type, BranchId)
+	result, err := services.AdminListCandidateImport()
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]any{})
 		return
 	}
 
-	helper.Logger("info", "Get Admin List User success")
+	helper.Logger("info", "Get Admin List Candidate Import success")
 	helper.Response(w, http.StatusOK, false, "Successfully", result["data"])
 }

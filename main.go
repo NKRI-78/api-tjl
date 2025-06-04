@@ -80,6 +80,8 @@ func main() {
 
 	// Import User Create
 	router.HandleFunc("/api/v1/import/user/create", controllers.ImportUserCreate).Methods("POST")
+	router.HandleFunc("/api/v1/import/user/list", controllers.AdminListCandidateImport).Methods("GET")
+
 
 	// List Candidate Passes
 	router.HandleFunc("/api/v1/candidate-passes/list", controllers.CandidatePassesList).Methods("GET")
@@ -109,7 +111,6 @@ func main() {
 
 	// Admin User
 	router.HandleFunc("/api/v1/admin/list/user/{type}", controllers.AdminListUser).Methods("GET")
-	// router.HandleFunc("/api/v1/admin/list/candidate", controllers.AdminListCandidate).Methods("GET")
 	router.HandleFunc("/api/v1/admin/delete/user", controllers.DeleteUser).Methods("DELETE")
 
 	// Chart Admin
