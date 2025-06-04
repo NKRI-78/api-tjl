@@ -8,7 +8,7 @@ import (
 
 func AdminListCandidateImport(w http.ResponseWriter, r *http.Request) {
 
-	result, err := services.AdminListCandidateImport()
+	result, err := services.AdminListCandidateImportV2()
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]any{})
@@ -16,5 +16,5 @@ func AdminListCandidateImport(w http.ResponseWriter, r *http.Request) {
 	}
 
 	helper.Logger("info", "Get Admin List Candidate Import success")
-	helper.Response(w, http.StatusOK, false, "Successfully", result["data"])
+	helper.Response(w, http.StatusOK, false, "Successfully", result)
 }

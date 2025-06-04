@@ -8,3 +8,4 @@
 [ERROR]: 2025-06-04 15:08:19 - In Server: Error 1054: Unknown column 'ur.name' in 'field list'
 [ERROR]: 2025-06-04 15:08:20 - In Server: Error 1054: Unknown column 'ur.name' in 'field list'
 [INFO]: 2025-06-04 15:08:29 - Get Admin List Candidate Import success
+[INFO]: 2025-06-04 16:27:16 - Get Admin List Candidate Import success

@@ -3,8 +3,11 @@ package services
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	entities "superapps/entities"
 	helper "superapps/helpers"
+
+	"github.com/jinzhu/gorm"
 )
 
 func AdminCandidatePassesBadges(branchId string) (map[string]any, error) {
@@ -368,6 +371,287 @@ func ViewPdfApplyJobOffline(applyJobId string) (map[string]any, error) {
 	return map[string]any{
 		"data": content,
 	}, nil
+}
+
+func AdminListCandidateImportV2() ([]entities.ProfileResponse, error) {
+	profiles := []entities.Profile{}
+
+	query := `SELECT p.user_id AS id, p.fullname, p.avatar, u.phone, u.email, u.enabled, 
+		fb.id AS bio_id,
+		fb.birthdate AS bio_birthdate,
+		fb.gender AS bio_gender,
+		fb.weight AS bio_weight,
+		fb.height AS bio_height,
+		fb.religion AS bio_religion,
+		fb.status AS bio_status,
+		fb.place AS bio_place,
+		fp.detail_address AS bio_detail_address,
+		fp.id AS bio_address_id,
+		pro.id AS bio_province_id,
+		pro.name AS bio_province,
+		reg.id AS bio_city_id,
+		reg.name AS bio_city,
+		dis.id AS bio_district_id,
+		dis.name AS bio_district, 
+		vil.id AS bio_subdistrict_id,
+		vil.name AS bio_subdistrict 
+		FROM profiles p 
+		INNER JOIN users u ON u.uid = p.user_id
+		LEFT JOIN form_biodatas fb ON fb.user_id = p.user_id
+		LEFT JOIN form_places fp ON fp.user_id = p.user_id
+		LEFT JOIN provinces pro ON pro.id = fp.province_id
+		LEFT JOIN regencies reg ON reg.id = fp.city_id
+		LEFT JOIN districts dis ON dis.id = fp.district_id
+		LEFT JOIN villages vil ON vil.id = fp.subdistrict_id
+		WHERE u.via = ?
+	`
+
+	if err := db.Debug().Raw(query, "auto").Scan(&profiles).Error; err != nil {
+		return nil, err
+	}
+	if len(profiles) == 0 {
+		return nil, errors.New("no profiles found")
+	}
+
+	var result []entities.ProfileResponse
+
+	for _, prof := range profiles {
+		profileResp := entities.ProfileResponse{
+			Id:        prof.Id,
+			Fullname:  prof.Fullname,
+			Avatar:    prof.Avatar,
+			Email:     prof.Email,
+			Phone:     prof.Phone,
+			IsEnabled: prof.Enabled == 1,
+			Job: entities.ProfileJobResponse{
+				Id:   prof.JobId,
+				Name: prof.JobName,
+			},
+			Biodata: entities.Biodata{
+				Personal: entities.ProfileFormBiodata{
+					Id:        prof.BioId,
+					Birthdate: prof.BioBirthdate,
+					Gender:    prof.BioGender,
+					Height:    prof.BioHeight,
+					Weight:    prof.BioWeight,
+					Religion:  prof.BioReligion,
+					Place:     prof.BioPlace,
+					Status:    prof.BioStatus,
+				},
+				Address: entities.ProfileFormPlace{
+					Id:            prof.BioAddressId,
+					DetailAddress: prof.BioDetailAddress,
+					Province: entities.ProfileFormPlaceData{
+						Id:   prof.BioProvinceId,
+						Name: prof.BioProvince,
+					},
+					City: entities.ProfileCityPlaceData{
+						Id:   prof.BioCityId,
+						Name: prof.BioCity,
+					},
+					District: entities.ProfileDistrictPlaceData{
+						Id:   prof.BioDistrictId,
+						Name: prof.BioDistrict,
+					},
+					Subdistrict: entities.ProfileSubdistrictPlaceData{
+						Id:   prof.BioSubdistrictId,
+						Name: prof.BioSubdistrict,
+					},
+				},
+			},
+		}
+
+		// Call helper methods to get related data
+		// Get Educations
+		educations, err := getEducations(db, prof.Id)
+		if err != nil {
+			return nil, err
+		}
+		profileResp.Biodata.Educations = educations
+
+		// Get Trainings
+		trainings, err := getTrainings(db, prof.Id)
+		if err != nil {
+			return nil, err
+		}
+		profileResp.Biodata.Trainings = trainings
+
+		// Get Experiences (Works)
+		works, err := getWorks(db, prof.Id)
+		if err != nil {
+			return nil, err
+		}
+		profileResp.Biodata.Experiences = works
+
+		// Get Languages
+		languages, err := getLanguages(db, prof.Id)
+		if err != nil {
+			return nil, err
+		}
+		profileResp.Biodata.Languages = languages
+
+		result = append(result, profileResp)
+	}
+
+	return result, nil
+}
+
+func logAndReturnError(message string, err error) error {
+	helper.Logger("error", fmt.Sprintf("%s: %s", message, err.Error()))
+	return errors.New(err.Error())
+}
+
+func getEducations(db *gorm.DB, userId string) ([]entities.ProfileFormEducation, error) {
+	var dataEdu []entities.ProfileFormEducation
+
+	queryEdu := `SELECT id, education_level, major, school_or_college, start_year, start_month, end_month, end_year, user_id 
+	FROM form_educations WHERE user_id = ?`
+
+	rows, err := db.Debug().Raw(queryEdu, userId).Rows()
+	if err != nil {
+		return nil, logAndReturnError("Education Query", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var edu entities.ProfileFormEducation
+		if err := db.ScanRows(rows, &edu); err != nil {
+			return nil, logAndReturnError("Education Scan", err)
+		}
+
+		var letters []entities.FormEducationLetter
+		queryMedia := `SELECT id, path FROM form_exercise_medias WHERE exercise_id = ?`
+		mediaRows, err := db.Debug().Raw(queryMedia, edu.Id).Rows()
+		if err != nil {
+			return nil, logAndReturnError("Education Media Query", err)
+		}
+
+		for mediaRows.Next() {
+			var media entities.FormEducationLetter
+			if err := db.ScanRows(mediaRows, &media); err != nil {
+				return nil, logAndReturnError("Education Media Scan", err)
+			}
+			letters = append(letters, media)
+		}
+		mediaRows.Close()
+
+		edu.Letters = letters
+		dataEdu = append(dataEdu, edu)
+	}
+
+	return dataEdu, nil
+}
+
+func getTrainings(db *gorm.DB, userId string) ([]entities.ProfileFormExercise, error) {
+	var dataTraining []entities.ProfileFormExercise
+
+	query := `SELECT id, name, institution, start_month, start_year, end_month, end_year, user_id 
+	FROM form_exercises WHERE user_id = ?`
+
+	rows, err := db.Debug().Raw(query, userId).Rows()
+	if err != nil {
+		return nil, logAndReturnError("Training Query", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var training entities.ProfileFormExercise
+		if err := db.ScanRows(rows, &training); err != nil {
+			return nil, logAndReturnError("Training Scan", err)
+		}
+
+		var certs []entities.FormExerciseCertificate
+		queryMedia := `SELECT id, path FROM form_exercise_medias WHERE exercise_id = ?`
+		mediaRows, err := db.Debug().Raw(queryMedia, training.Id).Rows()
+		if err != nil {
+			return nil, logAndReturnError("Training Media Query", err)
+		}
+
+		for mediaRows.Next() {
+			var cert entities.FormExerciseCertificate
+			if err := db.ScanRows(mediaRows, &cert); err != nil {
+				return nil, logAndReturnError("Training Media Scan", err)
+			}
+			certs = append(certs, cert)
+		}
+		mediaRows.Close()
+
+		training.Certificates = certs
+		dataTraining = append(dataTraining, training)
+	}
+
+	return dataTraining, nil
+}
+
+func getWorks(db *gorm.DB, userId string) ([]entities.ProfileFormWork, error) {
+	var dataWork []entities.ProfileFormWork
+
+	query := `SELECT id, work, position, institution, is_work, country, city, start_month, start_year, end_month, end_year, user_id 
+	FROM form_works WHERE user_id = ?`
+
+	rows, err := db.Debug().Raw(query, userId).Rows()
+	if err != nil {
+		return nil, logAndReturnError("Work Query", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var workRow struct {
+			Id          int
+			Work        string
+			Position    string
+			Institution string
+			Country     string
+			City        string
+			IsWork      bool
+			StartMonth  string
+			StartYear   string
+			EndMonth    string
+			EndYear     string
+		}
+		if err := db.ScanRows(rows, &workRow); err != nil {
+			return nil, logAndReturnError("Work Scan", err)
+		}
+
+		work := entities.ProfileFormWork{
+			Id:          workRow.Id,
+			Work:        workRow.Work,
+			Position:    workRow.Position,
+			Institution: workRow.Institution,
+			IsWork:      workRow.IsWork,
+			City:        workRow.City,
+			Country:     workRow.Country,
+			StartMonth:  workRow.StartMonth,
+			StartYear:   workRow.StartYear,
+			EndMonth:    workRow.EndMonth,
+			EndYear:     workRow.EndYear,
+		}
+		dataWork = append(dataWork, work)
+	}
+
+	return dataWork, nil
+}
+
+func getLanguages(db *gorm.DB, userId string) ([]entities.ProfileFormLanguage, error) {
+	var dataLanguage []entities.ProfileFormLanguage
+
+	query := `SELECT id, language, level FROM form_languages WHERE user_id = ?`
+
+	rows, err := db.Debug().Raw(query, userId).Rows()
+	if err != nil {
+		return nil, logAndReturnError("Language Query", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var lang entities.ProfileFormLanguage
+		if err := db.ScanRows(rows, &lang); err != nil {
+			return nil, logAndReturnError("Language Scan", err)
+		}
+		dataLanguage = append(dataLanguage, lang)
+	}
+
+	return dataLanguage, nil
 }
 
 func AdminListCandidateImport() (map[string]any, error) {
