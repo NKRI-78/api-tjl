@@ -24,35 +24,6 @@ func ImportUserCreate(w http.ResponseWriter, r *http.Request) {
 
 	data.UserId = uuid.NewV4().String()
 
-	hashedPassword, err := helper.Hash(data.Password)
-	if err != nil {
-		helper.Logger("error", "In Server: "+err.Error())
-	}
-
-	data.Password = string(hashedPassword)
-
-	Email := data.Email
-	Password := data.Password
-	Phone := data.Phone
-
-	if Email == "" {
-		helper.Logger("error", "In Server: email is required")
-		helper.Response(w, 400, true, "email is required", map[string]any{})
-		return
-	}
-
-	if Password == "" {
-		helper.Logger("error", "In Server: password is required")
-		helper.Response(w, 400, true, "password is required", map[string]any{})
-		return
-	}
-
-	if Phone == "" {
-		helper.Logger("error", "In Server: phone is required")
-		helper.Response(w, 400, true, "phone is required", map[string]any{})
-		return
-	}
-
 	result, err := services.ImportUserCreate(data)
 
 	if err != nil {

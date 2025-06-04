@@ -1,0 +1,10 @@
+[ERROR]: 2025-06-04 15:02:26 - In Server: Missing auth token
+[ERROR]: 2025-06-04 15:04:32 - In Server (InsertUser): Error 1136: Column count doesn't match value count at row 1
+[ERROR]: 2025-06-04 15:04:53 - In Server (InsertUser): Error 1136: Column count doesn't match value count at row 1
+[ERROR]: 2025-06-04 15:06:00 - In Server (InsertUser): Error 1136: Column count doesn't match value count at row 1
+[INFO]: 2025-06-04 15:06:16 - Store Icon success
+[ERROR]: 2025-06-04 15:08:08 - In Server: Error 1054: Unknown column 'jc.uid' in 'field list'
+[ERROR]: 2025-06-04 15:08:08 - In Server: Error 1054: Unknown column 'jc.uid' in 'field list'
+[ERROR]: 2025-06-04 15:08:19 - In Server: Error 1054: Unknown column 'ur.name' in 'field list'
+[ERROR]: 2025-06-04 15:08:20 - In Server: Error 1054: Unknown column 'ur.name' in 'field list'
+[INFO]: 2025-06-04 15:08:29 - Get Admin List Candidate Import success

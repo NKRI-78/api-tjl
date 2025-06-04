@@ -5,7 +5,6 @@ type ImportUserStore struct {
 	Email               string `json:"email"`
 	Fullname            string `json:"fullname"`
 	Phone               string `json:"phone"`
-	Password            string `json:"password"`
 	Gender              string `json:"gender"`
 	Height              string `json:"height"`
 	Weight              string `json:"weight"`
