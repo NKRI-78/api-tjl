@@ -55,7 +55,8 @@ func GetDocumentAdditional(userId, typeParam string) (map[string]any, error) {
 	row := db.Debug().Raw(`
 		SELECT id, type, path
 		FROM user_document_additionals
-		WHERE user_id = ? AND type = ?`, userId, typeParam).Row()
+		WHERE user_id = ? AND type = ? 
+		ORDER BY created_at DESC`, userId, typeParam).Row()
 
 	err := row.Scan(&doc.Id, &doc.Type, &doc.Path)
 
