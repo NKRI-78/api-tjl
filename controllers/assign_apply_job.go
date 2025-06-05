@@ -42,6 +42,6 @@ func AssignApplyJob(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	helper.Logger("info", "Assign Address success")
+	helper.Logger("info", "Assign Apply Job success")
 	helper.Response(w, http.StatusOK, false, "Successfully", result["data"])
 }
