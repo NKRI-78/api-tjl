@@ -82,7 +82,6 @@ func main() {
 	router.HandleFunc("/api/v1/import/user/create", controllers.ImportUserCreate).Methods("POST")
 	router.HandleFunc("/api/v1/import/user/list", controllers.AdminListCandidateImport).Methods("GET")
 
-
 	// List Candidate Passes
 	router.HandleFunc("/api/v1/candidate-passes/list", controllers.CandidatePassesList).Methods("GET")
 	router.HandleFunc("/api/v1/candidate-passes/form/list", controllers.CandidatePassesFormList).Methods("GET")
@@ -171,6 +170,7 @@ func main() {
 	router.HandleFunc("/api/v1/assign/document/apply/job", controllers.AssignDocumentApplyJob).Methods("POST")
 	router.HandleFunc("/api/v1/assign/branch", controllers.AssignBranch).Methods("POST")
 	router.HandleFunc("/api/v1/assign/address", controllers.AssignAddress).Methods("POST")
+	router.HandleFunc("/api/v1/assign/exercise", controllers.AssignExercise).Methods("POST")
 	router.HandleFunc("/api/v1/assign/apply-job", controllers.AssignApplyJob).Methods("POST")
 
 	// Badges

@@ -42,6 +42,6 @@ func AssignDocumentApplyJob(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	helper.Logger("info", "Apply Job success")
+	helper.Logger("info", "Assign Document Apply Job success")
 	helper.Response(w, http.StatusOK, false, "Successfully", result["data"])
 }
