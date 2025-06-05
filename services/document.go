@@ -132,7 +132,7 @@ func DocumentAdditionalUpdate(d *models.DocumentAdditionalUpdate) (map[string]an
 	doc.Path = d.Path
 	doc.Type = d.Type
 
-	errInsertAdditionalDoc := db.Debug().Exec(`UPDATE user_document_additionals SET path = ?, type = ? WHERE user_id = ?`, doc.Path, doc.Type, d.UserId).Error
+	errInsertAdditionalDoc := db.Debug().Exec(`UPDATE user_document_additionals SET path = ?, type = ? WHERE user_id = ? AND type = ?`, doc.Path, doc.Type, d.UserId, doc.Type).Error
 
 	if errInsertAdditionalDoc != nil {
 		helper.Logger("error", "In Server: "+errInsertAdditionalDoc.Error())
