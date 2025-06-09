@@ -169,6 +169,8 @@ func main() {
 	// Assign
 	router.HandleFunc("/api/v1/assign/document/apply/job", controllers.AssignDocumentApplyJob).Methods("POST")
 	router.HandleFunc("/api/v1/assign/branch", controllers.AssignBranch).Methods("POST")
+	router.HandleFunc("/api/v1/assign/education", controllers.AssignEducation).Methods("POST")
+	router.HandleFunc("/api/v1/assign/work", controllers.AssignWork).Methods("POST")
 	router.HandleFunc("/api/v1/assign/address", controllers.AssignAddress).Methods("POST")
 	router.HandleFunc("/api/v1/assign/exercise", controllers.AssignExercise).Methods("POST")
 	router.HandleFunc("/api/v1/assign/apply-job", controllers.AssignApplyJob).Methods("POST")

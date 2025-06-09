@@ -8,9 +8,9 @@ import (
 	"superapps/services"
 )
 
-func AssignExercise(w http.ResponseWriter, r *http.Request) {
+func AssignWork(w http.ResponseWriter, r *http.Request) {
 
-	data := &models.FormExercise{}
+	data := &models.FormWork{}
 
 	err := json.NewDecoder(r.Body).Decode(data)
 
@@ -20,23 +20,38 @@ func AssignExercise(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	Name := data.Name
+	Position := data.Position
 	Institution := data.Institution
+	City := data.City
+	Work := data.Work
 	StartYear := data.StartYear
 	StartMonth := data.StartMonth
 	EndMonth := data.EndMonth
 	EndYear := data.EndYear
+
 	UserId := data.UserId
 
-	if Name == "" {
-		helper.Logger("error", "In Server: name is required")
-		helper.Response(w, 400, true, "name is required", map[string]any{})
+	if Position == "" {
+		helper.Logger("error", "In Server: position is required")
+		helper.Response(w, 400, true, "position is required", map[string]any{})
 		return
 	}
 
 	if Institution == "" {
 		helper.Logger("error", "In Server: institution is required")
-		helper.Response(w, 400, true, "institution is required", map[string]any{})
+		helper.Response(w, 400, true, "institution is required", map[string]interface{}{})
+		return
+	}
+
+	if City == "" {
+		helper.Logger("error", "In Server: city is required")
+		helper.Response(w, 400, true, "city is required", map[string]any{})
+		return
+	}
+
+	if Work == "" {
+		helper.Logger("error", "In Server: work is required")
+		helper.Response(w, 400, true, "work is required", map[string]any{})
 		return
 	}
 
@@ -64,19 +79,21 @@ func AssignExercise(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if UserId == "" {
-		helper.Logger("error", "In Server: user_id is required")
-		helper.Response(w, 400, true, "user_id is required", map[string]any{})
-		return
+	if data.StillWork {
+		data.IsWork = 1
+	} else {
+		data.IsWork = 0
 	}
 
-	result, err := services.FormExercise(data)
+	data.UserId = UserId
+
+	result, err := services.FormWork(data)
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]any{})
 		return
 	}
 
-	helper.Logger("info", "Assign Form Exercise success")
+	helper.Logger("info", "Assign Form Work success")
 	helper.Response(w, http.StatusOK, false, "Successfully", result)
 }
