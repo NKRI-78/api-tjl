@@ -173,6 +173,7 @@ func main() {
 	router.HandleFunc("/api/v1/assign/work", controllers.AssignWork).Methods("POST")
 	router.HandleFunc("/api/v1/assign/address", controllers.AssignAddress).Methods("POST")
 	router.HandleFunc("/api/v1/assign/exercise", controllers.AssignExercise).Methods("POST")
+	router.HandleFunc("/api/v1/assign/language", controllers.AssignLanguage).Methods("POST")
 	router.HandleFunc("/api/v1/assign/apply-job", controllers.AssignApplyJob).Methods("POST")
 
 	// Badges

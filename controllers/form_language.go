@@ -36,14 +36,14 @@ func FormLanguage(w http.ResponseWriter, r *http.Request) {
 	UserId := userId
 
 	if Language == "" {
-		helper.Logger("error", "In Server: province_id is required")
-		helper.Response(w, 400, true, "province_id is required", map[string]interface{}{})
+		helper.Logger("error", "In Server: language is required")
+		helper.Response(w, 400, true, "language is required", map[string]interface{}{})
 		return
 	}
 
 	if Level == "" {
-		helper.Logger("error", "In Server: city_id is required")
-		helper.Response(w, 400, true, "city_id is required", map[string]interface{}{})
+		helper.Logger("error", "In Server: level is required")
+		helper.Response(w, 400, true, "level is required", map[string]interface{}{})
 		return
 	}
 

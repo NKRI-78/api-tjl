@@ -373,10 +373,15 @@ func ViewPdfApplyJobOffline(applyJobId string) (map[string]any, error) {
 	}, nil
 }
 
-func AdminListCandidateImportV2() ([]entities.ProfileResponse, error) {
-	profiles := []entities.Profile{}
+func AdminListCandidateImportV2() ([]entities.ProfileImportResponse, error) {
+	profiles := []entities.ProfileImport{}
 
 	query := `SELECT p.user_id AS id, p.fullname, p.avatar, u.phone, u.email, u.enabled, 
+		ur.name AS role,
+		c.uid AS company_id,
+		c.name AS company,
+		jc.name AS position,
+		j.salary,
 		fb.id AS bio_id,
 		fb.birthdate AS bio_birthdate,
 		fb.gender AS bio_gender,
@@ -397,6 +402,11 @@ func AdminListCandidateImportV2() ([]entities.ProfileResponse, error) {
 		vil.name AS bio_subdistrict 
 		FROM profiles p 
 		INNER JOIN users u ON u.uid = p.user_id
+		LEFT JOIN user_roles ur ON ur.id = u.role
+		LEFT JOIN apply_jobs aj ON aj.user_id = p.user_id
+		LEFT JOIN jobs j ON j.uid = aj.job_id
+		LEFT JOIN job_categories jc ON jc.uid = j.cat_id
+		LEFT JOIN companies c ON c.uid = j.company_id
 		LEFT JOIN form_biodatas fb ON fb.user_id = p.user_id
 		LEFT JOIN form_places fp ON fp.user_id = p.user_id
 		LEFT JOIN provinces pro ON pro.id = fp.province_id
@@ -413,19 +423,22 @@ func AdminListCandidateImportV2() ([]entities.ProfileResponse, error) {
 		return nil, errors.New("no profiles found")
 	}
 
-	var result []entities.ProfileResponse
+	var result []entities.ProfileImportResponse
 
 	for _, prof := range profiles {
-		profileResp := entities.ProfileResponse{
+		profileResp := entities.ProfileImportResponse{
 			Id:        prof.Id,
 			Fullname:  prof.Fullname,
 			Avatar:    prof.Avatar,
 			Email:     prof.Email,
+			Role:      prof.Role,
 			Phone:     prof.Phone,
 			IsEnabled: prof.Enabled == 1,
-			Job: entities.ProfileJobResponse{
-				Id:   prof.JobId,
-				Name: prof.JobName,
+			Job: entities.ProfileImportJobResponse{
+				Id:       prof.CompanyId,
+				Company:  prof.Company,
+				Position: prof.Position,
+				Salary:   prof.Salary,
 			},
 			Biodata: entities.Biodata{
 				Personal: entities.ProfileFormBiodata{
@@ -461,7 +474,6 @@ func AdminListCandidateImportV2() ([]entities.ProfileResponse, error) {
 			},
 		}
 
-		// Call helper methods to get related data
 		// Get Educations
 		educations, err := getEducations(db, prof.Id)
 		if err != nil {
