@@ -154,6 +154,49 @@ type Profile struct {
 	BioDetailAddress   string `json:"bio_detail_address"`
 }
 
+type ProfileImport struct {
+	Id                 string `json:"id"`
+	Avatar             string `json:"avatar"`
+	Phone              string `json:"phone"`
+	Fullname           string `json:"fullname"`
+	Enabled            int    `json:"enabled"`
+	Email              string `json:"email"`
+	Role               string `json:"role"`
+	CompanyId          string `json:"company_id"`
+	Company            string `json:"company"`
+	Position           string `json:"position"`
+	Salary             int    `json:"salary"`
+	JobId              string `json:"job_id"`
+	JobName            string `json:"job_name"`
+	BioId              int    `json:"bio_id"`
+	BioBirthdate       string `json:"bio_birthdate"`
+	BioGender          string `json:"bio_gender"`
+	BioHeight          string `json:"bio_height"`
+	BioWeight          string `json:"bio_weight"`
+	BioStatus          string `json:"bio_status"`
+	BioReligion        string `json:"bio_religion"`
+	BioPlace           string `json:"bio_place"`
+	BioEducationLevel  string `json:"edu_education_level"`
+	BioMajor           string `json:"edu_major"`
+	BioSchoolOrCollege string `json:"edu_school_or_college"`
+	BioStartMonth      string `json:"edu_start_month"`
+	BioEndMonth        string `json:"edu_end_month"`
+	BioStartYear       string `json:"edu_start_year"`
+	BioEndYear         string `json:"edu_end_year"`
+	BioName            string `json:"ex_name"`
+	BioInstitution     string `json:"ex_institution"`
+	BioAddressId       int    `json:"bio_address_id"`
+	BioProvinceId      int    `json:"bio_province_id"`
+	BioProvince        string `json:"bio_province"`
+	BioCityId          int    `json:"bio_city_id"`
+	BioCity            string `json:"bio_city"`
+	BioDistrictId      int    `json:"bio_district_id"`
+	BioDistrict        string `json:"bio_district"`
+	BioSubdistrictId   int    `json:"bio_subdistrict_id"`
+	BioSubdistrict     string `json:"bio_subdistrict"`
+	BioDetailAddress   string `json:"bio_detail_address"`
+}
+
 type ProfileResponse struct {
 	Id        string             `json:"id"`
 	Avatar    string             `json:"avatar"`
@@ -164,6 +207,25 @@ type ProfileResponse struct {
 	Email     string             `json:"email"`
 	Job       ProfileJobResponse `json:"job"`
 	Biodata   Biodata            `json:"biodata"`
+}
+
+type ProfileImportResponse struct {
+	Id        string                   `json:"id"`
+	Avatar    string                   `json:"avatar"`
+	Phone     string                   `json:"phone"`
+	Fullname  string                   `json:"fullname"`
+	IsEnabled bool                     `json:"enabled"`
+	Role      string                   `json:"role"`
+	Email     string                   `json:"email"`
+	Job       ProfileImportJobResponse `json:"job"`
+	Biodata   Biodata                  `json:"biodata"`
+}
+
+type ProfileImportJobResponse struct {
+	Id       string `json:"id"`
+	Company  string `json:"company"`
+	Position string `json:"position"`
+	Salary   int    `json:"salary"`
 }
 
 type ProfileFormBiodata struct {
