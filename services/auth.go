@@ -209,6 +209,34 @@ func UpdateEmail(ue *models.UpdateEmail) (map[string]any, error) {
 	return map[string]any{}, nil
 }
 
+func UpdateUser(uu *models.UpdateUser) (map[string]any, error) {
+	// UPDATE USER
+	queryUpdateUser := `UPDATE users SET email = ?, phone = ? WHERE uid = ?`
+	err := db.Debug().Exec(queryUpdateUser, uu.Email, uu.Phone, uu.UserId).Error
+	if err != nil {
+		helper.Logger("error", "In Server (UpdateUser): "+err.Error())
+		return nil, err
+	}
+
+	// UPDATE PROFILE
+	queryUpdateProfile := `UPDATE profiles SET fullname = ? WHERE user_id = ?`
+	err = db.Debug().Exec(queryUpdateProfile, uu.Fullname, uu.UserId).Error
+	if err != nil {
+		helper.Logger("error", "In Server (UpdateProfile): "+err.Error())
+		return nil, err
+	}
+
+	// UPDATE FORM BIODATA
+	queryUpdateBiodata := `UPDATE form_biodatas SET birthdate = ?, gender = ?, weight = ?, height = ?, status = ?, religion = ?, place = ? WHERE user_id = ?`
+	err = db.Debug().Exec(queryUpdateBiodata, uu.Birthdate, uu.Gender, uu.Weight, uu.Height, uu.MaritalStatus, uu.Religion, uu.Place, uu.UserId).Error
+	if err != nil {
+		helper.Logger("error", "In Server (UpdateBiodata): "+err.Error())
+		return nil, err
+	}
+
+	return map[string]any{}, nil
+}
+
 func VerifyOtp(u *models.User) (map[string]any, error) {
 	var user entities.UserOtp
 
