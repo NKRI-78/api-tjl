@@ -6,6 +6,7 @@ import (
 
 type RegisterUserBranch entities.RegisterUserBranch
 type UpdateEmail entities.UpdateEmail
+type UpdateUser entities.UpdateUser
 
 type User entities.User
 type UserRoles entities.UserRoles

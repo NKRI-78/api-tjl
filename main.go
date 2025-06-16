@@ -110,6 +110,7 @@ func main() {
 
 	// Admin User
 	router.HandleFunc("/api/v1/admin/list/user/{type}", controllers.AdminListUser).Methods("GET")
+	router.HandleFunc("/api/v1/admin/update/user", controllers.UpdateUser).Methods("PUT")
 	router.HandleFunc("/api/v1/admin/delete/user", controllers.DeleteUser).Methods("DELETE")
 
 	// Chart Admin

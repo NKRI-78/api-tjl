@@ -357,3 +357,17 @@ type UpdateEmail struct {
 	OldEmail string `json:"old_email"`
 	NewEmail string `json:"new_email"`
 }
+
+type UpdateUser struct {
+	UserId        string `json:"user_id"`
+	Email         string `json:"email"`
+	Fullname      string `json:"fullname"`
+	Phone         string `json:"phone"`
+	Gender        string `json:"gender"`
+	Height        string `json:"height"`
+	Weight        string `json:"weight"`
+	MaritalStatus string `json:"marital_status"`
+	Religion      string `json:"religion"`
+	Place         string `json:"place"`
+	Birthdate     string `json:"birthdate"`
+}
