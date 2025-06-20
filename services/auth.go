@@ -500,14 +500,14 @@ func Register(u *models.User) (map[string]any, error) {
 	isUserExist := len(users)
 
 	if isUserExist == 1 {
-		helper.Logger("error", "In Server: User already exist")
+		helper.Logger("error", "In Server: USER_ALREADY_EXIST")
 		return nil, errors.New("USER_ALREADY_EXIST")
 	}
 
 	isJobExist := len(jobs)
 
 	if isJobExist == 0 {
-		helper.Logger("error", "In Server: Job not found")
+		helper.Logger("error", "In Server: JOB_NOT_FOUND")
 		return nil, errors.New("JOB_NOT_FOUND")
 	}
 
