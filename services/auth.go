@@ -413,11 +413,11 @@ func LoginAdmin(u *models.UserAdmin) (entities.AdminResponse, error) {
 	WHERE u.email = ? OR u.phone = ?
 	LIMIT 1`
 
-	err := db.Debug().Raw(query, u.Val, u.Val).Scan(&users).Error
+	errUser := db.Debug().Raw(query, u.Val, u.Val).Scan(&users).Error
 
-	if err != nil {
-		helper.Logger("error", "In Server: "+err.Error())
-		return entities.AdminResponse{}, errors.New(err.Error())
+	if errUser != nil {
+		helper.Logger("error", "In Server: "+errUser.Error())
+		return entities.AdminResponse{}, errors.New(errUser.Error())
 	}
 
 	isUserExist := len(users)
@@ -428,7 +428,7 @@ func LoginAdmin(u *models.UserAdmin) (entities.AdminResponse, error) {
 
 	passHashed := users[0].Password
 
-	err = helper.VerifyPassword(passHashed, u.Password)
+	err := helper.VerifyPassword(passHashed, u.Password)
 
 	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
 		helper.Logger("error", "In Server: "+err.Error())
