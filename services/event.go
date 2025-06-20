@@ -26,7 +26,7 @@ func EventList(page, limit, startDate string) (map[string]any, error) {
 
 	// Count total events based on createdAt filter
 	var countQuery string
-	var countArgs []interface{}
+	var countArgs []any
 
 	if startDate != "" {
 		countQuery = `SELECT id FROM events WHERE start_date = ?`
