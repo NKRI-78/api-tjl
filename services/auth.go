@@ -428,10 +428,10 @@ func LoginAdmin(u *models.UserAdmin) (entities.AdminResponse, error) {
 
 	passHashed := users[0].Password
 
-	err := helper.VerifyPassword(passHashed, u.Password)
+	errVerify := helper.VerifyPassword(passHashed, u.Password)
 
-	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
-		helper.Logger("error", "In Server: "+err.Error())
+	if errVerify != nil && errVerify == bcrypt.ErrMismatchedHashAndPassword {
+		helper.Logger("error", "In Server: "+errVerify.Error())
 		return entities.AdminResponse{}, errors.New("CREDENTIALS_IS_INCORRECT")
 	}
 
@@ -454,10 +454,10 @@ func LoginAdmin(u *models.UserAdmin) (entities.AdminResponse, error) {
 
 func Register(u *models.User) (map[string]any, error) {
 
-	hashedPassword, err := helper.Hash(u.Password)
-	if err != nil {
-		helper.Logger("error", "In Server: "+err.Error())
-		return nil, err
+	hashedPassword, errHasshed := helper.Hash(u.Password)
+	if errHasshed != nil {
+		helper.Logger("error", "In Server: "+errHasshed.Error())
+		return nil, errHasshed
 	}
 
 	user := entities.User{}
@@ -553,9 +553,9 @@ func Register(u *models.User) (map[string]any, error) {
 		helper.Logger("error", "Failed to send email: "+errEmail.Error())
 	}
 
-	token, err := middleware.CreateToken("-", user.Id)
-	if err != nil {
-		helper.Logger("error", "In Server: "+err.Error())
+	token, errToken := middleware.CreateToken("-", user.Id)
+	if errToken != nil {
+		helper.Logger("error", "In Server: "+errToken.Error())
 	}
 
 	access := token["token"]
