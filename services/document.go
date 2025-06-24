@@ -3,6 +3,7 @@ package services
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 
 	entities "superapps/entities"
 	helper "superapps/helpers"
@@ -31,22 +32,39 @@ func DocumentList(d *models.DocumentAssign) (map[string]any, error) {
 }
 
 func DocumentStore(d *models.DocumentStore) (map[string]any, error) {
-	doc := entities.DocumentStore{}
-
-	doc.Path = d.Path
-	doc.UserId = d.UserId
-	doc.Type = d.Type
-
-	errInsertDoc := db.Debug().Exec(`
-	INSERT INTO user_documents (user_id, path, type) 
-	VALUES (?, ?, ?)`, doc.UserId, doc.Path, doc.Type).Error
-
-	if errInsertDoc != nil {
-		helper.Logger("error", "In Server: "+errInsertDoc.Error())
-		return nil, errors.New(errInsertDoc.Error())
+	// Validasi input dasar
+	if d.UserId == "" || d.Path == "" {
+		return nil, errors.New("user_id, path, and type cannot be empty")
 	}
 
-	return map[string]any{}, nil
+	// Cek apakah type tersebut sudah ada untuk user yang sama
+	var count int64
+	err := db.Table("user_documents").
+		Where("user_id = ? AND type = ?", d.UserId, d.Type).
+		Count(&count).Error
+
+	if err != nil {
+		helper.Logger("error", "Failed to check existing document: "+err.Error())
+		return nil, fmt.Errorf("failed to check existing document: %w", err)
+	}
+
+	if count > 0 {
+		return nil, fmt.Errorf("document with type '%s' already exists for user", d.Type)
+	}
+
+	// Insert dokumen baru
+	errInsert := db.Exec(`
+		INSERT INTO user_documents (user_id, path, type) 
+		VALUES (?, ?, ?)`, d.UserId, d.Path, d.Type).Error
+
+	if errInsert != nil {
+		helper.Logger("error", "Failed to insert document: "+errInsert.Error())
+		return nil, fmt.Errorf("failed to store document: %w", errInsert)
+	}
+
+	return map[string]any{
+		"message": "document stored successfully",
+	}, nil
 }
 
 func GetDocumentAdditional(userId, typeParam string) (map[string]any, error) {
