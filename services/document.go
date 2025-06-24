@@ -14,7 +14,7 @@ import (
 func DocumentList(d *models.DocumentAssign) (map[string]any, error) {
 	docs := []entities.Document{}
 
-	query := `SELECT ud.id, d.name, ud.path
+	query := `SELECT ud.id, d.name, ud.type, ud.path
 	FROM documents d
 	INNER JOIN user_documents ud ON ud.type = d.id
 	INNER JOIN profiles p ON p.user_id = ud.user_id 
