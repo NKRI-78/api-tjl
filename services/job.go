@@ -698,7 +698,6 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 	var dataUserFcm entities.InitFcm
 	var dataQuery entities.ApplyJobQuery
 
-	// Fetch existing job application details
 	queryInfo := `SELECT uid, job_id, user_id, status FROM apply_jobs WHERE uid = ?`
 	row := db.Debug().Raw(queryInfo, uaj.ApplyJobId).Row()
 	errJobRow := row.Scan(&dataQuery.Uid, &dataQuery.JobId, &dataQuery.UserId, &dataQuery.Status)
@@ -711,35 +710,69 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 	var status string
 	var isFinish int64 = 0
 
-	// Validate status transition rules
-	switch dataQuery.Status {
-	case 1: // IN_PROGRESS -> can only move to INTERVIEW (2)
-		if uaj.Status != 2 {
-			helper.Logger("error", "status IN_PROGRESS can only move to INTERVIEW")
-			return nil, errors.New("status IN_PROGRESS can only move to INTERVIEW")
-		}
-		status = "INTERVIEW"
-	case 2: // INTERVIEW -> can move to ACCEPTED (3) or DECLINED (4)
-		if uaj.Status != 3 && uaj.Status != 4 {
-			helper.Logger("error", "status INTERVIEW can only move to ACCEPTED or DECLINED")
-			return nil, errors.New("status INTERVIEW can only move to ACCEPTED or DECLINED")
-		}
-		if uaj.Status == 3 {
-			status = "ACCEPTED"
-		} else {
-			status = "DECLINED"
-			isFinish = 1
-		}
-	case 3: // ACCEPTED - no further updates
-		helper.Logger("error", "status [ACCEPTED] already passed")
-		return nil, errors.New("status [ACCEPTED] already passed")
-	case 4: // DECLINED - no further updates
-		helper.Logger("error", "status [DECLINED] already passed")
-		return nil, errors.New("status [DECLINED] already passed")
-	default:
-		helper.Logger("error", "unknown status")
-		return nil, errors.New("unknown status")
+	statusNames := map[int]string{
+		1:  "PROCESS",
+		2:  "INTERVIEW",
+		3:  "FINISH", // accepted
+		4:  "DECLINE",
+		5:  "UPLOAD_PASSPOR",
+		6:  "MCU",
+		7:  "LINK_SIAPKERJA",
+		8:  "SKCK",
+		9:  "VISA",
+		10: "TTD",
+		11: "OPP",
+		12: "DONE", // final status
 	}
+
+	// Validasi status baru
+	if _, ok := statusNames[uaj.Status]; !ok {
+		helper.Logger("error", fmt.Sprintf("unknown target status: %d", uaj.Status))
+		return nil, errors.New("unknown target status")
+	}
+
+	// Cegah update ke status yang lebih rendah atau sama
+	if uaj.Status != dataQuery.Status+1 {
+		helper.Logger("error", fmt.Sprintf("status must increase step by step: current=%d, target=%d", dataQuery.Status, uaj.Status))
+		return nil, errors.New("status must increase step by step")
+	}
+
+	// Tetapkan status name
+	status = statusNames[uaj.Status]
+
+	// Tandai selesai jika status adalah DONE atau DECLINE
+	if uaj.Status == 12 || uaj.Status == 4 {
+		isFinish = 1
+	}
+
+	// switch dataQuery.Status {
+	// case 1:
+	// 	if uaj.Status != 2 {
+	// 		helper.Logger("error", "status IN_PROGRESS can only move to INTERVIEW")
+	// 		return nil, errors.New("status IN_PROGRESS can only move to INTERVIEW")
+	// 	}
+	// 	status = "INTERVIEW"
+	// case 2:
+	// 	if uaj.Status != 3 && uaj.Status != 4 {
+	// 		helper.Logger("error", "status INTERVIEW can only move to ACCEPTED or DECLINED")
+	// 		return nil, errors.New("status INTERVIEW can only move to ACCEPTED or DECLINED")
+	// 	}
+	// 	if uaj.Status == 3 {
+	// 		status = "ACCEPTED"
+	// 	} else {
+	// 		status = "DECLINED"
+	// 		isFinish = 1
+	// 	}
+	// case 3:
+	// 	helper.Logger("error", "status [ACCEPTED] already passed")
+	// 	return nil, errors.New("status [ACCEPTED] already passed")
+	// case 4:
+	// 	helper.Logger("error", "status [DECLINED] already passed")
+	// 	return nil, errors.New("status [DECLINED] already passed")
+	// default:
+	// 	helper.Logger("error", "unknown status")
+	// 	return nil, errors.New("unknown status")
+	// }
 
 	queryUserFcm := `SELECT f.token, p.fullname FROM fcms f 
 	INNER JOIN profiles p ON p.user_id = f.user_id 
@@ -757,7 +790,6 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 		helper.Logger("error", "In Server: "+errUserFcmRow.Error())
 	}
 
-	// Perform the update
 	query := `UPDATE apply_jobs SET user_confirm_id = ?, status = ?, is_finish = ? WHERE uid = ?`
 	err := db.Debug().Exec(query, uaj.UserConfirmId, uaj.Status, isFinish, uaj.ApplyJobId).Error
 	if err != nil {
@@ -765,7 +797,6 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 		return nil, errors.New(err.Error())
 	}
 
-	// Insert history
 	queryHistory := `INSERT INTO apply_job_histories
 	(uid, job_id, user_id, user_confirm_id, status, link, schedule)
 	VALUES (?, ?, ?, ?, ?, ?, ?)`
@@ -816,7 +847,6 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 		helper.SendEmail(dataUserFcm.Email, "TJL", status, uaj.Content, "apply-job-offline")
 	}
 
-	// Insert Inbox
 	queryInsertInbox := `INSERT INTO inboxes (uid, title, caption, user_id, type) VALUES (?, ?, ?, ?, ?)`
 
 	errInsertInbox := db.Debug().Exec(queryInsertInbox, uuid.NewV4().String(), status, uaj.Content, uaj.UserId, "broadcast").Error
