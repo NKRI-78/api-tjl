@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"strconv"
 
 	entities "superapps/entities"
 	helper "superapps/helpers"
@@ -32,38 +33,72 @@ func DocumentList(d *models.DocumentAssign) (map[string]any, error) {
 }
 
 func DocumentStore(d *models.DocumentStore) (map[string]any, error) {
-	// Validasi input dasar
+	// TYPE MAP
+	typeNames := map[string]string{
+		"1":  "KTP",
+		"2":  "PASPOR",
+		"3":  "SKCS",
+		"4":  "BIRTH_CERTIFICATE",
+		"5":  "GUARDIAN_APPROVAL_LETTER",
+		"6":  "FAMILY_CARD",
+		"7":  "LAST_DIPLOMA",
+		"8":  "EXPERIENCE_CERTIFICATE_WORK",
+		"9":  "JOB_SKILLS_CERTIFICATE",
+		"10": "MARRIAGE_DOCUMENT",
+	}
+
+	// Validasi input
 	if d.UserId == "" || d.Path == "" {
 		return nil, errors.New("user_id, path, and type cannot be empty")
 	}
 
-	// Cek apakah type tersebut sudah ada untuk user yang sama
+	// Validasi type
+	typeName, ok := typeNames[strconv.Itoa(d.Type)]
+	if !ok {
+		return nil, fmt.Errorf("invalid document type: %s", d.Type)
+	}
+
+	// Check if document exists
 	var count int64
 	err := db.Table("user_documents").
 		Where("user_id = ? AND type = ?", d.UserId, d.Type).
 		Count(&count).Error
 
 	if err != nil {
-		helper.Logger("error", "Failed to check existing document: "+err.Error())
+		helper.Logger("error", "DB check failed: "+err.Error())
 		return nil, fmt.Errorf("failed to check existing document: %w", err)
 	}
 
 	if count > 0 {
-		return nil, fmt.Errorf("document with type '%s' already exists for user", d.Type)
+		// Document exists → Update
+		errUpdate := db.Exec(`
+			UPDATE user_documents 
+			SET path = ?, updated_at = CURRENT_TIMESTAMP 
+			WHERE user_id = ? AND type = ?`,
+			d.Path, d.UserId, d.Type).Error
+
+		if errUpdate != nil {
+			helper.Logger("error", "Update failed: "+errUpdate.Error())
+			return nil, fmt.Errorf("failed to update document: %w", errUpdate)
+		}
+
+		return map[string]any{
+			"message": fmt.Sprintf("document '%s' updated successfully", typeName),
+		}, nil
 	}
 
-	// Insert dokumen baru
+	// Document doesn't exist → Insert
 	errInsert := db.Exec(`
 		INSERT INTO user_documents (user_id, path, type) 
 		VALUES (?, ?, ?)`, d.UserId, d.Path, d.Type).Error
 
 	if errInsert != nil {
-		helper.Logger("error", "Failed to insert document: "+errInsert.Error())
+		helper.Logger("error", "Insert failed: "+errInsert.Error())
 		return nil, fmt.Errorf("failed to store document: %w", errInsert)
 	}
 
 	return map[string]any{
-		"message": "document stored successfully",
+		"message": fmt.Sprintf("document '%s' stored successfully", typeName),
 	}, nil
 }
 

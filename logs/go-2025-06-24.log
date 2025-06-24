@@ -1,0 +1,6 @@
+[ERROR]: 2025-06-24 17:34:09 - invalid status transition: from 3 to 3
+[ERROR]: 2025-06-24 17:34:20 - In Server: Error 1452: Cannot add or update a child row: a foreign key constraint fails (`tjl`.`inboxes`, CONSTRAINT `inboxes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE)
+[INFO]: 2025-06-24 17:34:20 - Update Apply Job success
+[ERROR]: 2025-06-24 17:34:25 - invalid status transition: from 5 to 4
+[ERROR]: 2025-06-24 17:34:40 - In Server: Error 1452: Cannot add or update a child row: a foreign key constraint fails (`tjl`.`inboxes`, CONSTRAINT `inboxes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE)
+[INFO]: 2025-06-24 17:34:40 - Update Apply Job success
