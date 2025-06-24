@@ -710,37 +710,59 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 	var status string
 	var isFinish int64 = 0
 
+	// Daftar nama status
 	statusNames := map[int]string{
 		1:  "PROCESS",
 		2:  "INTERVIEW",
-		3:  "FINISH", // accepted
-		4:  "DECLINE",
+		3:  "FINISH",  // accepted, lanjut
+		4:  "DECLINE", // berhenti
 		5:  "MCU",
 		6:  "LINK_SIAPKERJA",
 		7:  "SKCK",
 		8:  "VISA",
-		9: "TTD",
+		9:  "TTD",
 		10: "OPP",
-		11: "DONE", // final status
+		11: "DONE", // final selesai
 	}
 
-	// Validasi status baru
+	// Validasi status tujuan harus dikenali
 	if _, ok := statusNames[uaj.Status]; !ok {
 		helper.Logger("error", fmt.Sprintf("unknown target status: %d", uaj.Status))
 		return nil, errors.New("unknown target status")
 	}
 
-	// Cegah update ke status yang lebih rendah atau sama
-	if uaj.Status != dataQuery.Status+1 {
-		helper.Logger("error", fmt.Sprintf("status must increase step by step: current=%d, target=%d", dataQuery.Status, uaj.Status))
-		return nil, errors.New("status must increase step by step")
+	// Daftar status yang diizinkan sebagai transisi berikutnya
+	var validNextStatuses = map[int][]int{
+		1:  {2},
+		2:  {3, 4}, // interview ke finish (diterima) atau decline (gagal)
+		3:  {5},    // lanjut ke MCU
+		5:  {6},
+		6:  {7},
+		7:  {8},
+		8:  {9},
+		9:  {10},
+		10: {11}, // terakhir adalah DONE
 	}
 
-	// Tetapkan status name
+	// Validasi apakah target status valid dari status saat ini
+	validNext := false
+	for _, next := range validNextStatuses[dataQuery.Status] {
+		if uaj.Status == next {
+			validNext = true
+			break
+		}
+	}
+
+	if !validNext {
+		helper.Logger("error", fmt.Sprintf("invalid status transition: from %d to %d", dataQuery.Status, uaj.Status))
+		return nil, errors.New("invalid status transition")
+	}
+
+	// Set nama status
 	status = statusNames[uaj.Status]
 
-	// Tandai selesai jika status adalah DONE atau DECLINE
-	if uaj.Status == 11 || uaj.Status == 4 {
+	// Tandai proses selesai hanya jika DECLINE (4) atau DONE (11)
+	if uaj.Status == 4 || uaj.Status == 11 {
 		isFinish = 1
 	}
 
