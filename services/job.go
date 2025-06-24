@@ -715,14 +715,13 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 		2:  "INTERVIEW",
 		3:  "FINISH", // accepted
 		4:  "DECLINE",
-		5:  "UPLOAD_PASSPOR",
-		6:  "MCU",
-		7:  "LINK_SIAPKERJA",
-		8:  "SKCK",
-		9:  "VISA",
-		10: "TTD",
-		11: "OPP",
-		12: "DONE", // final status
+		5:  "MCU",
+		6:  "LINK_SIAPKERJA",
+		7:  "SKCK",
+		8:  "VISA",
+		9: "TTD",
+		10: "OPP",
+		11: "DONE", // final status
 	}
 
 	// Validasi status baru
@@ -741,7 +740,7 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 	status = statusNames[uaj.Status]
 
 	// Tandai selesai jika status adalah DONE atau DECLINE
-	if uaj.Status == 12 || uaj.Status == 4 {
+	if uaj.Status == 11 || uaj.Status == 4 {
 		isFinish = 1
 	}
 
