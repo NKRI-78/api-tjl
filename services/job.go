@@ -883,14 +883,15 @@ func AdminListApplyJob(branchId string) (map[string]any, error) {
 
 	var job entities.AdminListApplyJobQuery
 
-	var additionalDoc entities.AdditionalDoc
+	var addDoc entities.AdditionalDoc
+	// var candidateDoc entities.CandidateDocumentQuery
 
 	var candidateExercise entities.CandidateExerciseQuery
 	var candidateBiodata entities.CandidateBiodataQuery
 	var candidateLanguage entities.CandidateLanguageQuery
 	var candidateWork entities.CandidateWorkQuery
 	var candidatePlace entities.CandidatePlaceQuery
-	var candidateDoc entities.CandidateDocumentQuery
+
 	var candidateEdu entities.CandidateEducationQuery
 
 	var exerciseMedia entities.FormExerciseCertificate
@@ -1196,22 +1197,31 @@ func AdminListApplyJob(branchId string) (map[string]any, error) {
 
 		// Candidate Document
 
-		dataCandidateDocument := make([]entities.CandidateDocument, 0)
+		groupedCandidateDocuments := map[string][]entities.CandidateDocument{}
 
-		queryCandidateDocument := `SELECT d.name AS document, ajd.path
-		FROM documents d
-		INNER JOIN apply_job_documents ajd ON ajd.doc_id = d.id
-		WHERE ajd.apply_job_id = ?
-		`
+		getTypeLabel := func(docType string) string {
+			switch docType {
+			case "regulation":
+				return "regulation"
+			case "preparation":
+				return "preparation"
+			default:
+				return "other"
+			}
+		}
+
+		queryCandidateDocument := `SELECT d.name AS document, d.type, ajd.path FROM documents d 
+		INNER JOIN apply_job_documents ajd ON ajd.doc_id = d.id 
+		WHERE ajd.apply_job_id = ?`
 
 		rowsCandidateDocument, errCandidateDocument := db.Debug().Raw(queryCandidateDocument, job.Id).Rows()
-
 		if errCandidateDocument != nil {
 			helper.Logger("error", "In Server: "+errCandidateDocument.Error())
 		}
 		defer rowsCandidateDocument.Close()
 
 		for rowsCandidateDocument.Next() {
+			var candidateDoc entities.CandidateDocument
 			errCandidateDocumentRows := db.ScanRows(rowsCandidateDocument, &candidateDoc)
 
 			if errCandidateDocumentRows != nil {
@@ -1219,10 +1229,46 @@ func AdminListApplyJob(branchId string) (map[string]any, error) {
 				return nil, errors.New(errCandidateDocumentRows.Error())
 			}
 
-			dataCandidateDocument = append(dataCandidateDocument, entities.CandidateDocument{
+			label := getTypeLabel(candidateDoc.Type)
+			groupedCandidateDocuments[label] = append(groupedCandidateDocuments[label], entities.CandidateDocument{
 				Document: candidateDoc.Document,
+				Type:     candidateDoc.Type,
 				Path:     candidateDoc.Path,
 			})
+		}
+
+		queryAdditionalDoc := `SELECT path, type
+		FROM user_document_additionals WHERE user_id = ?`
+
+		rowsAdditionalDoc, errAdditionalDoc := db.Debug().Raw(queryAdditionalDoc, job.UserIdCandidate).Rows()
+
+		if errAdditionalDoc != nil {
+			helper.Logger("error", "In Server: "+errAdditionalDoc.Error())
+		}
+		defer rowsAdditionalDoc.Close()
+
+		hasMedicalLicense := false
+
+		for rowsAdditionalDoc.Next() {
+			var additionalDoc entities.AdditionalDoc
+			errScan := db.ScanRows(rowsAdditionalDoc, &additionalDoc)
+			if errScan != nil {
+				helper.Logger("error", "In Server: "+errScan.Error())
+				return nil, errors.New(errScan.Error())
+			}
+
+			if additionalDoc.Type == "medical-license" && !hasMedicalLicense {
+				groupedCandidateDocuments["regulation"] = append(
+					groupedCandidateDocuments["regulation"],
+					entities.CandidateDocument{
+						Document: "Medical License",
+						Type:     "regulation",
+						Path:     additionalDoc.Path,
+					},
+				)
+
+				hasMedicalLicense = true
+			}
 		}
 
 		// End Candidate Document
@@ -1264,29 +1310,29 @@ func AdminListApplyJob(branchId string) (map[string]any, error) {
 
 		// Additionaldoc
 
-		dataAdditionalDoc := make([]entities.AdditionalDoc, 0)
+		dataAddDoc := make([]entities.AdditionalDoc, 0)
 
-		queryAdditionalDoc := `SELECT path, type  
-		FROM user_document_additionals WHERE user_id = ?`
+		queryAddDoc := `SELECT path, type
+		FROM user_document_additionals WHERE user_id = ? AND (type = ? OR type = ?)`
 
-		rowsAdditionalDoc, errAdditionalDoc := db.Debug().Raw(queryAdditionalDoc, job.UserIdCandidate).Rows()
+		rowsAddDoc, errAddDoc := db.Debug().Raw(queryAddDoc, job.UserIdCandidate, "introduction-video", "introduction-photo").Rows()
 
-		if errAdditionalDoc != nil {
-			helper.Logger("error", "In Server: "+errAdditionalDoc.Error())
+		if errAddDoc != nil {
+			helper.Logger("error", "In Server: "+errAddDoc.Error())
 		}
-		defer rowsAdditionalDoc.Close()
+		defer rowsAddDoc.Close()
 
-		for rowsAdditionalDoc.Next() {
-			errCandidateEducationRows := db.ScanRows(rowsAdditionalDoc, &additionalDoc)
+		for rowsAddDoc.Next() {
+			errAddDoc := db.ScanRows(rowsAddDoc, &addDoc)
 
-			if errCandidateEducationRows != nil {
-				helper.Logger("error", "In Server: "+errCandidateEducationRows.Error())
-				return nil, errors.New(errCandidateEducationRows.Error())
+			if errAddDoc != nil {
+				helper.Logger("error", "In Server: "+errAddDoc.Error())
+				return nil, errors.New(errAddDoc.Error())
 			}
 
-			dataAdditionalDoc = append(dataAdditionalDoc, entities.AdditionalDoc{
-				Path: additionalDoc.Path,
-				Type: additionalDoc.Type,
+			dataAddDoc = append(dataAddDoc, entities.AdditionalDoc{
+				Path: addDoc.Path,
+				Type: addDoc.Type,
 			})
 		}
 
@@ -1311,14 +1357,14 @@ func AdminListApplyJob(branchId string) (map[string]any, error) {
 				Avatar:            job.UserAvatarCandidate,
 				Name:              job.UserNameCandidate,
 				Phone:             job.UserPhoneCandidate,
-				AdditionalDoc:     dataAdditionalDoc,
 				CandidateExercise: dataCandidateExercise,
 				CandidateBiodata:  dataCandidateBiodata,
 				CandidateLanguage: dataCandidateLanguage,
 				CandidateWork:     dataCandidateWork,
 				CandidatePlace:    dataCandidatePlace,
-				CandidateDoc:      dataCandidateDocument,
 				CandidateEdu:      dataCandidateEducation,
+				AdditionalDoc:     dataAddDoc,
+				Document:          groupedCandidateDocuments,
 			},
 			Status: entities.JobStatus{
 				Id:   job.JobStatusId,

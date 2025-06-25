@@ -357,19 +357,20 @@ type AdminBranch struct {
 }
 
 type Candidate struct {
-	Id                string               `json:"id"`
-	Avatar            string               `json:"avatar"`
-	Email             string               `json:"email"`
-	Name              string               `json:"name"`
-	Phone             string               `json:"phone"`
-	CandidateExercise []CandidateExercise  `json:"exercises"`
-	CandidateBiodata  []CandidateBiodata   `json:"biodatas"`
-	CandidateLanguage []CandidateLanguage  `json:"languages"`
-	CandidateWork     []CandidateWork      `json:"works"`
-	CandidatePlace    []CandidatePlace     `json:"places"`
-	CandidateEdu      []CandidateEducation `json:"educations"`
-	CandidateDoc      []CandidateDocument  `json:"documents"`
-	AdditionalDoc     []AdditionalDoc      `json:"additional_doc"`
+	Id                string                         `json:"id"`
+	Avatar            string                         `json:"avatar"`
+	Email             string                         `json:"email"`
+	Name              string                         `json:"name"`
+	Phone             string                         `json:"phone"`
+	CandidateExercise []CandidateExercise            `json:"exercises"`
+	CandidateBiodata  []CandidateBiodata             `json:"biodatas"`
+	CandidateLanguage []CandidateLanguage            `json:"languages"`
+	CandidateWork     []CandidateWork                `json:"works"`
+	CandidatePlace    []CandidatePlace               `json:"places"`
+	CandidateEdu      []CandidateEducation           `json:"educations"`
+	// CandidateDoc      []CandidateDocument            `json:"documents"`
+	AdditionalDoc     []AdditionalDoc                `json:"introductions"`
+	Document          map[string][]CandidateDocument `json:"document"`
 }
 
 type AdditionalDoc struct {
@@ -430,6 +431,7 @@ type CandidatePlace struct {
 
 type CandidateDocument struct {
 	Document string `json:"document"`
+	Type     string `json:"type"`
 	Path     string `json:"path"`
 }
 
