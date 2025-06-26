@@ -54,7 +54,7 @@ func CandidatePassesList() (map[string]any, error) {
 		WHERE aj.status = ?
 		ORDER BY aj.created_at DESC
 	`
-	rows, err := db.Debug().Raw(query, "3").Rows()
+	rows, err := db.Debug().Raw(query, "11").Rows()
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
