@@ -1,0 +1,1 @@
+[ERROR]: 2025-06-26 14:46:14 - In Server: Error 1452: Cannot add or update a child row: a foreign key constraint fails (`tjl`.`inboxes`, CONSTRAINT `inboxes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE)
