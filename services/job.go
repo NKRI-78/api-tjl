@@ -792,7 +792,7 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 		// Insert Inbox
 		queryInbox := `INSERT INTO inboxes (uid, field1, field2, user_id, type) VALUES (?, ?, ?, ?, ?)`
 
-		errInbox := db.Debug().Exec(queryInbox, uuid.NewV4().String(), uaj.Content, uaj.ApplyJobId, uaj.UserId, "departure").Error
+		errInbox := db.Debug().Exec(queryInbox, uuid.NewV4().String(), uaj.Content, uaj.ApplyJobId, dataQuery.UserId, "departure").Error
 
 		if errInbox != nil {
 			helper.Logger("error", "In Server: "+errInbox.Error())
