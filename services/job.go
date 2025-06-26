@@ -2135,73 +2135,72 @@ func JobCategoryStore(j *models.JobCategoryStore) (map[string]any, error) {
 }
 
 func CandidatePassesForm(dp *entities.DepartureForm) (map[string]any, error) {
-	// var dataUserFcm entities.InitFcm
+	var dataUserFcm entities.InitFcm
 
 	// Insert Departure
-	// queryDepartures := `INSERT INTO departures (content) VALUES (?)`
+	queryDepartures := `INSERT INTO departures (content) VALUES (?)`
 
-	// resultDepartures, _ := db.DB().Exec(queryDepartures, dp.Content)
+	resultDepartures, _ := db.DB().Exec(queryDepartures, dp.Content)
 
-	// lastID, errDepartures := resultDepartures.LastInsertId()
-	// if errDepartures != nil {
-	// 	helper.Logger("error", "In Server: "+errDepartures.Error())
-	// 	return nil, errors.New(errDepartures.Error())
-	// }
+	lastID, errDepartures := resultDepartures.LastInsertId()
+	if errDepartures != nil {
+		helper.Logger("error", "In Server: "+errDepartures.Error())
+		return nil, errors.New(errDepartures.Error())
+	}
 
 	// Insert Candidate Passes
-	// queryCandidatePasses := `INSERT INTO candidate_passes (departure_id, apply_job_id, user_candidate_id) VALUES (?, ?, ?)`
+	queryCandidatePasses := `INSERT INTO candidate_passes (departure_id, apply_job_id, user_candidate_id) VALUES (?, ?, ?)`
 
-	// errCandidatePasses := db.Debug().Exec(queryCandidatePasses, lastID, dp.ApplyJobId, dp.UserCandidateId).Error
+	errCandidatePasses := db.Debug().Exec(queryCandidatePasses, lastID, dp.ApplyJobId, dp.UserCandidateId).Error
 
-	// if errCandidatePasses != nil {
-	// 	helper.Logger("error", "In Server: "+errCandidatePasses.Error())
-	// 	return nil, errors.New(errCandidatePasses.Error())
-	// }
+	if errCandidatePasses != nil {
+		helper.Logger("error", "In Server: "+errCandidatePasses.Error())
+		return nil, errors.New(errCandidatePasses.Error())
+	}
 
 	// Insert Inbox
-	// queryInbox := `INSERT INTO inboxes (uid, field1, field2, user_id, type) VALUES (?, ?, ?, ?, ?)`
+	queryInbox := `INSERT INTO inboxes (uid, field1, field2, user_id, type) VALUES (?, ?, ?, ?, ?)`
 
-	// errInbox := db.Debug().Exec(queryInbox, uuid.NewV4().String(), dp.Content, dp.ApplyJobId, dp.UserCandidateId, "departure").Error
+	errInbox := db.Debug().Exec(queryInbox, uuid.NewV4().String(), dp.Content, dp.ApplyJobId, dp.UserCandidateId, "departure").Error
 
-	// if errInbox != nil {
-	// 	helper.Logger("error", "In Server: "+errInbox.Error())
-	// 	return nil, errors.New(errInbox.Error())
-	// }
+	if errInbox != nil {
+		helper.Logger("error", "In Server: "+errInbox.Error())
+		return nil, errors.New(errInbox.Error())
+	}
 
 	// Update Apply Jobs
-	// queryUpdateApplyJobs := `UPDATE apply_jobs SET is_finish = ? WHERE uid = ?`
-	// errUpdateApplyJobs := db.Debug().Exec(queryUpdateApplyJobs, 1, dp.ApplyJobId).Error
-	// if errUpdateApplyJobs != nil {
-	// 	helper.Logger("error", "In Server: "+errUpdateApplyJobs.Error())
-	// 	return nil, errors.New(errUpdateApplyJobs.Error())
-	// }
+	queryUpdateApplyJobs := `UPDATE apply_jobs SET is_finish = ? WHERE uid = ?`
+	errUpdateApplyJobs := db.Debug().Exec(queryUpdateApplyJobs, 1, dp.ApplyJobId).Error
+	if errUpdateApplyJobs != nil {
+		helper.Logger("error", "In Server: "+errUpdateApplyJobs.Error())
+		return nil, errors.New(errUpdateApplyJobs.Error())
+	}
 
 	// Fcm
-	// queryUserFcm := `SELECT f.token, p.fullname FROM fcms f
-	// INNER JOIN profiles p ON p.user_id = f.user_id
-	// WHERE f.user_id = ?`
+	queryUserFcm := `SELECT f.token, p.fullname FROM fcms f
+	INNER JOIN profiles p ON p.user_id = f.user_id
+	WHERE f.user_id = ?`
 
-	// rowUserFcm := db.Debug().Raw(queryUserFcm, dp.UserCandidateId).Row()
+	rowUserFcm := db.Debug().Raw(queryUserFcm, dp.UserCandidateId).Row()
 
-	// errUserFcmRow := rowUserFcm.Scan(&dataUserFcm.Token, &dataUserFcm.Fullname)
+	errUserFcmRow := rowUserFcm.Scan(&dataUserFcm.Token, &dataUserFcm.Fullname)
 
-	// if errUserFcmRow != nil {
-	// 	if errors.Is(errUserFcmRow, sql.ErrNoRows) {
-	// 		helper.Logger("info", "No FCM data found for user")
-	// 	}
+	if errUserFcmRow != nil {
+		if errors.Is(errUserFcmRow, sql.ErrNoRows) {
+			helper.Logger("info", "No FCM data found for user")
+		}
 
-	// 	helper.Logger("error", "In Server: "+errUserFcmRow.Error())
-	// }
+		helper.Logger("error", "In Server: "+errUserFcmRow.Error())
+	}
 
-	// helper.SendFcm("Jadwal Keberangkatan", dataUserFcm.Fullname, dataUserFcm.Token, "notifications", "-")
+	helper.SendFcm("Jadwal Keberangkatan", dataUserFcm.Fullname, dataUserFcm.Token, "notifications", "-")
 
-	// return map[string]any{
-	// 	"content":           dp.Content,
-	// 	"departure_id":      lastID,
-	// 	"apply_job_id":      dp.ApplyJobId,
-	// 	"user_candidate_id": dp.UserCandidateId,
-	// }, nil
-	return map[string]any{}, nil
+	return map[string]any{
+		"content":           dp.Content,
+		"departure_id":      lastID,
+		"apply_job_id":      dp.ApplyJobId,
+		"user_candidate_id": dp.UserCandidateId,
+	}, nil
 }
 
 func JobCategoryUpdate(j *models.JobCategoryUpdate) (map[string]any, error) {
