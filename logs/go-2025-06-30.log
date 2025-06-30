@@ -1,0 +1,16 @@
+[INFO]: 2025-06-30 13:21:18 - Fetch Candidate Departure success
+[INFO]: 2025-06-30 13:21:40 - View PDF Departure success
+[INFO]: 2025-06-30 13:21:48 - View PDF Departure success
+[INFO]: 2025-06-30 13:21:59 - View PDF Departure success
+[INFO]: 2025-06-30 13:23:43 - View PDF Departure success
+[INFO]: 2025-06-30 13:23:44 - View PDF Departure success
+[INFO]: 2025-06-30 13:25:14 - View PDF Departure success
+[INFO]: 2025-06-30 13:25:18 - View PDF Departure success
+[INFO]: 2025-06-30 13:25:38 - View PDF Departure success
+[INFO]: 2025-06-30 13:26:15 - View PDF Departure success
+[INFO]: 2025-06-30 13:26:53 - View PDF Departure success
+[INFO]: 2025-06-30 13:27:04 - Fetch Candidate Departure success
+[INFO]: 2025-06-30 13:29:40 - View PDF Departure success
+[ERROR]: 2025-06-30 13:31:29 - In Server (count query): Error 1054: Unknown column 'apply_job_id' in 'where clause'
+[INFO]: 2025-06-30 13:31:53 - Fetch Candidate Passes List success
+[INFO]: 2025-06-30 13:34:42 - Fetch Candidate Passes List success
