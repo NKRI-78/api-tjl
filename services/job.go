@@ -921,6 +921,10 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 		helper.SendEmail(dataUserFcm.Email, "TJL", status, uaj.Content, "apply-job-offline")
 	}
 
+	if uaj.Status == 7 {
+		helper.SendEmail(dataUserFcm.Email, "TJL", status, uaj.Content, "tjl-skck")
+	}
+
 	queryInsertInbox := `INSERT INTO inboxes (uid, title, caption, user_id, type) VALUES (?, ?, ?, ?, ?)`
 
 	errInsertInbox := db.Debug().Exec(queryInsertInbox, uuid.NewV4().String(), status, uaj.Content, uaj.UserId, "broadcast").Error
