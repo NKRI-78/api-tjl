@@ -12,6 +12,8 @@ import (
 	helper "superapps/helpers"
 	models "superapps/models"
 
+	"slices"
+
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -67,7 +69,7 @@ func CandidatePassesList() (map[string]any, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		var dataQuery entities.InfoApplyJobQuery // ✅ struct fresh tiap loop
+		var dataQuery entities.InfoApplyJobQuery
 
 		if err := db.ScanRows(rows, &dataQuery); err != nil {
 			helper.Logger("error", "In Server (scan main row): "+err.Error())
@@ -103,7 +105,7 @@ func CandidatePassesList() (map[string]any, error) {
 		defer rowsCandidateDocument.Close()
 
 		for rowsCandidateDocument.Next() {
-			var candidateDoc entities.CandidateDocumentQuery // ✅ fresh tiap loop
+			var candidateDoc entities.CandidateDocumentQuery
 			if err := db.ScanRows(rowsCandidateDocument, &candidateDoc); err != nil {
 				helper.Logger("error", "In Server (scan candidate doc): "+err.Error())
 				return nil, err
@@ -115,7 +117,6 @@ func CandidatePassesList() (map[string]any, error) {
 		}
 		docFilled := len(dataCandidateDocument) > 0
 
-		// Append result
 		data = append(data, entities.ResultCandidateInfoApplyJob{
 			Id:                  dataQuery.ApplyJobId,
 			Status:              dataQuery.Status,
@@ -123,7 +124,7 @@ func CandidatePassesList() (map[string]any, error) {
 			FormFilled:          formFilled,
 			DocFilled:           docFilled,
 			InvitationOffline:   helper.DefaultIfEmpty(dataQuery.InvitationOffline, "-"),
-			InvitationDeparture: helper.DefaultIfEmpty(dataQuery.InvitationDeparture, "-"), // ✅ safe
+			InvitationDeparture: helper.DefaultIfEmpty(dataQuery.InvitationDeparture, "-"),
 			Job: entities.JobApply{
 				JobTitle:    dataQuery.JobTitle,
 				JobCategory: dataQuery.JobCategory,
@@ -713,6 +714,23 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 		return nil, errors.New("data not found")
 	}
 
+	queryUserFcm := `SELECT u.email, f.token, p.fullname FROM fcms f
+		INNER JOIN profiles p ON p.user_id = f.user_id
+		INNER JOIN users u ON u.uid = f.user_id
+		WHERE f.user_id = ?`
+
+	rowUserFcm := db.Debug().Raw(queryUserFcm, dataQuery.UserId).Row()
+
+	errUserFcmRow := rowUserFcm.Scan(&dataUserFcm.Email, &dataUserFcm.Token, &dataUserFcm.Fullname)
+
+	if errUserFcmRow != nil {
+		if errors.Is(errUserFcmRow, sql.ErrNoRows) {
+			helper.Logger("info", "No FCM data found for user")
+		}
+
+		helper.Logger("error", "In Server: "+errUserFcmRow.Error())
+	}
+
 	var status string
 	var isFinish int64 = 0
 
@@ -751,30 +769,28 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 	}
 
 	// Validasi apakah target status valid dari status saat ini
-	validNext := false
-	for _, next := range validNextStatuses[dataQuery.Status] {
-		if uaj.Status == next {
-			validNext = true
-			break
-		}
-	}
+	validNext := slices.Contains(validNextStatuses[dataQuery.Status], uaj.Status)
 
 	if !validNext {
 		helper.Logger("error", fmt.Sprintf("invalid status transition: from %d to %d", dataQuery.Status, uaj.Status))
 		return nil, errors.New("invalid status transition")
 	}
 
-	// Set nama status
 	status = statusNames[uaj.Status]
 
-	// Tandai proses selesai hanya jika DECLINE (4) atau DONE (11)
+	// DECLINE (4) atau DONE (11)
 	if uaj.Status == 4 || uaj.Status == 11 {
 		isFinish = 1
 	}
 
+	if uaj.Status == 7 {
+		fmt.Println("kirim email")
+		helper.SendEmail(dataUserFcm.Email, "TJL", status, uaj.Content, "tjl-skck")
+	}
+
+	// DONE (11)
 	if uaj.Status == 11 {
 
-		// Departures
 		queryDepartures := `INSERT INTO departures (content) VALUES (?)`
 
 		resultDepartures, _ := db.DB().Exec(queryDepartures, uaj.Content)
@@ -785,7 +801,6 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 			return nil, errors.New(errDepartures.Error())
 		}
 
-		// Candidate Passes
 		queryCandidatePasses := `INSERT INTO candidate_passes (departure_id, apply_job_id, user_candidate_id) VALUES (?, ?, ?)`
 
 		errCandidatePasses := db.Debug().Exec(queryCandidatePasses, lastID, uaj.ApplyJobId, dataQuery.UserId).Error
@@ -795,72 +810,8 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 			return nil, errors.New(errCandidatePasses.Error())
 		}
 
-		// Insert Inbox
-		queryInbox := `INSERT INTO inboxes (uid, field1, field2, user_id, type) VALUES (?, ?, ?, ?, ?)`
-
-		errInbox := db.Debug().Exec(queryInbox, uuid.NewV4().String(), uaj.Content, uaj.ApplyJobId, dataQuery.UserId, "departure").Error
-
-		if errInbox != nil {
-			helper.Logger("error", "In Server: "+errInbox.Error())
-			return nil, errors.New(errInbox.Error())
-		}
-
-		// Fcm
-		queryUserFcm := `SELECT f.token, p.fullname FROM fcms f
-		INNER JOIN profiles p ON p.user_id = f.user_id
-		WHERE f.user_id = ?`
-
-		rowUserFcm := db.Debug().Raw(queryUserFcm, dataQuery.UserId).Row()
-
-		errUserFcmRow := rowUserFcm.Scan(&dataUserFcm.Token, &dataUserFcm.Fullname)
-
-		if errUserFcmRow != nil {
-			if errors.Is(errUserFcmRow, sql.ErrNoRows) {
-				helper.Logger("info", "No FCM data found for user")
-			}
-
-			helper.Logger("error", "In Server: "+errUserFcmRow.Error())
-		}
-
 		helper.SendFcm("Jadwal Keberangkatan", dataUserFcm.Fullname, dataUserFcm.Token, "notifications", "-")
 	}
-
-	// switch dataQuery.Status {
-	// case 1:
-	// 	if uaj.Status != 2 {
-	// 		helper.Logger("error", "status IN_PROGRESS can only move to INTERVIEW")
-	// 		return nil, errors.New("status IN_PROGRESS can only move to INTERVIEW")
-	// 	}
-	// 	status = "INTERVIEW"
-	// case 2:
-	// 	if uaj.Status != 3 && uaj.Status != 4 {
-	// 		helper.Logger("error", "status INTERVIEW can only move to ACCEPTED or DECLINED")
-	// 		return nil, errors.New("status INTERVIEW can only move to ACCEPTED or DECLINED")
-	// 	}
-	// 	if uaj.Status == 3 {
-	// 		status = "ACCEPTED"
-	// 	} else {
-	// 		status = "DECLINED"
-	// 		isFinish = 1
-	// 	}
-	// case 3:
-	// 	helper.Logger("error", "status [ACCEPTED] already passed")
-	// 	return nil, errors.New("status [ACCEPTED] already passed")
-	// case 4:
-	// 	helper.Logger("error", "status [DECLINED] already passed")
-	// 	return nil, errors.New("status [DECLINED] already passed")
-	// default:
-	// 	helper.Logger("error", "unknown status")
-	// 	return nil, errors.New("unknown status")
-	// }
-
-	queryUserFcm := `SELECT f.token, p.fullname FROM fcms f 
-	INNER JOIN profiles p ON p.user_id = f.user_id 
-	WHERE f.user_id = ?`
-
-	rowUserFcm := db.Debug().Raw(queryUserFcm, dataQuery.UserId).Row()
-
-	errUserFcmRow := rowUserFcm.Scan(&dataUserFcm.Token, &dataUserFcm.Fullname)
 
 	if errUserFcmRow != nil {
 		if errors.Is(errUserFcmRow, sql.ErrNoRows) {
@@ -927,13 +878,9 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 		helper.SendEmail(dataUserFcm.Email, "TJL", status, uaj.Content, "apply-job-offline")
 	}
 
-	if uaj.Status == 7 {
-		helper.SendEmail(dataUserFcm.Email, "TJL", status, uaj.Content, "tjl-skck")
-	}
+	queryInsertInbox := `INSERT INTO inboxes (uid, title, caption, user_id, field2, type) VALUES (?, ?, ?, ?, ?, ?)`
 
-	queryInsertInbox := `INSERT INTO inboxes (uid, title, caption, user_id, type) VALUES (?, ?, ?, ?, ?)`
-
-	errInsertInbox := db.Debug().Exec(queryInsertInbox, uuid.NewV4().String(), status, uaj.Content, uaj.UserId, "broadcast").Error
+	errInsertInbox := db.Debug().Exec(queryInsertInbox, uuid.NewV4().String(), status, uaj.Content, uaj.UserId, uaj.ApplyJobId, "broadcast").Error
 
 	if errInsertInbox != nil {
 		helper.Logger("error", "In Server: "+errInsertInbox.Error())
