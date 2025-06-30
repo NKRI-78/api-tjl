@@ -69,8 +69,16 @@ func CandidatePassesList() (map[string]any, error) {
 			return nil, errors.New(errJobRows.Error())
 		}
 
+		// var count int
+		// row := db.Raw(`SELECT COUNT(*) FROM candidate_passes WHERE apply_job_id = ?`, dataQuery.ApplyJobId).Row()
+		// errCount := row.Scan(&count)
+		// if errCount != nil {
+		// 	helper.Logger("error", "In Server (count query): "+errCount.Error())
+		// 	return nil, errors.New(errCount.Error())
+		// }
+
 		var count int
-		row := db.Raw(`SELECT COUNT(*) FROM candidate_passes WHERE apply_job_id = ?`, dataQuery.ApplyJobId).Row()
+		row := db.Raw(`SELECT COUNT(*) FROM inboxes WHERE field2 = ? AND user_id = ?`, dataQuery.ApplyJobId, dataQuery.ApplyUserId).Row()
 		errCount := row.Scan(&count)
 		if errCount != nil {
 			helper.Logger("error", "In Server (count query): "+errCount.Error())
@@ -2181,7 +2189,7 @@ func CandidatePassesForm(dp *entities.DepartureForm) (map[string]any, error) {
 	}
 
 	// Fcm
-	queryUserFcm := `SELECT f.token, p.fullname FROM fcms f
+	queryUserFcm := `SELECT u.email, f.token, p.fullname FROM fcms f
 	INNER JOIN profiles p ON p.user_id = f.user_id
 	WHERE f.user_id = ?`
 
@@ -2196,6 +2204,8 @@ func CandidatePassesForm(dp *entities.DepartureForm) (map[string]any, error) {
 
 		helper.Logger("error", "In Server: "+errUserFcmRow.Error())
 	}
+
+	helper.SendEmail(dataUserFcm.Email, "TJL", "Jadwal Keberangkatan", dp.Content, "tjl-invitation")
 
 	helper.SendFcm("Jadwal Keberangkatan", dataUserFcm.Fullname, dataUserFcm.Token, "notifications", "-")
 
