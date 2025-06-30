@@ -10,6 +10,8 @@ import (
 
 func AdminListApplyJob(w http.ResponseWriter, r *http.Request) {
 
+	Filter := r.URL.Query().Get("filter")
+
 	tokenHeader := r.Header.Get("Authorization")
 
 	token := helper.DecodeJwt(tokenHeader)
@@ -18,7 +20,7 @@ func AdminListApplyJob(w http.ResponseWriter, r *http.Request) {
 
 	BranchId, _ := claims["branch_id"].(string)
 
-	result, err := services.AdminListApplyJob(BranchId)
+	result, err := services.AdminListApplyJob(BranchId, Filter)
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]any{})
