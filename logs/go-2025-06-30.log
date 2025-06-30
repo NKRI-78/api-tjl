@@ -35,3 +35,30 @@
 [INFO]: 2025-06-30 13:59:15 - Fetch Candidate Passes List success
 [INFO]: 2025-06-30 14:02:36 - Fetch Candidate Passes List success
 [INFO]: 2025-06-30 14:02:41 - Fetch Candidate Passes List success
+[INFO]: 2025-06-30 14:25:16 - Fetch Candidate Passes List success
+[ERROR]: 2025-06-30 14:43:42 - In Server: Error 1054: Unknown column 'u.email' in 'field list'
+[INFO]: 2025-06-30 14:43:43 - Send Email Success
+[ERROR]: 2025-06-30 14:43:43 - In Server: Error 1054: Unknown column 'u.email' in 'field list'
+[ERROR]: 2025-06-30 14:43:44 - In Server: Error 1452: Cannot add or update a child row: a foreign key constraint fails (`tjl`.`inboxes`, CONSTRAINT `inboxes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE)
+[INFO]: 2025-06-30 14:43:44 - Update Apply Job success
+[ERROR]: 2025-06-30 14:45:05 - In Server: Error 1054: Unknown column 'u.email' in 'field list'
+[ERROR]: 2025-06-30 14:45:05 - invalid status transition: from 7 to 7
+[ERROR]: 2025-06-30 14:46:21 - In Server: Error 1054: Unknown column 'u.email' in 'field list'
+[INFO]: 2025-06-30 14:46:22 - Send Email Success
+[ERROR]: 2025-06-30 14:46:22 - In Server: Error 1054: Unknown column 'u.email' in 'field list'
+[ERROR]: 2025-06-30 14:46:22 - In Server: Error 1452: Cannot add or update a child row: a foreign key constraint fails (`tjl`.`inboxes`, CONSTRAINT `inboxes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE)
+[INFO]: 2025-06-30 14:46:22 - Update Apply Job success
+[ERROR]: 2025-06-30 14:48:42 - In Server: Error 1054: Unknown column 'u.email' in 'field list'
+[INFO]: 2025-06-30 14:48:43 - Send Email Success
+[ERROR]: 2025-06-30 14:48:43 - In Server: Error 1054: Unknown column 'u.email' in 'field list'
+[INFO]: 2025-06-30 14:48:44 - Update Apply Job success
+[ERROR]: 2025-06-30 14:50:27 - In Server: Error 1054: Unknown column 'u.email' in 'field list'
+[INFO]: 2025-06-30 14:50:29 - Send Email Success
+[ERROR]: 2025-06-30 14:50:29 - In Server: Error 1054: Unknown column 'u.email' in 'field list'
+[INFO]: 2025-06-30 14:50:29 - Update Apply Job success
+[ERROR]: 2025-06-30 14:54:18 - In Server: Error 1054: Unknown column 'u.email' in 'field list'
+[INFO]: 2025-06-30 14:54:19 - Send Email Success
+[ERROR]: 2025-06-30 14:54:19 - In Server: Error 1054: Unknown column 'u.email' in 'field list'
+[INFO]: 2025-06-30 14:54:19 - Update Apply Job success
+[INFO]: 2025-06-30 14:56:15 - Send Email Success
+[INFO]: 2025-06-30 14:56:15 - Update Apply Job success
