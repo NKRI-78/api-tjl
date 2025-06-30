@@ -16,108 +16,106 @@ import (
 )
 
 func CandidatePassesList() (map[string]any, error) {
-
-	var dataQuery entities.InfoApplyJobQuery
 	var data []entities.ResultCandidateInfoApplyJob
 
-	var candidateDoc entities.CandidateDocumentQuery
-
-	query := `SELECT paa.user_id AS apply_user_id, paa.fullname AS apply_user_name, 
-		pac.user_id AS confirm_user_id, pac.fullname AS confirm_user_name,
-		u.phone AS apply_user_phone,
-		u.email AS apply_user_email,
-		ajo.content AS invitation_offline,
-		drs.content AS invitation_departure,
-		js.name AS status, aj.uid AS apply_job_id,
-		j.title AS job_title,
-		jc.name AS job_category,
-		p.avatar AS job_avatar,
-		p.fullname AS job_author,
-		c.uid AS company_id,
-		c.logo AS company_logo,
-		c.name AS company_name,
-		pl.name AS country_name,
-		aj.created_at
-		FROM apply_jobs aj 
-		INNER JOIN jobs j ON j.uid = aj.job_id
-		INNER JOIN companies c ON c.uid = j.company_id 
-		INNER JOIN places pl ON pl.id = c.place_id
-		INNER JOIN job_categories jc ON jc.uid = j.cat_id
-		INNER JOIN profiles p ON p.user_id = j.user_id
-		INNER JOIN job_statuses js ON js.id = aj.status
-		INNER JOIN profiles paa ON paa.user_id = aj.user_id
-		INNER JOIN users u ON u.uid = aj.user_id
-		LEFT JOIN candidate_passes cp ON cp.apply_job_id = aj.uid
-		LEFT JOIN apply_job_offlines ajo ON ajo.apply_job_id = aj.uid
-		LEFT JOIN departures drs ON drs.id = cp.departure_id
-		LEFT JOIN profiles pac ON pac.user_id = aj.user_confirm_id 
+	query := `
+		SELECT 
+			paa.user_id AS apply_user_id,
+			paa.fullname AS apply_user_name, 
+			pac.user_id AS confirm_user_id,
+			pac.fullname AS confirm_user_name,
+			u.phone AS apply_user_phone,
+			u.email AS apply_user_email,
+			ajo.content AS invitation_offline,
+			ibs.field1 AS invitation_departure,
+			js.name AS status,
+			aj.uid AS apply_job_id,
+			j.title AS job_title,
+			jc.name AS job_category,
+			p.avatar AS job_avatar,
+			p.fullname AS job_author,
+			c.uid AS company_id,
+			c.logo AS company_logo,
+			c.name AS company_name,
+			pl.name AS country_name,
+			aj.created_at
+		FROM apply_jobs aj
+			INNER JOIN jobs j ON j.uid = aj.job_id
+			INNER JOIN companies c ON c.uid = j.company_id 
+			INNER JOIN places pl ON pl.id = c.place_id
+			INNER JOIN job_categories jc ON jc.uid = j.cat_id
+			INNER JOIN profiles p ON p.user_id = j.user_id
+			INNER JOIN job_statuses js ON js.id = aj.status
+			INNER JOIN profiles paa ON paa.user_id = aj.user_id
+			INNER JOIN users u ON u.uid = aj.user_id
+			LEFT JOIN apply_job_offlines ajo ON ajo.apply_job_id = aj.uid
+			LEFT JOIN (
+				SELECT field2 AS apply_job_id, MAX(field1) AS field1
+				FROM inboxes
+				GROUP BY field2
+			) ibs ON ibs.apply_job_id = aj.uid
+			LEFT JOIN profiles pac ON pac.user_id = aj.user_confirm_id 
 		WHERE aj.status = ?
 		ORDER BY aj.created_at DESC
 	`
-	rows, err := db.Debug().Raw(query, "11").Rows()
 
+	rows, err := db.Debug().Raw(query, "11").Rows()
 	if err != nil {
-		helper.Logger("error", "In Server: "+err.Error())
+		helper.Logger("error", "In Server (main query): "+err.Error())
+		return nil, err
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		errJobRows := db.ScanRows(rows, &dataQuery)
+		var dataQuery entities.InfoApplyJobQuery // ✅ struct fresh tiap loop
 
-		if errJobRows != nil {
-			helper.Logger("error", "In Server: "+errJobRows.Error())
-			return nil, errors.New(errJobRows.Error())
+		if err := db.ScanRows(rows, &dataQuery); err != nil {
+			helper.Logger("error", "In Server (scan main row): "+err.Error())
+			return nil, err
 		}
 
-		// var count int
-		// row := db.Raw(`SELECT COUNT(*) FROM candidate_passes WHERE apply_job_id = ?`, dataQuery.ApplyJobId).Row()
-		// errCount := row.Scan(&count)
-		// if errCount != nil {
-		// 	helper.Logger("error", "In Server (count query): "+errCount.Error())
-		// 	return nil, errors.New(errCount.Error())
-		// }
-
+		// Count form filled
 		var count int
-		row := db.Raw(`SELECT COUNT(*) FROM inboxes WHERE field2 = ? AND user_id = ?`, dataQuery.ApplyJobId, dataQuery.ApplyUserId).Row()
-		errCount := row.Scan(&count)
-		if errCount != nil {
-			helper.Logger("error", "In Server (count query): "+errCount.Error())
-			return nil, errors.New(errCount.Error())
+		row := db.Raw(
+			`SELECT COUNT(*) FROM inboxes WHERE field2 = ? AND user_id = ?`,
+			dataQuery.ApplyJobId, dataQuery.ApplyUserId,
+		).Row()
+		if err := row.Scan(&count); err != nil {
+			helper.Logger("error", "In Server (count query): "+err.Error())
+			return nil, err
 		}
-
 		formFilled := count > 0
 
+		// Candidate documents
 		dataCandidateDocument := make([]entities.CandidateDocument, 0)
-
-		queryCandidateDocument := `SELECT d.name AS document, ajd.path
-		FROM documents d
-		INNER JOIN apply_job_documents ajd ON ajd.doc_id = d.id
-		WHERE ajd.apply_job_id = ?
+		queryCandidateDocument := `
+			SELECT d.name AS document, ajd.path
+			FROM documents d
+				INNER JOIN apply_job_documents ajd ON ajd.doc_id = d.id
+			WHERE ajd.apply_job_id = ?
 		`
 
-		rowsCandidateDocument, errCandidateDocument := db.Debug().Raw(queryCandidateDocument, dataQuery.ApplyJobId).Rows()
-
-		if errCandidateDocument != nil {
-			helper.Logger("error", "In Server: "+errCandidateDocument.Error())
+		rowsCandidateDocument, err := db.Debug().Raw(queryCandidateDocument, dataQuery.ApplyJobId).Rows()
+		if err != nil {
+			helper.Logger("error", "In Server (candidate document query): "+err.Error())
+			return nil, err
 		}
 		defer rowsCandidateDocument.Close()
 
 		for rowsCandidateDocument.Next() {
-			errCandidateDocumentRows := db.ScanRows(rowsCandidateDocument, &candidateDoc)
-
-			if errCandidateDocumentRows != nil {
-				helper.Logger("error", "In Server: "+errCandidateDocumentRows.Error())
-				return nil, errors.New(errCandidateDocumentRows.Error())
+			var candidateDoc entities.CandidateDocumentQuery // ✅ fresh tiap loop
+			if err := db.ScanRows(rowsCandidateDocument, &candidateDoc); err != nil {
+				helper.Logger("error", "In Server (scan candidate doc): "+err.Error())
+				return nil, err
 			}
-
 			dataCandidateDocument = append(dataCandidateDocument, entities.CandidateDocument{
 				Document: candidateDoc.Document,
 				Path:     candidateDoc.Path,
 			})
 		}
-
 		docFilled := len(dataCandidateDocument) > 0
 
+		// Append result
 		data = append(data, entities.ResultCandidateInfoApplyJob{
 			Id:                  dataQuery.ApplyJobId,
 			Status:              dataQuery.Status,
@@ -125,7 +123,7 @@ func CandidatePassesList() (map[string]any, error) {
 			FormFilled:          formFilled,
 			DocFilled:           docFilled,
 			InvitationOffline:   helper.DefaultIfEmpty(dataQuery.InvitationOffline, "-"),
-			InvitationDeparture: helper.DefaultIfEmpty(dataQuery.InvitationDeparture, "-"),
+			InvitationDeparture: helper.DefaultIfEmpty(dataQuery.InvitationDeparture, "-"), // ✅ safe
 			Job: entities.JobApply{
 				JobTitle:    dataQuery.JobTitle,
 				JobCategory: dataQuery.JobCategory,
