@@ -27,15 +27,6 @@ import (
 
 // var letterRunes = []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 
-func Contains(s []string, e string) bool {
-	for _, a := range s {
-		if a == e {
-			return true
-		}
-	}
-	return false
-}
-
 func DefaultIfEmpty(value, defaultValue string) string {
 	if value == "" {
 		return defaultValue
@@ -73,6 +64,15 @@ func FormatDate(t time.Time) string {
 	day := days[t.Weekday().String()]
 	month := months[t.Month().String()]
 	return fmt.Sprintf("%s, %02d %s %d %02d:%02d WIB", day, t.Day(), month, t.Year(), t.Hour(), t.Minute())
+}
+
+func contains[T comparable](s []T, val T) bool {
+	for _, v := range s {
+		if v == val {
+			return true
+		}
+	}
+	return false
 }
 
 func SendEmail(to, app, subject, data, Type string) error {

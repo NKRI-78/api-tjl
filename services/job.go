@@ -12,8 +12,6 @@ import (
 	helper "superapps/helpers"
 	models "superapps/models"
 
-	"slices"
-
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -769,7 +767,13 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 	}
 
 	// Validasi apakah target status valid dari status saat ini
-	validNext := slices.Contains(validNextStatuses[dataQuery.Status], uaj.Status)
+	validNext := false
+	for _, next := range validNextStatuses[dataQuery.Status] {
+		if uaj.Status == next {
+			validNext = true
+			break
+		}
+	}
 
 	if !validNext {
 		helper.Logger("error", fmt.Sprintf("invalid status transition: from %d to %d", dataQuery.Status, uaj.Status))
