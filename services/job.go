@@ -8,6 +8,7 @@ import (
 	"math"
 	"os"
 	"strconv"
+	"strings"
 	entities "superapps/entities"
 	helper "superapps/helpers"
 	models "superapps/models"
@@ -814,6 +815,8 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 			return nil, errors.New(errCandidatePasses.Error())
 		}
 
+		helper.SendEmail(dataUserFcm.Email, "TJL", "Jadwal Keberangkatan", uaj.Content, "tjl-departure")
+
 		helper.SendFcm("Jadwal Keberangkatan", dataUserFcm.Fullname, dataUserFcm.Token, "notifications", "-")
 	}
 
@@ -850,7 +853,6 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 
 	if uaj.IsOffline {
 
-		// Insert Job Offline
 		queryInsertApplyJobOffline := `INSERT INTO apply_job_offlines (apply_job_id, content) VALUES (?, ?)`
 
 		errInsertApplyJobOffline := db.Debug().Exec(queryInsertApplyJobOffline, uaj.ApplyJobId, uaj.Content).Error
@@ -877,9 +879,9 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 		}
 		message := fmt.Sprintf("Silahkan periksa Alamat E-mail [%s] Anda untuk info lebih lanjut", dataUserFcm.Email)
 
-		helper.SendFcm(status, message, dataUserFcm.Token, "apply-job-detail", uaj.ApplyJobId)
+		helper.SendEmail(dataUserFcm.Email, "TJL", "Lolos Seleksi", uaj.Content, "tjl-apply-job-offline")
 
-		helper.SendEmail(dataUserFcm.Email, "TJL", status, uaj.Content, "apply-job-offline")
+		helper.SendFcm(status, message, dataUserFcm.Token, "apply-job-detail", uaj.ApplyJobId)
 	}
 
 	queryInsertInbox := `INSERT INTO inboxes (uid, title, caption, user_id, field2, type) VALUES (?, ?, ?, ?, ?, ?)`
@@ -893,12 +895,11 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 	return map[string]any{}, nil
 }
 
-func AdminListApplyJob(branchId string) (map[string]any, error) {
+func AdminListApplyJob(branchId, filter string) (map[string]any, error) {
 
 	var job entities.AdminListApplyJobQuery
 
 	var addDoc entities.AdditionalDoc
-	// var candidateDoc entities.CandidateDocumentQuery
 
 	var candidateExercise entities.CandidateExerciseQuery
 	var candidateBiodata entities.CandidateBiodataQuery
@@ -955,13 +956,26 @@ func AdminListApplyJob(branchId string) (map[string]any, error) {
 	var rows *sql.Rows
 	var err error
 
+	conditions := []string{}
+	args := []any{}
+
 	if branchId != "" {
-		query += " WHERE ub.branch_id = ? ORDER BY aj.created_at DESC"
-		rows, err = db.Debug().Raw(query, branchId).Rows()
-	} else {
-		query += " ORDER BY aj.created_at DESC"
-		rows, err = db.Debug().Raw(query).Rows()
+		conditions = append(conditions, "ub.branch_id = ?")
+		args = append(args, branchId)
 	}
+
+	if filter != "ALL" {
+		conditions = append(conditions, "js.name = ?")
+		args = append(args, filter)
+	}
+
+	if len(conditions) > 0 {
+		query += " WHERE " + strings.Join(conditions, " AND ")
+	}
+
+	query += " ORDER BY aj.created_at DESC"
+
+	rows, err = db.Debug().Raw(query, args...).Rows()
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
