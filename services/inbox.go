@@ -6,18 +6,18 @@ import (
 	helper "superapps/helpers"
 )
 
-func InboxList(userId string) (map[string]any, error) {
+func InboxList(userId, typeP string) (map[string]any, error) {
 	inboxQuery := entities.InboxListQuery{}
 	var data []entities.InboxListResult
 
 	query := `SELECT i.uid AS id, i.title, i.caption, i.is_read, i.field1, i.field2, i.field3, i.field4, i.field5, i.type, i.created_at, p.user_id, p.fullname AS user_fullname, p.avatar AS user_avatar
 		FROM inboxes i 
 		INNER JOIN profiles p ON p.user_id = i.user_id
-		WHERE p.user_id = ?
+		WHERE p.user_id = ? AND i.type = ?
 		ORDER BY i.created_at DESC
 	`
 
-	rows, err := db.Debug().Raw(query, userId).Rows()
+	rows, err := db.Debug().Raw(query, userId, typeP).Rows()
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
