@@ -10,6 +10,8 @@ import (
 
 func InboxList(w http.ResponseWriter, r *http.Request) {
 
+	typeP := r.URL.Query().Get("type")
+
 	tokenHeader := r.Header.Get("Authorization")
 
 	token := helper.DecodeJwt(tokenHeader)
@@ -18,7 +20,7 @@ func InboxList(w http.ResponseWriter, r *http.Request) {
 
 	userId, _ := claims["id"].(string)
 
-	result, err := services.InboxList(userId)
+	result, err := services.InboxList(userId, typeP)
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]any{})
