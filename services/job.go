@@ -1245,9 +1245,9 @@ func AdminListApplyJob(branchId, filter string) (map[string]any, error) {
 
 		queryCandidateDocument := `SELECT d.name AS document, d.type, ajd.path FROM documents d 
 		INNER JOIN user_documents ajd ON ajd.type = d.id 
-		WHERE ajd.apply_job_id = ?`
+		WHERE ajd.user_id = ?`
 
-		rowsCandidateDocument, errCandidateDocument := db.Debug().Raw(queryCandidateDocument, job.Id).Rows()
+		rowsCandidateDocument, errCandidateDocument := db.Debug().Raw(queryCandidateDocument, job.UserIdCandidate).Rows()
 		if errCandidateDocument != nil {
 			helper.Logger("error", "In Server: "+errCandidateDocument.Error())
 		}
