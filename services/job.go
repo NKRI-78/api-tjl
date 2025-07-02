@@ -849,6 +849,11 @@ func UpdateApplyJob(uaj *models.ApplyJob) (map[string]any, error) {
 	}
 
 	title := fmt.Sprintf("Selamat lamaran Anda sudah dalam tahap [%s]", status)
+
+	if status == "DECLINE" {
+		title = fmt.Sprintf("Maaf lamaran Anda telah ditolak [%s]", status)
+	}
+
 	helper.SendFcm(title, dataUserFcm.Fullname, dataUserFcm.Token, "apply-job-detail", uaj.ApplyJobId)
 
 	if uaj.IsOffline {
