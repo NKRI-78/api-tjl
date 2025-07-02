@@ -1244,7 +1244,7 @@ func AdminListApplyJob(branchId, filter string) (map[string]any, error) {
 		}
 
 		queryCandidateDocument := `SELECT d.name AS document, d.type, ajd.path FROM documents d 
-		INNER JOIN apply_job_documents ajd ON ajd.doc_id = d.id 
+		INNER JOIN user_documents ajd ON ajd.type = d.id 
 		WHERE ajd.apply_job_id = ?`
 
 		rowsCandidateDocument, errCandidateDocument := db.Debug().Raw(queryCandidateDocument, job.Id).Rows()
@@ -1290,7 +1290,7 @@ func AdminListApplyJob(branchId, filter string) (map[string]any, error) {
 				return nil, errors.New(errScan.Error())
 			}
 
-			if additionalDoc.Type == "medical-license" && !hasMedicalLicense {
+			if additionalDoc.Type == "medical-license"  && !hasMedicalLicense {
 				groupedCandidateDocuments["regulation"] = append(
 					groupedCandidateDocuments["regulation"],
 					entities.CandidateDocument{
