@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"net/http"
-	"superapps/entities"
 	helper "superapps/helpers"
 	"superapps/services"
 
@@ -10,32 +9,23 @@ import (
 )
 
 func AdminApplyJobBadges(w http.ResponseWriter, r *http.Request) {
-	Filter := r.URL.Query().Get("filter")
-
-	var dataAdminApplyJobBadges entities.AdminApplyJobBadges
-
 	tokenHeader := r.Header.Get("Authorization")
-
 	token := helper.DecodeJwt(tokenHeader)
-
 	claims, _ := token.Claims.(jwt.MapClaims)
-
 	BranchId, _ := claims["branch_id"].(string)
 
-	result, err := services.AdminApplyJobBadges(BranchId, Filter)
+	result, err := services.AdminApplyJobBadges(BranchId)
 	if err != nil {
 		helper.Response(w, http.StatusBadRequest, true, err.Error(), nil)
 		return
 	}
 
-	total, ok := result["data"].(int)
+	badgeData, ok := result["data"].([]map[string]any)
 	if !ok {
 		helper.Response(w, http.StatusInternalServerError, true, "Invalid result data type", nil)
 		return
 	}
 
-	dataAdminApplyJobBadges.Total = total
-
 	helper.Logger("info", "Admin Apply Job Badges success")
-	helper.Response(w, http.StatusOK, false, "Successfully", dataAdminApplyJobBadges)
+	helper.Response(w, http.StatusOK, false, "Successfully", badgeData)
 }
