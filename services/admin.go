@@ -52,35 +52,55 @@ func AdminCandidatePassesBadges(branchId string) (map[string]any, error) {
 	}, nil
 }
 
-func AdminApplyJobBadges(branchId, status string) (map[string]any, error) {
-	var dataAdminApplyJobBadges entities.AdminApplyJobBadges
-
-	baseQuery := `
-		SELECT COUNT(*) AS total 
-		FROM users u 
-		INNER JOIN apply_jobs aj ON aj.user_id = u.uid
-		INNER JOIN job_statuses js ON js.id  = aj.status 
-		INNER JOIN user_branches ub ON ub.user_id = u.uid
-		INNER JOIN branchs b ON b.id = ub.branch_id
-		WHERE js.name = ?
-	`
-
-	args := []any{status} // Add status first
-
-	if branchId != "" {
-		baseQuery += " AND b.id = ?"
-		args = append(args, branchId)
+func AdminApplyJobBadges(branchId string) (map[string]any, error) {
+	statusSequence := []string{
+		"ON_PROGRESS", "INTERVIEW", "ACCEPTED", "PROGRESS_MCU",
+		"PROGRESS_LINK_SIAPKERJA", "PROGRESS_SKCK", "PROGRESS_VISA",
+		"PROGRESS_TTD", "PROGRESS_OPP", "PROGRESS_DONE", "DECLINED",
 	}
 
-	row := db.Debug().Raw(baseQuery, args...).Row()
-	err := row.Scan(&dataAdminApplyJobBadges.Total)
+	var badgeCounts []struct {
+		Status string
+		Total  int
+	}
+
+	baseQuery := `
+		SELECT js.name AS status, COUNT(*) AS total
+		FROM users u
+		INNER JOIN apply_jobs aj ON aj.user_id = u.uid
+		INNER JOIN job_statuses js ON js.id = aj.status
+		INNER JOIN user_branches ub ON ub.user_id = u.uid
+		INNER JOIN branchs b ON b.id = ub.branch_id
+	`
+
+	var args []any
+	if branchId != "" {
+		baseQuery += " WHERE b.id = ?"
+		args = append(args, branchId)
+	}
+	baseQuery += " GROUP BY js.name"
+
+	err := db.Debug().Raw(baseQuery, args...).Scan(&badgeCounts).Error
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
 		return nil, err
 	}
 
+	countMap := make(map[string]int)
+	for _, row := range badgeCounts {
+		countMap[row.Status] = row.Total
+	}
+
+	var orderedResult []map[string]any
+	for _, status := range statusSequence {
+		orderedResult = append(orderedResult, map[string]any{
+			"status": status,
+			"total":  countMap[status],
+		})
+	}
+
 	return map[string]any{
-		"data": dataAdminApplyJobBadges.Total,
+		"data": orderedResult,
 	}, nil
 }
 
