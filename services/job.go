@@ -1290,7 +1290,7 @@ func AdminListApplyJob(branchId, filter string) (map[string]any, error) {
 				return nil, errors.New(errScan.Error())
 			}
 
-			if additionalDoc.Type == "medical-license"  && !hasMedicalLicense {
+			if additionalDoc.Type == "medical-license" && !hasMedicalLicense {
 				groupedCandidateDocuments["regulation"] = append(
 					groupedCandidateDocuments["regulation"],
 					entities.CandidateDocument{
@@ -1425,6 +1425,522 @@ func AdminListApplyJob(branchId, filter string) (map[string]any, error) {
 			},
 			Created: job.CreatedAt.Format("2006-01-02 15:04:05"),
 		})
+	}
+
+	return map[string]any{
+		"data": dataJob,
+	}, nil
+}
+
+func AdminDetailApplyJob(id string) (map[string]any, error) {
+
+	var job entities.AdminListApplyJobQuery
+
+	var addDoc entities.AdditionalDoc
+
+	var candidateExercise entities.CandidateExerciseQuery
+	var candidateBiodata entities.CandidateBiodataQuery
+	var candidateLanguage entities.CandidateLanguageQuery
+	var candidateWork entities.CandidateWorkQuery
+	var candidatePlace entities.CandidatePlaceQuery
+
+	var candidateEdu entities.CandidateEducationQuery
+
+	var exerciseMedia entities.FormExerciseCertificate
+
+	var jobFavourite []entities.JobFavourite
+
+	var dataJob entities.AdminListApplyJob
+
+	query := `SELECT aj.uid AS id, j.title, j.caption, j.salary,
+	aj.user_id AS user_id_candidate,
+	pc.fullname AS user_name_candidate,
+	pc.avatar AS user_avatar_candidate,
+	upc.email AS user_email_candidate,
+	upc.phone AS user_phone_candidate,
+	jc.uid as cat_id,
+	jc.name AS cat_name, 
+	p.id AS place_id,
+	p.name AS place_name,
+	p.currency AS place_currency,
+	p.kurs AS place_kurs,
+	p.info AS place_info,
+	c.uid AS company_id,
+	c.logo AS company_logo,
+	c.name AS company_name,
+	p.name AS country_name,
+	up.user_id,
+	up.avatar AS user_avatar,
+	up.fullname AS user_name,
+	aj.created_at,
+	js.id AS job_status_id,
+	js.name AS job_status_name,
+	b.id AS branch_id,
+    b.name AS branch_name
+	FROM jobs j
+	INNER JOIN job_categories jc ON jc.uid = j.cat_id
+	INNER JOIN companies c ON c.uid = j.company_id 
+	INNER JOIN apply_jobs aj ON aj.job_id = j.uid
+	INNER JOIN job_statuses js ON js.id = aj.status
+	INNER JOIN places p ON p.id = j.place_id
+	INNER JOIN profiles up ON up.user_id = j.user_id
+	INNER JOIN profiles pc ON pc.user_id = aj.user_id
+	INNER JOIN users upc ON upc.uid = pc.user_id
+	INNER JOIN user_branches ub ON ub.user_id = aj.user_id
+	INNER JOIN branchs b ON b.id  = ub.branch_id
+	WHERE aj.uid = ?
+	`
+
+	var rows *sql.Rows
+	var err error
+
+	query += " ORDER BY aj.created_at DESC"
+
+	rows, err = db.Debug().Raw(query, id).Rows()
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		errJobRows := db.ScanRows(rows, &job)
+
+		if errJobRows != nil {
+			helper.Logger("error", "In Server: "+errJobRows.Error())
+			return nil, errors.New(errJobRows.Error())
+		}
+
+		jobFavourite = nil
+
+		bookmarkQuery := `SELECT job_id, user_id FROM job_favourites WHERE user_id = '` + job.UserId + `' AND job_id = '` + job.Id + `'`
+
+		errBookmark := db.Debug().Raw(bookmarkQuery).Scan(&jobFavourite).Error
+
+		if errBookmark != nil {
+			helper.Logger("error", "In Server: "+errBookmark.Error())
+			return nil, errors.New(errBookmark.Error())
+		}
+
+		isJobFavouriteExist := len(jobFavourite)
+
+		var bookmark bool
+
+		if isJobFavouriteExist == 1 {
+			bookmark = true
+		} else {
+			bookmark = false
+		}
+
+		salaryIdr := helper.FormatIDR(job.Salary * job.PlaceKurs)
+
+		// Candidate Exercise
+
+		dataCandidateExercise := make([]entities.CandidateExercise, 0)
+
+		queryCandidateExercise := `SELECT id, name, institution, start_month, start_year, end_month, end_year 
+		FROM form_exercises WHERE user_id = ?`
+
+		rowsCandidateExercise, errCandidateExercise := db.Debug().Raw(queryCandidateExercise, job.UserIdCandidate).Rows()
+
+		if errCandidateExercise != nil {
+			helper.Logger("error", "In Server: "+errCandidateExercise.Error())
+		}
+		defer rowsCandidateExercise.Close()
+
+		for rowsCandidateExercise.Next() {
+			errCandidateExerciseRows := db.ScanRows(rowsCandidateExercise, &candidateExercise)
+
+			if errCandidateExerciseRows != nil {
+				helper.Logger("error", "In Server: "+errCandidateExerciseRows.Error())
+				return nil, errors.New(errCandidateExerciseRows.Error())
+			}
+
+			queryFormExerciseMedia := `SELECT id, path FROM form_exercise_medias WHERE exercise_id  = ?`
+
+			rowsFormExerciseMedia, errFormExerciseMedia := db.Debug().Raw(queryFormExerciseMedia, candidateExercise.Id).Scan(&exerciseMedia).Rows()
+
+			if errFormExerciseMedia != nil {
+				helper.Logger("error", "In Server: "+errFormExerciseMedia.Error())
+				return nil, errors.New(errFormExerciseMedia.Error())
+			}
+
+			defer rowsFormExerciseMedia.Close()
+
+			var dataFormExerciseCertificate = make([]entities.CandidateExerciseCertificates, 0)
+
+			for rowsFormExerciseMedia.Next() {
+				errScanFormExerciseMedia := db.ScanRows(rowsFormExerciseMedia, &exerciseMedia)
+
+				if errScanFormExerciseMedia != nil {
+					helper.Logger("error", "In Server: "+errScanFormExerciseMedia.Error())
+					return nil, errors.New(errScanFormExerciseMedia.Error())
+				}
+
+				dataFormExerciseCertificate = append(dataFormExerciseCertificate, entities.CandidateExerciseCertificates{
+					Id:   exerciseMedia.Id,
+					Path: exerciseMedia.Path,
+				})
+			}
+
+			dataCandidateExercise = append(dataCandidateExercise, entities.CandidateExercise{
+				Name:         candidateExercise.Name,
+				Institution:  candidateExercise.Institution,
+				StartMonth:   candidateExercise.StartMonth,
+				StartYear:    candidateExercise.StartYear,
+				EndMonth:     candidateExercise.EndMonth,
+				EndYear:      candidateExercise.EndYear,
+				Certificates: dataFormExerciseCertificate,
+			})
+		}
+
+		// End Candidate Exercise
+
+		// Candidate Biodata
+
+		dataCandidateBiodata := make([]entities.CandidateBiodata, 0)
+
+		queryCandidateBiodata := `SELECT birthdate, gender, weight, height, status, religion, place 
+		FROM form_biodatas WHERE user_id = ?`
+
+		rowsCandidateBiodata, errCandidateBiodata := db.Debug().Raw(queryCandidateBiodata, job.UserIdCandidate).Rows()
+
+		if errCandidateBiodata != nil {
+			helper.Logger("error", "In Server: "+errCandidateBiodata.Error())
+		}
+		defer rowsCandidateBiodata.Close()
+
+		for rowsCandidateBiodata.Next() {
+			errCandidateBiodataRows := db.ScanRows(rowsCandidateBiodata, &candidateBiodata)
+
+			if errCandidateBiodataRows != nil {
+				helper.Logger("error", "In Server: "+errCandidateBiodataRows.Error())
+				return nil, errors.New(errCandidateBiodataRows.Error())
+			}
+
+			dataCandidateBiodata = append(dataCandidateBiodata, entities.CandidateBiodata{
+				Birthdate: candidateBiodata.Birthdate,
+				Gender:    candidateBiodata.Gender,
+				Weight:    candidateBiodata.Weight,
+				Height:    candidateBiodata.Height,
+				Status:    candidateBiodata.Status,
+				Religion:  candidateBiodata.Religion,
+				Place:     candidateBiodata.Place,
+			})
+		}
+
+		// End Candidate Biodata
+
+		// Candidate Language
+
+		dataCandidateLanguage := make([]entities.CandidateLanguage, 0)
+
+		queryCandidateLanguage := `SELECT level, language 
+		FROM form_languages WHERE user_id = ?`
+
+		rowsCandidateLanguage, errCandidateLanguage := db.Debug().Raw(queryCandidateLanguage, job.UserIdCandidate).Rows()
+
+		if errCandidateLanguage != nil {
+			helper.Logger("error", "In Server: "+errCandidateLanguage.Error())
+		}
+		defer rowsCandidateLanguage.Close()
+
+		for rowsCandidateLanguage.Next() {
+			errCandidateLanguageRows := db.ScanRows(rowsCandidateLanguage, &candidateLanguage)
+
+			if errCandidateLanguageRows != nil {
+				helper.Logger("error", "In Server: "+errCandidateLanguageRows.Error())
+				return nil, errors.New(errCandidateLanguageRows.Error())
+			}
+
+			dataCandidateLanguage = append(dataCandidateLanguage, entities.CandidateLanguage{
+				Level:    candidateLanguage.Level,
+				Language: candidateLanguage.Language,
+			})
+		}
+
+		// End Candidate Language
+
+		// Candidate Work
+
+		dataCandidateWork := make([]entities.CandidateWork, 0)
+
+		queryCandidateWork := `SELECT position, institution, work, country, city, start_month, 
+		start_year, end_month, end_year, is_work 
+		FROM form_works WHERE user_id = ?`
+
+		rowsCandidateWork, errCandidateWork := db.Debug().Raw(queryCandidateWork, job.UserIdCandidate).Rows()
+
+		if errCandidateWork != nil {
+			helper.Logger("error", "In Server: "+errCandidateWork.Error())
+		}
+		defer rowsCandidateWork.Close()
+
+		for rowsCandidateWork.Next() {
+			errCandidateWorkRows := db.ScanRows(rowsCandidateWork, &candidateWork)
+
+			if errCandidateWorkRows != nil {
+				helper.Logger("error", "In Server: "+errCandidateWorkRows.Error())
+				return nil, errors.New(errCandidateWorkRows.Error())
+			}
+
+			dataCandidateWork = append(dataCandidateWork, entities.CandidateWork{
+				Position:    candidateWork.Position,
+				Institution: candidateWork.Institution,
+				Work:        candidateWork.Work,
+				Country:     candidateWork.Country,
+				City:        candidateWork.City,
+				StartMonth:  candidateWork.StartMonth,
+				StartYear:   candidateWork.StartYear,
+				EndMonth:    candidateWork.EndMonth,
+				EndYear:     candidateWork.EndYear,
+				IsWork:      candidateWork.IsWork,
+			})
+		}
+
+		// End Candidate Work
+
+		// Candidate Place
+
+		dataCandidatePlace := make([]entities.CandidatePlace, 0)
+
+		queryCandidatePlace := `SELECT 
+		p.name AS province_name, 
+		r.name AS city_name, 
+		d.name AS district_name, 
+		s.name AS subdistrict_name,
+		fp.detail_address
+		FROM form_places fp 
+		INNER JOIN provinces p ON p.id = fp.province_id
+		INNER JOIN regencies r ON r.id = fp.city_id
+		INNER JOIN districts d ON d.id = fp.district_id
+		INNER JOIN villages s ON s.id = fp.subdistrict_id
+		WHERE user_id = ?`
+
+		rowsCandidatePlace, errCandidatePlace := db.Debug().Raw(queryCandidatePlace, job.UserIdCandidate).Rows()
+
+		if errCandidatePlace != nil {
+			helper.Logger("error", "In Server: "+errCandidatePlace.Error())
+		}
+		defer rowsCandidatePlace.Close()
+
+		for rowsCandidatePlace.Next() {
+			errCandidatePlaceRows := db.ScanRows(rowsCandidatePlace, &candidatePlace)
+
+			if errCandidatePlaceRows != nil {
+				helper.Logger("error", "In Server: "+errCandidatePlaceRows.Error())
+				return nil, errors.New(errCandidatePlaceRows.Error())
+			}
+
+			dataCandidatePlace = append(dataCandidatePlace, entities.CandidatePlace{
+				ProvinceName:    candidatePlace.ProvinceName,
+				CityName:        candidatePlace.CityName,
+				DistrictName:    candidatePlace.DistrictName,
+				SubdistrictName: candidatePlace.SubdistrictName,
+				DetailAddress:   candidatePlace.DetailAddress,
+			})
+		}
+
+		// End Candidate Place
+
+		// Candidate Document
+
+		groupedCandidateDocuments := map[string][]entities.CandidateDocument{}
+
+		getTypeLabel := func(docType string) string {
+			switch docType {
+			case "regulation":
+				return "regulation"
+			case "preparation":
+				return "preparation"
+			default:
+				return "other"
+			}
+		}
+
+		queryCandidateDocument := `SELECT d.name AS document, d.type, ajd.path FROM documents d 
+		INNER JOIN user_documents ajd ON ajd.type = d.id 
+		WHERE ajd.user_id = ?`
+
+		rowsCandidateDocument, errCandidateDocument := db.Debug().Raw(queryCandidateDocument, job.UserIdCandidate).Rows()
+		if errCandidateDocument != nil {
+			helper.Logger("error", "In Server: "+errCandidateDocument.Error())
+		}
+		defer rowsCandidateDocument.Close()
+
+		for rowsCandidateDocument.Next() {
+			var candidateDoc entities.CandidateDocument
+			errCandidateDocumentRows := db.ScanRows(rowsCandidateDocument, &candidateDoc)
+
+			if errCandidateDocumentRows != nil {
+				helper.Logger("error", "In Server: "+errCandidateDocumentRows.Error())
+				return nil, errors.New(errCandidateDocumentRows.Error())
+			}
+
+			label := getTypeLabel(candidateDoc.Type)
+			groupedCandidateDocuments[label] = append(groupedCandidateDocuments[label], entities.CandidateDocument{
+				Document: candidateDoc.Document,
+				Type:     candidateDoc.Type,
+				Path:     candidateDoc.Path,
+			})
+		}
+
+		queryAdditionalDoc := `SELECT path, type
+		FROM user_document_additionals WHERE user_id = ?`
+
+		rowsAdditionalDoc, errAdditionalDoc := db.Debug().Raw(queryAdditionalDoc, job.UserIdCandidate).Rows()
+
+		if errAdditionalDoc != nil {
+			helper.Logger("error", "In Server: "+errAdditionalDoc.Error())
+		}
+		defer rowsAdditionalDoc.Close()
+
+		hasMedicalLicense := false
+
+		for rowsAdditionalDoc.Next() {
+			var additionalDoc entities.AdditionalDoc
+			errScan := db.ScanRows(rowsAdditionalDoc, &additionalDoc)
+			if errScan != nil {
+				helper.Logger("error", "In Server: "+errScan.Error())
+				return nil, errors.New(errScan.Error())
+			}
+
+			if additionalDoc.Type == "medical-license" && !hasMedicalLicense {
+				groupedCandidateDocuments["regulation"] = append(
+					groupedCandidateDocuments["regulation"],
+					entities.CandidateDocument{
+						Document: "Medical License",
+						Type:     "regulation",
+						Path:     additionalDoc.Path,
+					},
+				)
+
+				hasMedicalLicense = true
+			}
+		}
+
+		// End Candidate Document
+
+		// Candidate Education
+
+		dataCandidateEducation := make([]entities.CandidateEducation, 0)
+
+		queryCandidateEducation := `SELECT education_level AS edu, major, school_or_college, start_month, start_year, end_month, end_year 
+		FROM form_educations WHERE user_id = ?`
+
+		rowsCandidateEducation, errCandidateEducation := db.Debug().Raw(queryCandidateEducation, job.UserIdCandidate).Rows()
+
+		if errCandidateEducation != nil {
+			helper.Logger("error", "In Server: "+errCandidateEducation.Error())
+		}
+		defer rowsCandidateEducation.Close()
+
+		for rowsCandidateEducation.Next() {
+			errCandidateEducationRows := db.ScanRows(rowsCandidateEducation, &candidateEdu)
+
+			if errCandidateEducationRows != nil {
+				helper.Logger("error", "In Server: "+errCandidateEducationRows.Error())
+				return nil, errors.New(errCandidateEducationRows.Error())
+			}
+
+			dataCandidateEducation = append(dataCandidateEducation, entities.CandidateEducation{
+				EducationalLevel: candidateEdu.Edu,
+				Major:            candidateEdu.Major,
+				SchoolOrCollege:  candidateEdu.SchoolOrCollege,
+				StartMonth:       candidateEdu.StartMonth,
+				EndMonth:         candidateEdu.EndMonth,
+				StartYear:        candidateEdu.StartYear,
+				EndYear:          candidateEdu.EndYear,
+			})
+		}
+
+		// End Candidate Education
+
+		// Additionaldoc
+
+		dataAddDoc := make([]entities.AdditionalDoc, 0)
+
+		queryAddDoc := `SELECT path, type
+		FROM user_document_additionals WHERE user_id = ? AND (type = ? OR type = ?)`
+
+		rowsAddDoc, errAddDoc := db.Debug().Raw(queryAddDoc, job.UserIdCandidate, "introduction-video", "introduction-photo").Rows()
+
+		if errAddDoc != nil {
+			helper.Logger("error", "In Server: "+errAddDoc.Error())
+		}
+		defer rowsAddDoc.Close()
+
+		for rowsAddDoc.Next() {
+			errAddDoc := db.ScanRows(rowsAddDoc, &addDoc)
+
+			if errAddDoc != nil {
+				helper.Logger("error", "In Server: "+errAddDoc.Error())
+				return nil, errors.New(errAddDoc.Error())
+			}
+
+			dataAddDoc = append(dataAddDoc, entities.AdditionalDoc{
+				Path: addDoc.Path,
+				Type: addDoc.Type,
+			})
+		}
+
+		// End Additional Doc
+
+		dataJob = entities.AdminListApplyJob{
+			Id:        job.Id,
+			Title:     job.Title,
+			Caption:   job.Caption,
+			Salary:    int(job.Salary),
+			SalaryIDR: salaryIdr,
+			Bookmark:  bookmark,
+			Company: entities.JobCompany{
+				Id:      job.CompanyId,
+				Logo:    job.CompanyLogo,
+				Name:    job.CompanyName,
+				Country: job.CountryName,
+			},
+			Candidate: entities.Candidate{
+				Id:                job.UserIdCandidate,
+				Email:             job.UserEmailCandidate,
+				Avatar:            job.UserAvatarCandidate,
+				Name:              job.UserNameCandidate,
+				Phone:             job.UserPhoneCandidate,
+				CandidateExercise: dataCandidateExercise,
+				CandidateBiodata:  dataCandidateBiodata,
+				CandidateLanguage: dataCandidateLanguage,
+				CandidateWork:     dataCandidateWork,
+				CandidatePlace:    dataCandidatePlace,
+				CandidateEdu:      dataCandidateEducation,
+				AdditionalDoc:     dataAddDoc,
+				Document:          groupedCandidateDocuments,
+			},
+			Status: entities.JobStatus{
+				Id:   job.JobStatusId,
+				Name: job.JobStatusName,
+			},
+			JobCategory: entities.JobCategory{
+				Id:   job.CatId,
+				Name: job.CatName,
+			},
+			JobPlace: entities.JobPlace{
+				Id:       job.PlaceId,
+				Name:     job.PlaceName,
+				Currency: job.PlaceCurrency,
+				Kurs:     int(job.PlaceKurs),
+				Info:     job.PlaceInfo,
+			},
+			Author: entities.AuthorJobUser{
+				Id:     job.UserId,
+				Avatar: job.UserAvatar,
+				Name:   job.UserName,
+			},
+			Branch: entities.AdminBranch{
+				Id:   job.BranchId,
+				Name: job.BranchName,
+			},
+			Created: job.CreatedAt.Format("2006-01-02 15:04:05"),
+		}
 	}
 
 	return map[string]any{
