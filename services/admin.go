@@ -52,21 +52,21 @@ func AdminCandidatePassesBadges(branchId string) (map[string]any, error) {
 	}, nil
 }
 
-func AdminApplyJobBadges(branchId string) (map[string]any, error) {
+func AdminApplyJobBadges(branchId, status string) (map[string]any, error) {
 	var dataAdminApplyJobBadges entities.AdminApplyJobBadges
 
 	baseQuery := `
 		SELECT COUNT(*) AS total 
 		FROM users u 
 		INNER JOIN apply_jobs aj ON aj.user_id = u.uid
+		INNER JOIN job_statuses js ON js.id  = aj.status 
 		INNER JOIN user_branches ub ON ub.user_id = u.uid
 		INNER JOIN branchs b ON b.id = ub.branch_id
-		WHERE aj.status = 1
+		WHERE js.name = ?
 	`
 
-	var args []any
+	args := []any{status} // Add status first
 
-	// Conditionally add branch filter
 	if branchId != "" {
 		baseQuery += " AND b.id = ?"
 		args = append(args, branchId)

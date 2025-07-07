@@ -57,7 +57,7 @@ func ClientDelete(c *entities.ClientDelete) (map[string]any, error) {
 	}
 
 	if rowsAffected == 0 {
-		return nil, fmt.Errorf("no client found with ID %d", c.Id)
+		return nil, fmt.Errorf("no client found with ID %s", c.Id)
 	}
 
 	return map[string]any{"data": "Ok"}, nil

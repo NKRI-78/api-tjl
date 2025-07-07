@@ -26,7 +26,7 @@ func main() {
 	router.Use(middleware.CorsMiddleware)
 	router.Use(middleware.JwtAuthentication)
 
-	errMkidr := os.MkdirAll("public", os.ModePerm) // os.ModePerm ensures directory is created with the correct permissions
+	errMkidr := os.MkdirAll("public", os.ModePerm)
 	if errMkidr != nil {
 		log.Fatalf("Failed to create or access directory: %v", err)
 	}
@@ -105,7 +105,11 @@ func main() {
 	router.Handle("/api/v1/forgot-password", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.ForgotPassword))).Methods("PUT")
 	router.Handle("/api/v1/update-email", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.UpdateEmail))).Methods("PUT")
 
-	// Auth Admin
+	// Admin
+	router.HandleFunc("/api/v1/admin/list/apply/job", controllers.AdminListApplyJob).Methods("GET")
+	router.HandleFunc("/api/v1/admin/detail/apply/job/{id}", controllers.AdminDetailApplyJob).Methods("GET")
+
+	// Admin Auth
 	router.Handle("/api/v1/login-admin", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.LoginAdmin))).Methods("POST")
 
 	// Admin User
@@ -113,7 +117,7 @@ func main() {
 	router.HandleFunc("/api/v1/admin/update/user", controllers.UpdateUser).Methods("PUT")
 	router.HandleFunc("/api/v1/admin/delete/user", controllers.DeleteUser).Methods("DELETE")
 
-	// Chart Admin
+	// Admin Chart
 	router.HandleFunc("/api/v1/admin/chart/summary", controllers.Summary).Methods("GET")
 
 	// Branch
@@ -160,9 +164,6 @@ func main() {
 	// Otp
 	router.HandleFunc("/api/v1/resend-otp", controllers.ResendOtp).Methods("POST")
 	router.HandleFunc("/api/v1/verify-otp", controllers.VerifyOtp).Methods("POST")
-
-	// Admin
-	router.HandleFunc("/api/v1/admin/list/apply/job", controllers.AdminListApplyJob).Methods("GET")
 
 	// Apply Job
 	router.HandleFunc("/api/v1/apply/job", controllers.ApplyJob).Methods("POST")

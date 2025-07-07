@@ -10,6 +10,8 @@ import (
 )
 
 func AdminApplyJobBadges(w http.ResponseWriter, r *http.Request) {
+	Filter := r.URL.Query().Get("filter")
+
 	var dataAdminApplyJobBadges entities.AdminApplyJobBadges
 
 	tokenHeader := r.Header.Get("Authorization")
@@ -20,7 +22,7 @@ func AdminApplyJobBadges(w http.ResponseWriter, r *http.Request) {
 
 	BranchId, _ := claims["branch_id"].(string)
 
-	result, err := services.AdminApplyJobBadges(BranchId)
+	result, err := services.AdminApplyJobBadges(BranchId, Filter)
 	if err != nil {
 		helper.Response(w, http.StatusBadRequest, true, err.Error(), nil)
 		return
