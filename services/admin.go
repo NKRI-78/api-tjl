@@ -54,7 +54,7 @@ func AdminCandidatePassesBadges(branchId string) (map[string]any, error) {
 
 func AdminApplyJobBadges(branchId string) (map[string]any, error) {
 	statusSequence := []string{
-		"ON_PROGRESS", "INTERVIEW", "ACCEPTED", "PROGRESS_MCU",
+		"IN_PROGRESS", "INTERVIEW", "ACCEPTED", "PROGRESS_MCU",
 		"PROGRESS_LINK_SIAPKERJA", "PROGRESS_SKCK", "PROGRESS_VISA",
 		"PROGRESS_TTD", "PROGRESS_OPP", "PROGRESS_DONE", "DECLINED",
 	}

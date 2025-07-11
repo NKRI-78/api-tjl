@@ -66,14 +66,7 @@ func FormatDate(t time.Time) string {
 	return fmt.Sprintf("%s, %02d %s %d %02d:%02d WIB", day, t.Day(), month, t.Year(), t.Hour(), t.Minute())
 }
 
-func contains[T comparable](s []T, val T) bool {
-	for _, v := range s {
-		if v == val {
-			return true
-		}
-	}
-	return false
-}
+
 
 func SendEmail(to, app, subject, data, Type string) error {
 
