@@ -957,6 +957,7 @@ func AdminListApplyJob(branchId, filter string) (map[string]any, error) {
 	INNER JOIN user_branches ub ON ub.user_id = aj.user_id
 	INNER JOIN branchs b ON b.id  = ub.branch_id
 	`
+	
 
 	var rows *sql.Rows
 	var err error
