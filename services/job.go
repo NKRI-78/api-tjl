@@ -16,7 +16,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-func CandidatePassesList() (map[string]any, error) {
+func CandidatePassesList(branchId string) (map[string]any, error) {
 	var data []entities.ResultCandidateInfoApplyJob
 
 	query := `
@@ -49,6 +49,8 @@ func CandidatePassesList() (map[string]any, error) {
 			INNER JOIN job_statuses js ON js.id = aj.status
 			INNER JOIN profiles paa ON paa.user_id = aj.user_id
 			INNER JOIN users u ON u.uid = aj.user_id
+			INNER JOIN user_branches ub ON ub.user_id = aj.user_id
+			INNER JOIN branchs b ON b.id = ub.branch_id
 			LEFT JOIN apply_job_offlines ajo ON ajo.apply_job_id = aj.uid
 			LEFT JOIN (
 				SELECT field2 AS apply_job_id, MAX(field1) AS field1
@@ -60,7 +62,15 @@ func CandidatePassesList() (map[string]any, error) {
 		ORDER BY aj.created_at DESC
 	`
 
-	rows, err := db.Debug().Raw(query, "11").Rows()
+	var args []any
+	args = append(args, "11")
+
+	if branchId != "" {
+		query += " AND b.id = ?"
+		args = append(args, branchId)
+	}
+
+	rows, err := db.Debug().Raw(query, args...).Rows()
 	if err != nil {
 		helper.Logger("error", "In Server (main query): "+err.Error())
 		return nil, err
@@ -957,7 +967,6 @@ func AdminListApplyJob(branchId, filter string) (map[string]any, error) {
 	INNER JOIN user_branches ub ON ub.user_id = aj.user_id
 	INNER JOIN branchs b ON b.id  = ub.branch_id
 	`
-	
 
 	var rows *sql.Rows
 	var err error
