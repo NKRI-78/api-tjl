@@ -59,7 +59,6 @@ func CandidatePassesList(branchId string) (map[string]any, error) {
 			) ibs ON ibs.apply_job_id = aj.uid
 			LEFT JOIN profiles pac ON pac.user_id = aj.user_confirm_id 
 		WHERE aj.status = ?
-		ORDER BY aj.created_at DESC
 	`
 
 	var args []any
@@ -69,6 +68,8 @@ func CandidatePassesList(branchId string) (map[string]any, error) {
 		query += " AND b.id = ?"
 		args = append(args, branchId)
 	}
+
+	query += " ORDER BY aj.created_at DESC"
 
 	rows, err := db.Debug().Raw(query, args...).Rows()
 	if err != nil {
