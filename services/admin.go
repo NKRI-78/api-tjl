@@ -256,7 +256,8 @@ func AdminListUser(Type, branchId string) (map[string]any, error) {
 		INNER JOIN profiles p ON p.user_id = u.uid
 		INNER JOIN user_roles ur ON ur.id = u.role
 		INNER JOIN user_branches ub ON ub.user_id = u.uid
-		INNER JOIN branchs b ON b.id = ub.branch_id`
+		INNER JOIN branchs b ON b.id = ub.branch_id 
+		WHERE u.role != '4'`
 
 	var args []any
 	whereClause := ""
