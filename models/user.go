@@ -21,7 +21,7 @@ type AdminListUser entities.AdminListUser
 type AdminListUserResponse entities.AdminListUserResponse
 type AdminListUserBranch entities.AdminListUserBranch
 
-type Branch entities.Branch
+type GetBranch entities.Branch
 type UpdateUserBranch entities.UpdateUserBranch
 
 type Biodata entities.Biodata

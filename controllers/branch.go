@@ -14,6 +14,6 @@ func Branch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	helper.Logger("info", "Register success")
+	helper.Logger("info", "Get Branch success")
 	helper.Response(w, http.StatusOK, false, "Successfully", result["data"])
 }

@@ -122,6 +122,9 @@ func main() {
 
 	// Branch
 	router.HandleFunc("/api/v1/branch", controllers.Branch).Methods("GET")
+	router.HandleFunc("/api/v1/branch/store", controllers.StoreBranch).Methods("POST")
+	router.HandleFunc("/api/v1/branch/delete", controllers.DeleteBranch).Methods("DELETE")
+	router.HandleFunc("/api/v1/branch/update", controllers.UpdateBranch).Methods("PUT")
 
 	// Banner
 	router.HandleFunc("/api/v1/banner", controllers.BannerList).Methods("GET")
