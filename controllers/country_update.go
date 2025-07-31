@@ -6,9 +6,14 @@ import (
 	helper "superapps/helpers"
 	"superapps/models"
 	"superapps/services"
+
+	"github.com/gorilla/mux"
 )
 
 func CountryUpdate(w http.ResponseWriter, r *http.Request) {
+
+	vars := mux.Vars(r)
+	id := vars["id"]
 
 	data := &models.CountryUpdate{}
 
@@ -20,10 +25,13 @@ func CountryUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	data.Id = id
 	Name := data.Name
 	Currency := data.Currency
 	Kurs := data.Kurs
 	Info := data.Info
+	Symbol := data.Symbol
+	LanguageCode := data.LanguageCode
 
 	if Name == "" {
 		helper.Logger("error", "In Server: name is required")
@@ -46,6 +54,18 @@ func CountryUpdate(w http.ResponseWriter, r *http.Request) {
 	if Info == "" {
 		helper.Logger("error", "In Server: info is required")
 		helper.Response(w, 400, true, "info is required", map[string]any{})
+		return
+	}
+
+	if Symbol == "" {
+		helper.Logger("error", "In Server: symbol is required")
+		helper.Response(w, 400, true, "symbol is required", map[string]any{})
+		return
+	}
+
+	if LanguageCode == "" {
+		helper.Logger("error", "In Server: language_code is required")
+		helper.Response(w, 400, true, "language_code is required", map[string]any{})
 		return
 	}
 

@@ -70,9 +70,9 @@ func main() {
 	router.HandleFunc("/api/v1/district/{city_id}", controllers.District).Methods("GET")
 	router.HandleFunc("/api/v1/subdistrict/{district_id}", controllers.Subdistrict).Methods("GET")
 	router.HandleFunc("/api/v1/country", controllers.Country).Methods("GET")
-	router.HandleFunc("/api/v1/country-store", controllers.CountryStore).Methods("POST")
-	router.HandleFunc("/api/v1/country-delete", controllers.CountryDelete).Methods("DELETE")
-	router.HandleFunc("/api/v1/country-update", controllers.CountryUpdate).Methods("PUT")
+	router.HandleFunc("/api/v1/country/store", controllers.CountryStore).Methods("POST")
+	router.HandleFunc("/api/v1/country/delete", controllers.CountryDelete).Methods("DELETE")
+	router.HandleFunc("/api/v1/country/update/{id}", controllers.CountryUpdate).Methods("PUT")
 
 	// Register User Branch
 	router.HandleFunc("/api/v1/admin/register-user-branch", controllers.RegisterUserBranch).Methods("POST")
