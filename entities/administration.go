@@ -29,16 +29,20 @@ type Country struct {
 }
 
 type CountryStore struct {
-	Name     string `json:"name"`
-	Currency string `json:"currency"`
-	Kurs     int    `json:"kurs"`
-	Info     string `json:"info"`
+	Name         string `json:"name"`
+	Currency     string `json:"currency"`
+	Kurs         int    `json:"kurs"`
+	Info         string `json:"info"`
+	Symbol       string `json:"symbol"`
+	LanguageCode string `json:"language_code"`
 }
 
 type CountryUpdate struct {
-	Id       string `json:"id"`
-	Name     string `json:"name"`
-	Currency string `json:"currency"`
-	Kurs     string `json:"kurs"`
-	Info     string `json:"info"`
+	Id           string `json:"id"`
+	Name         string `json:"name"`
+	Currency     string `json:"currency"`
+	Kurs         string `json:"kurs"`
+	Info         string `json:"info"`
+	Symbol       string `json:"symbol"`
+	LanguageCode string `json:"language_code"`
 }

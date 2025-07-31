@@ -40,7 +40,7 @@ func CountryDelete(c *models.Country) (map[string]any, error) {
 }
 
 func CountryStore(c *models.CountryStore) (map[string]any, error) {
-	query := `INSERT INTO places SET name = ?, currency = ?, kurs = ?, info = ?`
+	query := `INSERT INTO places SET name = ?, currency = ?, kurs = ?, info = ?, symbol = ?, language_code = ?`
 
 	err := db.Debug().Exec(query, c.Name, c.Currency, c.Kurs, c.Info).Error
 
@@ -54,9 +54,9 @@ func CountryStore(c *models.CountryStore) (map[string]any, error) {
 
 func CountryUpdate(c *models.CountryUpdate) (map[string]any, error) {
 
-	query := `UPDATE places SET name = ?, currency = ?, kurs = ?, info = ? WHERE id = ?`
+	query := `UPDATE places SET name = ?, currency = ?, kurs = ?, info = ?, symbol = ?, language_code = ? WHERE id = ?`
 
-	err := db.Debug().Exec(query, c.Name, c.Currency, c.Kurs, c.Info, c.Id).Error
+	err := db.Debug().Exec(query, c.Name, c.Currency, c.Kurs, c.Info, c.Symbol, c.LanguageCode, c.Id).Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
