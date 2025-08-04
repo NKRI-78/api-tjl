@@ -42,7 +42,7 @@ func CountryDelete(c *models.Country) (map[string]any, error) {
 func CountryStore(c *models.CountryStore) (map[string]any, error) {
 	query := `INSERT INTO places SET name = ?, currency = ?, kurs = ?, info = ?, symbol = ?, language_code = ?`
 
-	err := db.Debug().Exec(query, c.Name, c.Currency, c.Kurs, c.Info).Error
+	err := db.Debug().Exec(query, c.Name, c.Currency, c.Kurs, c.Info, "-", "-").Error
 
 	if err != nil {
 		helper.Logger("error", "In Server: "+err.Error())
