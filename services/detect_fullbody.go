@@ -44,6 +44,7 @@ type openAIChatResponse struct {
 
 func DetectFullbody(
 	folder string,
+	subfolder string,
 	file multipart.File,
 	fileHeader *multipart.FileHeader,
 ) (*DetectFullbodyResult, error) {
@@ -55,7 +56,7 @@ func DetectFullbody(
 		return nil, errors.New("Field media is required")
 	}
 
-	imageURL, err := uploadMediaToStorage(folder, file, fileHeader)
+	imageURL, err := uploadMediaToStorage(folder, subfolder, file, fileHeader)
 	if err != nil {
 		return nil, err
 	}
@@ -125,17 +126,15 @@ func DetectFullbody(
 
 func uploadMediaToStorage(
 	folder string,
+	subfolder string,
 	file multipart.File,
 	fileHeader *multipart.FileHeader,
 ) (string, error) {
 	var body bytes.Buffer
 	writer := multipart.NewWriter(&body)
 
-	// Kalau mau sama persis seperti Node.js:
-	// _ = writer.WriteField("folder", "ktp-scan")
-	//
-	// Kalau mau pakai request body `folder`, pakai ini:
 	_ = writer.WriteField("folder", folder)
+	_ = writer.WriteField("subfolder", subfolder)
 
 	originalName := strings.TrimSpace(fileHeader.Filename)
 	ext := filepath.Ext(originalName)

@@ -19,6 +19,12 @@ func DetectFullbody(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	subfolder := r.FormValue("subfolder")
+	if folder == "" {
+		helper.Response(w, 400, true, "Field folder is required", map[string]any{})
+		return
+	}
+
 	file, fileHeader, err := r.FormFile("media")
 	if err != nil {
 		helper.Response(w, 400, true, "Field media is required", map[string]any{})
@@ -26,7 +32,7 @@ func DetectFullbody(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	result, err := services.DetectFullbody(folder, file, fileHeader)
+	result, err := services.DetectFullbody(folder, subfolder, file, fileHeader)
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]any{})
 		return
