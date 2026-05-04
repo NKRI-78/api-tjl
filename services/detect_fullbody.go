@@ -237,7 +237,7 @@ func analyzeImageWithOpenAI(base64Image string) ([]struct {
 		Arguments string `json:"arguments"`
 	} `json:"function"`
 }, error) {
-	apiKey := os.Getenv("SECRET_CHATGPT_API_KEY")
+	apiKey := os.Getenv("CHATGPT_API_KEY")
 
 	payload := map[string]any{
 		"model":       "gpt-4o",
