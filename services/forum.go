@@ -850,72 +850,91 @@ func ReplyStore(r *entities.ReplyStore) (map[string]any, error) {
 	comment := []entities.ForumCommentDetail{}
 	replyUser := []entities.ForumUser{}
 
-	errComment := db.Debug().Raw(`SELECT fc.uid AS id, fc.comment, fc.user_id, fc.forum_id, p.fullname, p.avatar
-	FROM forum_comments fc
-	INNER JOIN profiles p ON p.user_id = fc.user_id`).Scan(&comment).Error
+	errComment := db.Debug().Raw(`
+		SELECT 
+			fc.uid AS id, 
+			fc.comment, 
+			fc.user_id, 
+			fc.forum_id, 
+			p.fullname, 
+			p.avatar
+		FROM forum_comments fc
+		INNER JOIN profiles p ON p.user_id = fc.user_id
+		WHERE fc.uid = ?
+	`, r.CommentId).Scan(&comment).Error
 
 	if errComment != nil {
 		helper.Logger("error", "In Server: "+errComment.Error())
 		return nil, errors.New(errComment.Error())
 	}
 
-	comments := len(comment)
-
-	if comments == 0 {
+	if len(comment) == 0 {
 		helper.Logger("error", "In Server: Comment not found")
 		return nil, errors.New("comment not found")
 	}
 
-	errForum := db.Debug().Raw(`SELECT f.uid AS id, f.title, f.caption,
-	p.avatar,
-	p.fullname, 
-	p.user_id,
-	u.email,
-	u.phone,
-	ft.id AS forum_type_id, 
-	ft.name AS forum_type_name, 
-	f.user_id, f.created_at
-	FROM forums f
-	INNER JOIN forum_types ft ON ft.id = f.type
-	INNER JOIN profiles p ON f.user_id = p.user_id
-	INNER JOIN users u ON u.uid = p.user_id
-	WHERE f.uid = ?`, comment[0].ForumId).Scan(&forum).Error
+	errReplyUser := db.Debug().Raw(`
+		SELECT 
+			p.user_id AS id,
+			p.avatar,
+			p.fullname,
+			u.email,
+			u.phone
+		FROM profiles p
+		INNER JOIN users u ON u.uid = p.user_id
+		WHERE p.user_id = ?
+	`, r.UserId).Scan(&replyUser).Error
+
+	if errReplyUser != nil {
+		helper.Logger("error", "In Server: "+errReplyUser.Error())
+		return nil, errors.New(errReplyUser.Error())
+	}
+
+	if len(replyUser) == 0 {
+		helper.Logger("error", "In Server: Reply user not found")
+		return nil, errors.New("reply user not found")
+	}
+
+	errForum := db.Debug().Raw(`
+		SELECT 
+			f.uid AS id, 
+			f.title, 
+			f.caption,
+			p.avatar,
+			p.fullname, 
+			u.email,
+			u.phone,
+			ft.id AS forum_type_id, 
+			ft.name AS forum_type_name, 
+			f.user_id, 
+			f.created_at
+		FROM forums f
+		INNER JOIN forum_types ft ON ft.id = f.type
+		INNER JOIN profiles p ON f.user_id = p.user_id
+		INNER JOIN users u ON u.uid = p.user_id
+		WHERE f.uid = ?
+	`, comment[0].ForumId).Scan(&forum).Error
 
 	if errForum != nil {
 		helper.Logger("error", "In Server: "+errForum.Error())
 		return nil, errors.New(errForum.Error())
 	}
 
-	forums := len(forum)
-
-	if forums == 0 {
+	if len(forum) == 0 {
 		helper.Logger("error", "In Server: Forum not found")
 		return nil, errors.New("forum not found")
 	}
-	errInsertReply := db.Debug().Exec(`INSERT INTO forum_comment_replies (uid, user_id, comment_id, reply) 
-	VALUES (?, ?, ?, ?)`, r.Id, r.UserId, r.CommentId, r.Reply).Error
+
+	errInsertReply := db.Debug().Exec(`
+		INSERT INTO forum_comment_replies 
+			(uid, user_id, comment_id, reply) 
+		VALUES 
+			(?, ?, ?, ?)
+	`, r.Id, r.UserId, r.CommentId, r.Reply).Error
 
 	if errInsertReply != nil {
 		helper.Logger("error", "In Server: "+errInsertReply.Error())
 		return nil, errors.New(errInsertReply.Error())
-	}
-
-	errCheckUser := db.Debug().Raw(`SELECT p.user_id AS id, u.email, u.phone, p.avatar, p.fullname 
-	FROM forums f 
-	INNER JOIN profiles p ON f.user_id = p.user_id 
-	INNER JOIN users u ON u.uid = p.user_id
-	WHERE f.user_id = ?`, r.UserId).Scan(&replyUser).Error
-
-	if errCheckUser != nil {
-		helper.Logger("error", "In Server: "+errCheckUser.Error())
-		return nil, errors.New(errCheckUser.Error())
-	}
-
-	isUserExist := len(replyUser)
-
-	if isUserExist == 0 {
-		helper.Logger("error", "In Server: User not found")
-		return nil, errors.New("user not found")
 	}
 
 	appendForumAssign = append(appendForumAssign, entities.ForumResponse{
@@ -946,11 +965,11 @@ func ReplyStore(r *entities.ReplyStore) (map[string]any, error) {
 						CreatedAt: time.Now(),
 					},
 				},
-				ReplyCount: 0,
+				ReplyCount: 1,
 				CreatedAt:  time.Now(),
 			},
 		},
-		CommentCount: 0,
+		CommentCount: 1,
 		Like:         []entities.ForumLike{},
 		IsLiked:      false,
 		LikeCount:    0,
@@ -965,7 +984,7 @@ func ReplyStore(r *entities.ReplyStore) (map[string]any, error) {
 			Email:    forum[0].Email,
 			Phone:    forum[0].Phone,
 		},
-		CreatedAt: time.Now(),
+		CreatedAt: forum[0].CreatedAt,
 	})
 
 	return map[string]any{
