@@ -100,6 +100,7 @@ func main() {
 	router.HandleFunc("/api/v1/inbox/badge", controllers.InboxBadge).Methods("GET")
 
 	// Auth
+	router.Handle("/api/v1/detect-fullbody", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.DetectFullbody))).Methods("POST")
 	router.Handle("/api/v1/login", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.Login))).Methods("POST")
 	router.Handle("/api/v1/register", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.Register))).Methods("POST")
 	router.Handle("/api/v1/forgot-password", rateLimiter.LimitMiddleware(http.HandlerFunc(controllers.ForgotPassword))).Methods("PUT")
