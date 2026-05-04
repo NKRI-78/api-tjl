@@ -735,35 +735,65 @@ func CommentStore(c *entities.CommentStore) (map[string]any, error) {
 	forum := []entities.Forum{}
 	commentUser := []entities.ForumUser{}
 
-	errForum := db.Debug().Raw(`SELECT f.uid AS id, f.title, f.caption,
-	p.avatar,
-	p.fullname, 
-	p.user_id,
-	u.email,
-	u.phone,
-	ft.id AS forum_type_id, 
-	ft.name AS forum_type_name, 
-	f.user_id, f.created_at
-	FROM forums f
-	INNER JOIN forum_types ft ON ft.id = f.type
-	INNER JOIN profiles p ON f.user_id = p.user_id
-	INNER JOIN users u ON u.uid = p.user_id
-	WHERE f.uid = ?`, c.ForumId).Scan(&forum).Error
+	errForum := db.Debug().Raw(`
+		SELECT 
+			f.uid AS id, 
+			f.title, 
+			f.caption,
+			p.avatar,
+			p.fullname, 
+			p.user_id,
+			u.email,
+			u.phone,
+			ft.id AS forum_type_id, 
+			ft.name AS forum_type_name, 
+			f.user_id, 
+			f.created_at
+		FROM forums f
+		INNER JOIN forum_types ft ON ft.id = f.type
+		INNER JOIN profiles p ON f.user_id = p.user_id
+		INNER JOIN users u ON u.uid = p.user_id
+		WHERE f.uid = ?
+	`, c.ForumId).Scan(&forum).Error
 
 	if errForum != nil {
 		helper.Logger("error", "In Server: "+errForum.Error())
 		return nil, errors.New(errForum.Error())
 	}
 
-	forums := len(forum)
-
-	if forums == 0 {
-		helper.Logger("error", "In Server: Forum type not found")
+	if len(forum) == 0 {
+		helper.Logger("error", "In Server: Forum not found")
 		return nil, errors.New("forum not found")
 	}
 
-	errInsertComment := db.Debug().Exec(`INSERT INTO forum_comments (uid, forum_id, user_id, comment) 
-	VALUES (?, ?, ?, ?)`, c.Id, c.ForumId, c.UserId, c.Comment).Error
+	errCommentUser := db.Debug().Raw(`
+		SELECT 
+			p.user_id AS id,
+			p.avatar,
+			p.fullname,
+			u.email,
+			u.phone
+		FROM profiles p
+		INNER JOIN users u ON u.uid = p.user_id
+		WHERE p.user_id = ?
+	`, c.UserId).Scan(&commentUser).Error
+
+	if errCommentUser != nil {
+		helper.Logger("error", "In Server: "+errCommentUser.Error())
+		return nil, errors.New(errCommentUser.Error())
+	}
+
+	if len(commentUser) == 0 {
+		helper.Logger("error", "In Server: Comment user not found")
+		return nil, errors.New("comment user not found")
+	}
+
+	errInsertComment := db.Debug().Exec(`
+		INSERT INTO forum_comments 
+			(uid, forum_id, user_id, comment) 
+		VALUES 
+			(?, ?, ?, ?)
+	`, c.Id, c.ForumId, c.UserId, c.Comment).Error
 
 	if errInsertComment != nil {
 		helper.Logger("error", "In Server: "+errInsertComment.Error())
@@ -790,7 +820,7 @@ func CommentStore(c *entities.CommentStore) (map[string]any, error) {
 				CreatedAt:  time.Now(),
 			},
 		},
-		CommentCount: 0,
+		CommentCount: 1,
 		Like:         []entities.ForumLike{},
 		IsLiked:      false,
 		LikeCount:    0,
@@ -805,7 +835,7 @@ func CommentStore(c *entities.CommentStore) (map[string]any, error) {
 			Email:    forum[0].Email,
 			Phone:    forum[0].Phone,
 		},
-		CreatedAt: time.Now(),
+		CreatedAt: forum[0].CreatedAt,
 	})
 
 	return map[string]any{
