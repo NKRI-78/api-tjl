@@ -770,24 +770,6 @@ func CommentStore(c *entities.CommentStore) (map[string]any, error) {
 		return nil, errors.New(errInsertComment.Error())
 	}
 
-	errCheckUser := db.Debug().Raw(`SELECT p.user_id AS id, u.email, u.phone, p.avatar, p.fullname 
-	FROM forums f 
-	INNER JOIN profiles p ON f.user_id = p.user_id 
-	INNER JOIN users u ON u.uid = p.user_id
-	WHERE f.user_id = ?`, c.UserId).Scan(&commentUser).Error
-
-	if errCheckUser != nil {
-		helper.Logger("error", "In Server: "+errCheckUser.Error())
-		return nil, errors.New(errCheckUser.Error())
-	}
-
-	isUserExist := len(commentUser)
-
-	if isUserExist == 0 {
-		helper.Logger("error", "In Server: User not found")
-		return nil, errors.New("user not found")
-	}
-
 	appendForumAssign = append(appendForumAssign, entities.ForumResponse{
 		Id:      forum[0].Id,
 		Title:   forum[0].Title,
